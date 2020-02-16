@@ -13,3 +13,6 @@ proyecto
     views
       view1
     urls
+
+
+funcionamiento rest framework https://www.django-rest-framework.org/tutorial/quickstart/
