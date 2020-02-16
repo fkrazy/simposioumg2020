@@ -1,0 +1,47 @@
+# See http://help.github.com/ignore-files/ for more about ignoring files.
+
+# compiled output
+/simumg20frontend/dist
+/simumg20frontend/tmp
+/simumg20frontend/out-tsc
+# Only exists if Bazel was run
+/simumg20frontend/bazel-out
+
+# dependencies
+/simumg20frontend/node_modules
+
+# profiling files
+/simumg20frontend/chrome-profiler-events*.json
+/simumg20frontend/speed-measure-plugin*.json
+
+# IDEs and editors
+/simumg20frontend/.idea
+/simumg20frontend/.project
+/simumg20frontend/.classpath
+/simumg20frontend/.c9/
+/simumg20frontend/*.launch
+/simumg20frontend/.settings/
+/simumg20frontend/*.sublime-workspace
+/simumg20frontend/.editorconfig
+
+# IDE - VSCode
+/simumg20frontend/.vscode/*
+/simumg20frontend/!.vscode/settings.json
+/simumg20frontend/!.vscode/tasks.json
+/simumg20frontend/!.vscode/launch.json
+/simumg20frontend/!.vscode/extensions.json
+/simumg20frontend/.history/*
+
+# misc
+/simumg20frontend/.sass-cache
+/simumg20frontend/connect.lock
+/simumg20frontend/coverage
+/simumg20frontend/libpeerconnection.log
+/simumg20frontend/npm-debug.log
+/simumg20frontend/yarn-error.log
+/simumg20frontend/testem.log
+/simumg20frontend/typings
+
+# System Files
+/simumg20frontend/.DS_Store
+/simumg20frontend/Thumbs.db
