@@ -18,16 +18,29 @@
 
         <ul class="navbar-nav flex-grow" *ngIf="isAuthenticated()">
 
-          <a [routerLink]="['/logout']" class="nav-link text-dark"><fa-icon [icon]="faSignOutAlt"></fa-icon>&nbsp;Salir</a>
+          <ng-container *ngIf="isAsistente()">
+
+            <li [routerLinkActive]="['link-active']"  class="nav-item">
+              <a [routerLink]="['/asistentes/pago']" class="nav-link text-dark">Pago</a>
+            </li>
+            <li [routerLinkActive]="['link-active']"  class="nav-item">
+              <a [routerLink]="['/asistentes/ticket']" class="nav-link text-dark">Ticket</a>
+            </li>
+
+          </ng-container>
+
+          <li class="nav-item">
+            <a [routerLink]="['/logout']" class="nav-link text-dark"><fa-icon [icon]="faSignOutAlt"></fa-icon>&nbsp;Salir</a>
+          </li>
 
         </ul>
 
-        <ul class="navbar-nav" *ngIf="!isAuthenticated()">
+        <ul class="navbar-nav flex-grow" *ngIf="!isAuthenticated()">
           <li [routerLinkActive]="['link-active']" class="nav-item">
             <a [routerLink]="['/registro']" class="nav-link text-dark">Participar</a>
           </li>
           <li class="nav-item">
-            <a (click)="openModalLogin(contentLogin)" class="nav-link btn text-dark"><fa-icon [icon]="faSignInAlt"></fa-icon>&nbsp;Entrar</a>
+            <button (click)="openModalLogin(contentLogin)" class="btn btn-link nav-link text-dark"><fa-icon [icon]="faSignInAlt"></fa-icon>&nbsp;Entrar</button>
           </li>
         </ul>
 

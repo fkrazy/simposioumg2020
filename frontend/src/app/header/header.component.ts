@@ -64,12 +64,16 @@ export class HeaderComponent implements OnInit {
     this.isExpanded = false;
   }
 
-  toggle() {
+  toggle(): void {
     this.isExpanded = !this.isExpanded;
   }
 
-  public isAuthenticated() {
+  public isAuthenticated(): boolean {
     return this.auth.isAuthenticated();
+  }
+
+  public isAsistente() {
+    return this.auth.isAsistente();
   }
 
 }
