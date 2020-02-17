@@ -4,15 +4,24 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import {Route, RouterModule} from '@angular/router';
 import { HeaderComponent } from './header/header.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
-import {FormsModule, ReactiveFormsModule} from '@angular/forms';
-import {HttpClientModule} from '@angular/common/http';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { HttpClientModule } from '@angular/common/http';
 import { AppComponent } from './app.component';
 import { LogOutComponent } from './log-out/log-out.component';
+import { LogInComponent } from './log-in/log-in.component';
+import { OnlyNotLoggedUsersGuard } from './auth/only-not-logged-users.guard';
+import { OnlyLoggedUsersGuard } from './auth/only-logged-users.guard';
 
 const routes: Route[] = [
   {
+    path: 'login',
+    component: LogInComponent,
+    canActivate: [OnlyNotLoggedUsersGuard]
+  },
+  {
     path: 'logout',
-    component: LogOutComponent
+    component: LogOutComponent,
+    canActivate: [OnlyLoggedUsersGuard]
   }
 ];
 
@@ -20,7 +29,8 @@ const routes: Route[] = [
   declarations: [
     AppComponent,
     HeaderComponent,
-    LogOutComponent
+    LogOutComponent,
+    LogInComponent
   ],
     imports: [
         BrowserModule,
