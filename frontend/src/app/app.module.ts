@@ -15,6 +15,7 @@ import { OnlyAsistentesGuard } from './auth/only-asistentes.guard';
 import { OnlyAdminGuard } from './auth/only-admin.guard';
 import { InicioComponent } from './inicio/inicio.component';
 import { ConferenciasComponent } from './conferencias/conferencias.component';
+import { RegistroComponent } from './registro/registro.component';
 
 const routes: Route[] = [
   {
@@ -30,6 +31,11 @@ const routes: Route[] = [
     path: 'logout',
     component: LogOutComponent,
     canActivate: [OnlyLoggedUsersGuard]
+  },
+  {
+    path: 'registro',
+    canActivate: [OnlyNotLoggedUsersGuard],
+    component: RegistroComponent
   },
   {
     path: 'asistentes',
@@ -52,7 +58,8 @@ const routes: Route[] = [
     LogOutComponent,
     LogInComponent,
     InicioComponent,
-    ConferenciasComponent
+    ConferenciasComponent,
+    RegistroComponent
   ],
     imports: [
         BrowserModule,
