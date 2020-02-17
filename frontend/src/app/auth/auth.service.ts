@@ -40,7 +40,7 @@ export class AuthService {
   public signOut(): void {
     this.loggedUser = null;
     localStorage.removeItem('logged_user');
-    this.router.navigateByUrl('/');
+    this.router.navigateByUrl('/login');
   }
 
   public isAuthenticated(): boolean {

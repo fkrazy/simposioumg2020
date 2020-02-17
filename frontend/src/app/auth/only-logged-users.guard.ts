@@ -43,8 +43,8 @@ export class OnlyLoggedUsersGuard implements CanActivate, CanActivateChild, CanL
 
   private isLogged(): boolean {
     const logged = this.auth.isAuthenticated();
-    if (logged) {
-      this.router.navigateByUrl('/');
+    if (!logged) {
+      this.router.navigateByUrl('/login');
     }
     return logged;
   }
