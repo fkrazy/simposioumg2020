@@ -31,6 +31,7 @@ const routes: Route[] = [
   },
   {
     path: 'reportes',
+    loadChildren: () => import('./reportes/reportes.module').then(m => m.ReportesModule)
   }
 ];
 
