@@ -1,0 +1,51 @@
+[
+  {
+    "username": "potter",
+    "password": "potter",
+    "email": "potter@gmail.com",
+    "roles": "ASISTENTE,ESTUDIANTE",
+    "firstLogin": true
+  },
+  {
+    "username": "voldemort",
+    "password": "voldemort",
+    "email": "voldemort@gmail.com",
+    "roles": "STAFF,ADMIN",
+    "firstLogin": false
+  },
+  {
+    "username": "dumbledore",
+    "password": "dumbledore",
+    "email": "dumbledore@gmail.com",
+    "roles": "STAFF,ADMIN,ASISTENTE",
+    "firstLogin": false
+  },
+  {
+    "username": "hagrid",
+    "password": "hagrid",
+    "email": "hagrid@gmail.com",
+    "roles": "STAFF,ASISTENTE",
+    "firstLogin": false
+  },
+  {
+    "username": "hermione",
+    "password": "hermione",
+    "email": "hermione@gmail.com",
+    "roles": "ASISTENTE,ESTUDIANTE",
+    "firstLogin": false
+  },
+  {
+    "username": "snape",
+    "password": "snape",
+    "email": "snape@gmail.com",
+    "roles": "STAFF,ADMIN",
+    "firstLogin": false
+  },
+  {
+    "username": "ron",
+    "password": "ron",
+    "email": "ron@gmail.com",
+    "roles": "ASISTENTE",
+    "firstLogin": false
+  }
+]
