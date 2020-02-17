@@ -29,6 +29,7 @@ export class AuthService {
       if(user) {
         if(user.password === password) {
           this.loggedUser = user;
+          localStorage.setItem('logged_user', JSON.stringify(this.loggedUser));
           resolve(user);
         }
       }
@@ -38,10 +39,12 @@ export class AuthService {
 
   public signOut(): void {
     this.loggedUser = null;
+    localStorage.removeItem('logged_user');
     this.router.navigateByUrl('/');
   }
 
   public isAuthenticated(): boolean {
+    this.getUserFromStorage();
     return this.loggedUser != null;
   }
 
@@ -63,6 +66,15 @@ export class AuthService {
 
   public isEstudiante(): boolean {
     return this.hasRole('ESTUDIANTE');
+  }
+
+  private getUserFromStorage(): void {
+    if(this.loggedUser == null) {
+      const loggedUserStr = localStorage.getItem('logged_user');
+      if(loggedUserStr) {
+        this.loggedUser = JSON.parse(loggedUserStr);
+      }
+    }
   }
 
 }
