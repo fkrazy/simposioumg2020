@@ -49,7 +49,7 @@ export class AuthService {
   }
 
   public hasRole(role: string): boolean {
-    return this.loggedUser != null && this.loggedUser.roles.includes(role);
+    return this.isAuthenticated() && this.loggedUser.roles.includes(role);
   }
 
   public isStaff(): boolean {
