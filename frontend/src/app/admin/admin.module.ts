@@ -27,6 +27,7 @@ const routes: Route[] = [
   },
   {
     path: 'pagos',
+    loadChildren: () => import('./pagos/pagos.module').then(m => m.PagosModule)
   },
   {
     path: 'reportes',
