@@ -11,6 +11,7 @@ import { LogOutComponent } from './log-out/log-out.component';
 import { LogInComponent } from './log-in/log-in.component';
 import { OnlyNotLoggedUsersGuard } from './auth/only-not-logged-users.guard';
 import { OnlyLoggedUsersGuard } from './auth/only-logged-users.guard';
+import {OnlyAsistentesGuard} from './auth/only-asistentes.guard';
 
 const routes: Route[] = [
   {
@@ -22,6 +23,12 @@ const routes: Route[] = [
     path: 'logout',
     component: LogOutComponent,
     canActivate: [OnlyLoggedUsersGuard]
+  },
+  {
+    path: 'asistentes',
+    canLoad: [OnlyAsistentesGuard],
+    canActivateChild: [OnlyAsistentesGuard],
+    loadChildren: () => import('./asistentes/asistentes.module').then(m => m.AsistentesModule)
   }
 ];
 
