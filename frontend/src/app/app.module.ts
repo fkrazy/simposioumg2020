@@ -13,8 +13,14 @@ import { OnlyNotLoggedUsersGuard } from './auth/only-not-logged-users.guard';
 import { OnlyLoggedUsersGuard } from './auth/only-logged-users.guard';
 import { OnlyAsistentesGuard } from './auth/only-asistentes.guard';
 import { OnlyAdminGuard } from './auth/only-admin.guard';
+import { InicioComponent } from './inicio/inicio.component';
+import { ConferenciasComponent } from './conferencias/conferencias.component';
 
 const routes: Route[] = [
+  {
+    path: '',
+    component: InicioComponent
+  },
   {
     path: 'login',
     component: LogInComponent,
@@ -44,7 +50,9 @@ const routes: Route[] = [
     AppComponent,
     HeaderComponent,
     LogOutComponent,
-    LogInComponent
+    LogInComponent,
+    InicioComponent,
+    ConferenciasComponent
   ],
     imports: [
         BrowserModule,
