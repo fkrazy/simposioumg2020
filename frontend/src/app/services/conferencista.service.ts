@@ -15,8 +15,8 @@ export class ConferencistaService{
   constructor(private http: HttpClient) {
     this.http.get<IConferencista[]>(`${ConferencistaService.BASE_URL}/conferencistas.json`)
       .subscribe(res => {
-        this.conferencistas = res;
-      });
+        this.conferencistas.push(...res);
+      }, console.error);
   }
 
   public getAll(): Observable<IConferencista[]> {

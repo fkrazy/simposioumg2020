@@ -15,8 +15,8 @@ export class SalonService {
   constructor(private http: HttpClient) {
     this.http.get<ISalon[]>(`${SalonService.BASE_URL}/salones.json`)
       .subscribe(res => {
-        this.salones = res;
-      });
+        this.salones.push(...res);
+      }, console.error);
   }
 
   public getAll(): Observable<ISalon[]> {

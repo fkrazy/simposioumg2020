@@ -15,8 +15,8 @@ export class ConferenciaService {
   constructor(private http: HttpClient) {
     this.http.get<IConferencia[]>(`${ConferenciaService.BASE_URL}/conferencias.json`)
       .subscribe(res => {
-        this.conferencias = res;
-      });
+        this.conferencias.push(...res);
+      }, console.error);
   }
 
   public getAll(): Observable<IConferencia[]> {
