@@ -1,1 +1,119 @@
-<p>conferencias works!</p>
+
+<div class="row">
+  <div class="col">
+    <h2>Conferencias</h2>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col p-2">
+    <button (click)="openModalNuevo(modalConfContent)" class="btn btn-info btn-sm float-right ml-1">
+      <fa-icon [icon]="faPlus"></fa-icon>
+      Nuevo
+    </button>
+    <button (click)="openModalEditar(modalConfContent)" [disabled]="selectedConferencia == null" class="btn btn-warning btn-sm float-right ml-1">
+      <fa-icon [icon]="faEdit"></fa-icon>
+      Editar
+    </button>
+    <button (click)="onEliminarConferencia()" [disabled]="selectedConferencia == null" class="btn btn-danger btn-sm float-right ml-1">
+      <fa-icon [icon]="faTrashAlt"></fa-icon>
+      Eliminar
+    </button>
+  </div>
+</div>
+
+<div class="table-responsive">
+
+  <table class="table table-hover">
+    <thead>
+    <tr>
+      <th>Id</th>
+      <th>Tema</th>
+      <th>Horario</th>
+      <th>Conferencista</th>
+      <th>Sal&oacute;n</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr *ngFor="let conferencia of conferencias" (click)="onConferenciaClicked(conferencia)" [ngClass]="{'bg-dark text-light': conferencia == selectedConferencia}">
+      <td>{{conferencia.id}}</td>
+      <td>{{conferencia.tema}}</td>
+      <td>{{(conferencia.inicio | slice: 0:5) + '-' + (conferencia.fin | slice: 0:5)}}</td>
+      <td>{{conferencia.conferencista.nombre}}</td>
+      <td>{{conferencia.salon.nombre}}</td>
+    </tr>
+    </tbody>
+  </table>
+
+</div>
+
+<ng-template #modalConfContent let-modalConferencia>
+
+  <div class="modal-header">
+
+    <h1 *ngIf="opcionNuevaConferencia;else titleEdicion" class="modal-title">Nueva</h1>
+    <ng-template #titleEdicion>
+      <h1 class="modal-title">Editar</h1>
+    </ng-template>
+
+    <button type="button" class="close" aria-label="Close" (click)="modalConferencia.dismiss('')">
+      <fa-icon [icon]="faTimes"></fa-icon>
+    </button>
+
+  </div>
+
+  <div class="modal-body">
+
+    <form (ngSubmit)="onSubmitFormConferencia()" [formGroup]="formConferencia" id="form-conferencia">
+      <div class="form-group row">
+        <label for="tema" class="col-12 col-md-2 col-form-label">Tema</label>
+        <div class="col-12 col-md-10">
+          <input formControlName="tema" type="text" id="tema" class="form-control" placeholder="Tema">
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-6">
+          <div class="form-group row">
+            <label for="inicio" class="col-12 col-form-label">Inicio</label>
+            <div class="col-12">
+              <input formControlName="inicio" type="text" id="inicio" class="form-control" placeholder="HH:MM">
+            </div>
+          </div>
+        </div>
+        <div class="col-6">
+          <div class="form-group row">
+            <label for="fin" class="col-12 col-form-label">Fin</label>
+            <div class="col-12">
+              <input formControlName="fin" type="text" id="fin" class="form-control" placeholder="HH:MM">
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="form-group row">
+        <label for="id_conferencista" class="col-12 col-md-3 col-lg-2 col-form-label">Conferencista</label>
+        <div class="col-12 col-md-9 col-lg-10">
+          <select formControlName="id_conferencista" id="id_conferencista" class="form-control custom-select">
+            <option *ngFor="let conferencista of conferencistas" [value]="conferencista.id">{{conferencista.nombre}}</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-group row">
+        <label for="id_salon" class="col-12 col-md-2 col-form-label">Sal&oacute;n</label>
+        <div class="col-12 col-md-10">
+          <select formControlName="id_salon" id="id_salon" class="form-control custom-select">
+            <option *ngFor="let salon of salones" [value]="salon.id">{{salon.nombre}}</option>
+          </select>
+        </div>
+      </div>
+    </form>
+
+  </div>
+
+  <div class="modal-footer">
+    <button [disabled]="!formConferencia.valid" type="submit" form="form-conferencia" class="btn btn-primary">
+      <fa-icon [icon]="faSave"></fa-icon>
+      Guardar
+    </button>
+  </div>
+
+</ng-template>
