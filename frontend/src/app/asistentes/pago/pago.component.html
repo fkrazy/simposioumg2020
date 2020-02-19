@@ -1,1 +1,75 @@
-<p>pago works!</p>
+
+<div class="row mt-3">
+  <div class="col">
+    <h2>Estado de pago</h2>
+    <p class="mt-0">Sin pagar</p>
+    <hr>
+  </div>
+
+</div>
+<div class="row">
+  <div class="col-12 col-md-12">
+
+  </div>
+  <div class="col-12 col-md-12">
+    <h3>Instrucciones</h3>
+    <p class="text-justify">
+      Para completar tu registro de asistencia debes realizar un dep&oacute;sito de <strong>Q.300</strong> en cualquiera de las siguientes cuentas bancarias:
+    </p>
+
+    <div class="d-flex justify-content-start justify-content-lg-center overflow-auto">
+       <div *ngFor="let cuenta of cuentas" class="card card-cuenta mr-1">
+         <div class="card-body">
+
+           <div class="card-block">
+             <h4 class="card-title mb-0">{{cuenta.numero}}</h4>
+             <p class="mt-0 mb-0">{{cuenta.titular}}</p>
+             <p class="card-text">{{cuenta.banco}}</p>
+           </div>
+         </div>
+       </div>
+    </div>
+
+    <p class="text-justify mt-2">
+      Una vez realizado el dep&oacute;sito, t&oacute;male una foto al recibo y presiona el siguiente bot&oacute;n para subir los datos de tu pago:
+    </p>
+
+    <button (click)="openModalRegistroPago(modalRegistroPagoContent)" class="btn btn-primary">Registrar pago</button>
+
+  </div>
+</div>
+
+
+<ng-template #modalRegistroPagoContent let-modalRegistroPago>
+
+  <div class="modal-header">
+
+    <h1 class="modal-title">Registro de pago</h1>
+
+    <button type="button" class="close" aria-label="Close" (click)="modalRegistroPago.dismiss('')">
+      <fa-icon [icon]="faTimes"></fa-icon>
+    </button>
+
+  </div>
+
+  <div class="modal-body">
+
+    <form (ngSubmit)="onSubmitFormRegistroPago()" [formGroup]="formRegistroPago" id="form-registro-pago">
+      <div class="form-group row">
+        <label for="foto" class="col-12 col-md-2 col-form-label">Foto de recibo</label>
+        <div class="col-12 col-md-10">
+          <input formControlName="foto" type="file" accept="image/*" id="foto" class="form-control form-control-file" placeholder="Foto">
+        </div>
+      </div>
+    </form>
+
+  </div>
+
+  <div class="modal-footer">
+    <button [disabled]="!formRegistroPago.valid" type="submit" form="form-registro-pago" class="btn btn-primary">
+      <!--<fa-icon [icon]="faSave"></fa-icon>-->
+      Enviar
+    </button>
+  </div>
+
+</ng-template>
