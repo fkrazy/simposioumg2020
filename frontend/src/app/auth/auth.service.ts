@@ -1,7 +1,6 @@
 import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {Router} from '@angular/router';
-import {Observable, of} from 'rxjs';
 import {IUser} from '../models/IUser';
 
 @Injectable({
@@ -35,6 +34,10 @@ export class AuthService {
       }
       reject('Credenciales inválidas');
     });
+  }
+
+  public get user() {
+    return this.loggedUser;
   }
 
   public signOut(): void {
