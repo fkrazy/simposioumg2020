@@ -6,6 +6,7 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { ConferenciasComponent } from './conferencias/conferencias.component';
 import { SalonesComponent } from './salones/salones.component';
 import { ConferencistasComponent } from './conferencistas/conferencistas.component';
+import { CuentasComponent } from './cuentas/cuentas.component';
 
 const routes: Route[] = [
   {
@@ -26,6 +27,10 @@ const routes: Route[] = [
     component: ConferencistasComponent
   },
   {
+    path: 'cuentas',
+    component: CuentasComponent
+  },
+  {
     path: 'pagos',
     loadChildren: () => import('./pagos/pagos.module').then(m => m.PagosModule)
   },
@@ -36,7 +41,7 @@ const routes: Route[] = [
 ];
 
 @NgModule({
-  declarations: [ConferenciasComponent, SalonesComponent, ConferencistasComponent],
+  declarations: [ConferenciasComponent, SalonesComponent, ConferencistasComponent, CuentasComponent],
   imports: [
     CommonModule,
     FormsModule,
