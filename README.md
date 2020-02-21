@@ -19,3 +19,6 @@ funcionamiento rest framework https://www.django-rest-framework.org/tutorial/qui
 
 
 para el login y seguridad https://django-allauth.readthedocs.io/en/latest/installation.html
+
+
+para los modelos https://docs.djangoproject.com/en/3.0/topics/db/models/
