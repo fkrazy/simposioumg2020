@@ -79,10 +79,10 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'simposium',
-        'USER': 'dev',
-        'PASSWORD': '12345',
+        'USER': 'Solomeo',
+        'PASSWORD': '4525MySql1225',
         'HOST': 'localhost',  # Or an IP Address that your DB is hosted on
-        'PORT': '3306',
+        #'PORT': '3306',
     }
 }
 
