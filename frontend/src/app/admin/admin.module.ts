@@ -7,6 +7,7 @@ import { ConferenciasComponent } from './conferencias/conferencias.component';
 import { SalonesComponent } from './salones/salones.component';
 import { ConferencistasComponent } from './conferencistas/conferencistas.component';
 import { CuentasComponent } from './cuentas/cuentas.component';
+import { CarrerasComponent } from './carreras/carreras.component';
 
 const routes: Route[] = [
   {
@@ -31,6 +32,10 @@ const routes: Route[] = [
     component: CuentasComponent
   },
   {
+    path: 'carreras',
+    component: CarrerasComponent
+  },
+  {
     path: 'pagos',
     loadChildren: () => import('./pagos/pagos.module').then(m => m.PagosModule)
   },
@@ -41,7 +46,7 @@ const routes: Route[] = [
 ];
 
 @NgModule({
-  declarations: [ConferenciasComponent, SalonesComponent, ConferencistasComponent, CuentasComponent],
+  declarations: [ConferenciasComponent, SalonesComponent, ConferencistasComponent, CuentasComponent, CarrerasComponent],
   imports: [
     CommonModule,
     FormsModule,
