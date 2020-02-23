@@ -1,6 +1,8 @@
 from django.db import models
-from django.contrib.auth.models import User
+
+from .asistentes import Asistente
 from .conferencias import Conferencia
+
 
 class Reservacion(models.Model):
 
@@ -12,7 +14,14 @@ class Reservacion(models.Model):
         (NO_PAGADA, "NO PAGADA")
     )
 
-    usuario = models.ForeignKey(User, related_name='Reservacion', verbose_name='Usuario', on_delete=models.CASCADE)
-    conferencia = models.ForeignKey(Conferencia, related_name="Reservacion", verbose_name="Conferencia", on_delete=models.CASCADE)
+    asistente = models.ForeignKey(Asistente, related_name='Reservacion', verbose_name='Usuario',
+                                  on_delete=models.CASCADE)
+    conferencia = models.ForeignKey(Conferencia, related_name="Reservacion", verbose_name="Conferencia",
+                                    on_delete=models.CASCADE)
     hora = models.TimeField(null=False)
     estado = models.SmallIntegerField(verbose_name="ESTOS", choices=ESTADOS, default=NO_PAGADA)
+
+    class Meta:
+        index_together = [
+            ["asistente", "conferencia"],
+        ]
