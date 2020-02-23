@@ -29,3 +29,6 @@ crear: post http://127.0.0.1:8000/administracion/carreras/
 editar: post http://127.0.0.1:8000/administracion/carreras/1/
 eliminar: delete http://127.0.0.1:8000/administracion/carreras/1/
 obtener: get http://127.0.0.1:8000/administracion/carreras/1/
+
+en postman al ingresar http://127.0.0.1:8000/administracion/ me muestra los endpoints disponibles
+
