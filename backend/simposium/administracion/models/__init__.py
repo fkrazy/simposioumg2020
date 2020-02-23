@@ -9,3 +9,4 @@ from .asistencias import Asistencia
 from .carreras import Carrera
 from .estudiantes_umg import EstudianteUmg
 from .reservaciones import Reservacion
+from .asistentes import Asistente
