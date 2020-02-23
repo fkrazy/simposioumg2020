@@ -6,3 +6,4 @@ from .conferencistas import ConferencistaViewSet
 from .cuentas import CuentaViewSet
 from .estudiantes_umg import EstudianteUmgViewSet
 from .pagos import PagoViewSet
+from .reservaciones import ReservacionViewSet
