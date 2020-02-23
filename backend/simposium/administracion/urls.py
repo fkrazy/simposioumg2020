@@ -15,6 +15,7 @@ router.register(r'pagos', views.PagoViewSet)
 router.register(r'reseraciones', views.ReservacionViewSet)
 router.register(r'salones', views.SalonViewSet)
 router.register(r'tickets', views.TicketViewSet)
+router.register(r'validacion_pagos', views.ValidacionPagoViewSet)
 
 urlpatterns = [
     path('', include(router.urls)),

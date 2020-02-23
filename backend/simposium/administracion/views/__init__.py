@@ -9,3 +9,4 @@ from .pagos import PagoViewSet
 from .reservaciones import ReservacionViewSet
 from .salones import SalonViewSet
 from .tickets import TicketViewSet
+from .validacion_pago import ValidacionPagoViewSet
