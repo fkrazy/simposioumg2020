@@ -25,7 +25,7 @@ SECRET_KEY = 'zrr#1^#0_dgequuth!-ryse0m)6#q#kx9=kj5jnqn1dpbrq!v4'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['localhost:8000']
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -38,7 +38,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
-    'administracion'
+    'administracion',
+    'cliente'
 ]
 
 MIDDLEWARE = [
@@ -79,10 +80,10 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'simposium',
-        'USER': 'dev',
-        'PASSWORD': '12345',
+        'USER': 'Solomeo',
+        'PASSWORD': '4525MySql1225',
         'HOST': 'localhost',  # Or an IP Address that your DB is hosted on
-        'PORT': '3306',
+        #'PORT': '3306',
     }
 }
 
@@ -125,3 +126,8 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+
+try:
+    from .local_settings import *
+except ImportError:
+    pass
