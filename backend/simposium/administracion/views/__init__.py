@@ -4,3 +4,4 @@ from .carrera import CarreraViewSet
 from .conferencias import ConferenciaViewSet
 from .conferencistas import ConferencistaViewSet
 from .cuentas import CuentaViewSet
+from .estudiantes_umg import EstudianteUmgViewSet
