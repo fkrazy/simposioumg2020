@@ -1,0 +1,52 @@
+<header>
+  <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow">
+    <div class="container">
+      <a class="navbar-brand" [routerLink]="['/']">SimposioUMG</a>
+
+      <button
+        class="navbar-toggler"
+        type="button"
+        data-toggle="collapse"
+        data-target=".navbar-collapse"
+        aria-label="Toggle navigation"
+        [attr.aria-expanded]="isExpanded"
+        (click)="toggle()">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse"
+        [ngClass]="{ show: isExpanded }">
+
+        <ul class="navbar-nav flex-grow" *ngIf="isAuthenticated()">
+
+          <ng-container *ngIf="isAsistente()">
+
+            <li [routerLinkActive]="['link-active']"  class="nav-item">
+              <a [routerLink]="['/asistentes/pago']" class="nav-link text-dark">Pago</a>
+            </li>
+            <li [routerLinkActive]="['link-active']"  class="nav-item">
+              <a [routerLink]="['/asistentes/ticket']" class="nav-link text-dark">Ticket</a>
+            </li>
+
+          </ng-container>
+
+          <li class="nav-item">
+            <a [routerLink]="['/logout']" class="nav-link text-dark"><fa-icon [icon]="faSignOutAlt"></fa-icon>&nbsp;Salir</a>
+          </li>
+
+        </ul>
+
+        <ul class="navbar-nav flex-grow" *ngIf="!isAuthenticated()">
+          <li [routerLinkActive]="['link-active']" class="nav-item">
+            <a [routerLink]="['/registro']" class="nav-link text-dark">Participar</a>
+          </li>
+          <li [routerLinkActive]="['link-active']" class="nav-item">
+            <a [routerLink]="['/login']" class="nav-link text-dark"><fa-icon [icon]="faSignInAlt"></fa-icon>&nbsp;Entrar</a>
+          </li>
+        </ul>
+
+      </div>
+    </div>
+  </nav>
+</header>
+
+

@@ -1,0 +1,94 @@
+
+
+<div class="row">
+  <div class="col">
+    <h2>Cuentas</h2>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col p-2">
+    <button (click)="openModalNueva(modalCuentaContent)" class="btn btn-info btn-sm float-right ml-1">
+      <fa-icon [icon]="faPlus"></fa-icon>
+      Nueva
+    </button>
+    <button (click)="openModalEditar(modalCuentaContent)" [disabled]="selectedCuenta == null" class="btn btn-warning btn-sm float-right ml-1">
+      <fa-icon [icon]="faEdit"></fa-icon>
+      Editar
+    </button>
+    <button (click)="onEliminarCuenta()" [disabled]="selectedCuenta == null" class="btn btn-danger btn-sm float-right ml-1">
+      <fa-icon [icon]="faTrashAlt"></fa-icon>
+      Eliminar
+    </button>
+  </div>
+</div>
+
+<div class="table-responsive">
+
+  <table class="table table-hover">
+    <thead>
+    <tr>
+      <th>N&iacute;mero</th>
+      <th>Banco</th>
+      <th>Titular</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr *ngFor="let cuenta of cuentas" (click)="onCuentaClicked(cuenta)" [ngClass]="{'bg-dark text-light': cuenta == selectedCuenta}">
+      <td>{{cuenta.numero}}</td>
+      <td>{{cuenta.banco}}</td>
+      <td>{{cuenta.titular}}</td>
+    </tr>
+    </tbody>
+  </table>
+
+</div>
+
+<ng-template #modalCuentaContent let-modalCuenta>
+
+  <div class="modal-header">
+
+    <h1 *ngIf="opcionNuevaCuenta;else titleEdicion" class="modal-title">Nueva</h1>
+    <ng-template #titleEdicion>
+      <h1 class="modal-title">Editar</h1>
+    </ng-template>
+
+    <button type="button" class="close" aria-label="Close" (click)="modalCuenta.dismiss('')">
+      <fa-icon [icon]="faTimes"></fa-icon>
+    </button>
+
+  </div>
+
+  <div class="modal-body">
+
+    <form (ngSubmit)="onSubmitFormCuenta()" [formGroup]="formCuenta" id="form-cuenta">
+      <div class="form-group row">
+        <label for="numero" class="col-12 col-md-2 col-form-label">N&uacute;mero</label>
+        <div class="col-12 col-md-10">
+          <input formControlName="numero" type="text" id="numero" class="form-control" placeholder="No. de cuenta">
+        </div>
+      </div>
+      <div class="form-group row">
+        <label for="banco" class="col-12 col-md-2 col-form-label">Banco</label>
+        <div class="col-12 col-md-10">
+          <input formControlName="banco" type="text" id="banco" class="form-control" placeholder="Banco">
+        </div>
+      </div>
+      <div class="form-group row">
+        <label for="titular" class="col-12 col-md-2 col-form-label">Titular</label>
+        <div class="col-12 col-md-10">
+          <input formControlName="titular" type="text" id="titular" class="form-control" placeholder="Titular">
+        </div>
+      </div>
+    </form>
+
+  </div>
+
+  <div class="modal-footer">
+    <button [disabled]="!formCuenta.valid" type="submit" form="form-cuenta" class="btn btn-primary">
+      <fa-icon [icon]="faSave"></fa-icon>
+      Guardar
+    </button>
+  </div>
+
+</ng-template>
