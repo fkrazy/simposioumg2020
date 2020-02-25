@@ -8,29 +8,29 @@
 /frontend/bazel-out
 
 # dependencies
-/frontend/node_modules
+/**/node_modules
 
 # profiling files
 /frontend/chrome-profiler-events*.json
 /frontend/speed-measure-plugin*.json
 
 # IDEs and editors
-/frontend/.idea
-/frontend/.project
-/frontend/.classpath
-/frontend/.c9/
-/frontend/*.launch
-/frontend/.settings/
-/frontend/*.sublime-workspace
-/frontend/.editorconfig
+/**/.idea
+/**/.project
+/**/.classpath
+/**/.c9/
+/**/*.launch
+/**/.settings/
+/**/*.sublime-workspace
+/**/.editorconfig
 
 # IDE - VSCode
-/frontend/.vscode/*
-/frontend/!.vscode/settings.json
-/frontend/!.vscode/tasks.json
-/frontend/!.vscode/launch.json
-/frontend/!.vscode/extensions.json
-/frontend/.history/*
+/**/.vscode/*
+/**/!.vscode/settings.json
+/**/!.vscode/tasks.json
+/**/!.vscode/launch.json
+/**/!.vscode/extensions.json
+/**/.history/*
 
 # misc
 /frontend/.sass-cache
@@ -45,3 +45,5 @@
 # System Files
 /frontend/.DS_Store
 /frontend/Thumbs.db
+
+/**/__pycache__/
