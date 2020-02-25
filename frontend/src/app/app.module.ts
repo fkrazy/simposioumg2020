@@ -16,6 +16,7 @@ import { OnlyAdminGuard } from './auth/only-admin.guard';
 import { InicioComponent } from './inicio/inicio.component';
 import { ConferenciasComponent } from './conferencias/conferencias.component';
 import { RegistroComponent } from './registro/registro.component';
+import { CarouselModule } from 'ngx-bootstrap/carousel';
 
 const routes: Route[] = [
   {
@@ -68,7 +69,8 @@ const routes: Route[] = [
         ReactiveFormsModule,
         RouterModule.forRoot(routes),
         FontAwesomeModule,
-      NgbModule
+      NgbModule,
+      CarouselModule.forRoot()
     ],
   providers: [],
   bootstrap: [AppComponent]
