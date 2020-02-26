@@ -55,12 +55,35 @@
   <div class="modal-body">
 
     <form (ngSubmit)="onSubmitFormRegistroPago()" [formGroup]="formRegistroPago" id="form-registro-pago">
-      <div class="form-group row">
-        <label for="foto" class="col-12 col-md-2 col-form-label">Foto de recibo</label>
-        <div class="col-12 col-md-10">
-          <input formControlName="foto" type="file" accept="image/*" id="foto" class="form-control form-control-file" placeholder="Foto">
+
+      <div class="row">
+        <div class="col d-flex justify-content-center p-2 border-dark">
+          <img class="img-fluid" src="#" alt="Selecciona la imagen de tu recibo" id="img-recibo">
         </div>
       </div>
+      <div class="form-group row">
+        <label for="foto" class="col-12 col-md-9 col-lg-2 col-form-label">Foto de recibo</label>
+        <div class="col-12 col-md-9 col-lg-10">
+          <input (change)="onChangeFotoRecibo($event)" formControlName="foto" type="file" accept="image/*" id="foto" class="form-control form-control-file" placeholder="Foto">
+        </div>
+      </div>
+
+      <div class="form-group row">
+        <label for="codigo_recibo" class="col-12 col-md-2 col-form-label">C&oacute;digo</label>
+        <div class="col-12 col-md-10">
+          <input formControlName="codigo_recibo" type="text" id="codigo_recibo" class="form-control" placeholder="C&oacute;digo del recibo">
+        </div>
+      </div>
+
+      <div class="form-group row">
+        <label for="id_cuenta" class="col-12 col-md-2 col-form-label">Cuenta</label>
+        <div class="col-12 col-md-10">
+          <select formControlName="id_cuenta" id="id_cuenta" class="custom-select">
+            <option *ngFor="let cuenta of cuentas" [value]="cuenta.id">{{cuenta.numero + ' ' + cuenta.banco}}</option>
+          </select>
+        </div>
+      </div>
+
     </form>
 
   </div>

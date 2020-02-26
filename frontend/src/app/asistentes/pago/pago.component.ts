@@ -21,6 +21,13 @@ export class PagoComponent implements OnInit {
   public registrandoPago = false;
 
   public formRegistroPago = new FormGroup({
+    codigo_recibo: new FormControl('', [
+      Validators.required,
+    ]),
+    id_cuenta: new FormControl('', [
+      Validators.required,
+      Validators.pattern('^[0-9]+$')
+    ]),
     foto: new FormControl('', [
       Validators.required,
     ])
@@ -42,11 +49,25 @@ export class PagoComponent implements OnInit {
   }
 
   public openModalRegistroPago(content): void {
+    this.formRegistroPago.reset({ foto: '' });
+    this.modalService.dismissAll();
     this.modalService.open(content, {
       size: 'lg',
       centered: true,
       windowClass: 'animated bounceIn'
     });
+  }
+
+  public onChangeFotoRecibo(event): void {
+    const reader = new FileReader();
+    console.log('Leyendo foto...');
+    reader.onload = (e) => {
+      const img = document.querySelector('#img-recibo');
+      img.setAttribute('src', reader.result + '');
+    };
+    if(event.target.files.length > 0) {
+      reader.readAsDataURL(event.target.files[0]);
+    }
   }
 
 }
