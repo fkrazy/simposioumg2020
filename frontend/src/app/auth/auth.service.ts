@@ -51,6 +51,10 @@ export class AuthService {
     return this.loggedUser != null;
   }
 
+  public firstLogin(): boolean {
+    return this.isAuthenticated() && this.loggedUser.firstLogin;
+  }
+
   public hasRole(role: string): boolean {
     return this.isAuthenticated() && this.loggedUser.roles.includes(role);
   }
