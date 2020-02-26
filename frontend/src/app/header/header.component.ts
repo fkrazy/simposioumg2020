@@ -37,4 +37,8 @@ export class HeaderComponent implements OnInit {
     return this.auth.isAsistente();
   }
 
+  public isAdmin() {
+    return this.auth.isAdmin();
+  }
+
 }
