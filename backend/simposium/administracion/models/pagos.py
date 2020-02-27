@@ -8,7 +8,7 @@ class Pago(models.Model):
     VALIDACION_RECHAZADA = 2    # cuando el administrador rechaza el pago por ser inválido o tener datos erróneos, etc.
     ACEPTADO = 3                # el pago ha sido aceptado como válido
     EVALUACION_REEMBOLSO = 4     # cuando el usuario ya pagó y pide un reembolso, en este estado el reembolso todavía debe ser evaluado por un administrador
-    PENDIENTE_REEMBOLSO = 5     # cuando el reembolso del pago ha sido aprobado pero aún no se ha hecho efectivo, es decir se aún no se devuelve el dinero
+    REEMBOLSO_APROBADO = 5     # cuando el reembolso del pago ha sido aprobado pero aún no se ha hecho efectivo, es decir se aún no se devuelve el dinero
     REEMBOLSADO = 6     # cuando el dinero del pago ha sido devuelto
 
     ESTADOS = (
@@ -16,7 +16,7 @@ class Pago(models.Model):
         (VALIDACION_RECHAZADA, 'Rechazado'),
         (ACEPTADO, 'Aceptado'),
         (EVALUACION_REEMBOLSO, 'Reembolso solicitado'),
-        (PENDIENTE_REEMBOLSO, 'Reembolso aprobado'),
+        (REEMBOLSO_APROBADO, 'Reembolso aprobado'),
         (REEMBOLSADO, 'Reembolsado')
     )
 
