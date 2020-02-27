@@ -52,7 +52,12 @@ export class AuthService {
   }
 
   public firstLogin(): boolean {
-    return this.isAuthenticated() && this.loggedUser.firstLogin;
+    const firstLogin = this.loggedUser.firstLogin == true;
+    if (firstLogin == true) {
+      this.loggedUser.firstLogin = false;
+      localStorage.setItem('logged_user', JSON.stringify(this.loggedUser));
+    }
+    return this.isAuthenticated() && firstLogin == true;
   }
 
   public hasRole(role: string): boolean {
