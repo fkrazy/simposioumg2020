@@ -1,4 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { AuthService } from '../auth/auth.service';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-inicio',
@@ -7,9 +9,22 @@ import { Component, OnInit } from '@angular/core';
 })
 export class InicioComponent implements OnInit {
 
-  constructor() { }
+  @ViewChild('modalPrimerLogin', {static: true}) modalPrimerLogin;
+
+  constructor(
+    public auth: AuthService,
+    private modalService: NgbModal
+  ) { }
 
   ngOnInit() {
+    if(this.auth.firstLogin() == true) {
+      this.modalService.open(this.modalPrimerLogin, {
+        size: 'sm',
+        centered: false,
+        windowClass: 'animated bounceIn'
+      });
+    }
+    setTimeout(() =>  this.modalService.dismissAll(), 22000);
   }
 
 }
