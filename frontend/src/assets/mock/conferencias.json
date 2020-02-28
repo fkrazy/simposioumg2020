@@ -1,4 +1,5 @@
 [
+  
   {
     "id": 9001,
     "tema": "Desarrollo de sistemas operativos",
@@ -17,8 +18,10 @@
       "nombre": "AA-02",
       "ubicacion": "Edificio A, 1er. Nivel",
       "capacidad": 230
-    }
+    },
+    "url": "https://www.areatecnologia.com/informatica/imagenes/so.jpg"
   },
+
   {
     "id": 9002,
     "tema": "Software libre",
@@ -37,8 +40,10 @@
       "nombre": "AA-02",
       "ubicacion": "Edificio A, 1er. Nivel",
       "capacidad": 230
-    }
+    },
+    "url":"https://www.elmundogeek.com.mx/wp-content/uploads/2019/10/logos-software-libre.jpg"
   },
+  
   {
     "id": 9003,
     "tema": "Tecnología vs Enfermedades",
@@ -57,7 +62,8 @@
       "nombre": "AA-02",
       "ubicacion": "Edificio A, 1er. Nivel",
       "capacidad": 230
-    }
+    },
+    "url":"https://www.itsitio.com/wp-content/uploads/2018/02/TI-y-salud.jpg"
   },
   {
     "id": 9004,
@@ -77,7 +83,8 @@
       "nombre": "AA-02",
       "ubicacion": "Edificio A, 1er. Nivel",
       "capacidad": 230
-    }
+    },
+    "url":"https://kaosenlared.net/wp-content/uploads/2016/09/Motores-de-busqueda-Header-568x319.png"
   },
   {
     "id": 9005,
@@ -97,6 +104,7 @@
       "nombre": "AA-02",
       "ubicacion": "Edificio A, 1er. Nivel",
       "capacidad": 230
-    }
+    },
+    "url":"https://elmundodelaeducacion.mx/media/zoo/images/Posiciones_La_tecnologia_y_el_aprendizaje_combinado_e1de68fc3b194ec23b7e38f93a04297b.jpg"
   }
 ]
