@@ -1,31 +1,28 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, of } from 'rxjs';
+import { Observable } from 'rxjs';
 import { ICarrera } from '../models/ICarrera';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class CarreraService {
 
-  static BASE_URL = 'assets/mock';
+  static BASE_URL = `${environment.apiUrl}/administracion/carreras`;
 
-  private carreras: ICarrera[] = [];
+  constructor(private http: HttpClient) { }
 
-  constructor(private http: HttpClient) {
-    this.http.get<ICarrera[]>(`${CarreraService.BASE_URL}/carreras.json`)
-      .subscribe((res) => {
-        this.carreras.push(...res);
-      }, console.error);
+  public getAll(): Observable<any> {
+    return this.http.get<any>(`${CarreraService.BASE_URL}/`);
   }
 
-  public getAll(): Observable<ICarrera[]> {
-    return of(this.carreras);
+  public create(carrera: ICarrera): Observable<any> {
+    return this.http.post<any>(`${CarreraService.BASE_URL}/`, carrera);
   }
 
-  public create(carrera: ICarrera): Observable<number> {
-    this.carreras.push(carrera);
-    return of(carrera.codigo);
+  public delete(codigoCarrera: number): Observable<any> {
+    return this.http.delete<any>(`${CarreraService.BASE_URL}/${codigoCarrera}`);
   }
 
 }

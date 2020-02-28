@@ -1,34 +1,28 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, of } from 'rxjs';
+import { Observable } from 'rxjs';
 import { IConferencia } from '../models/IConferencia';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ConferenciaService {
 
-  static BASE_URL = 'assets/mock';
+  static BASE_URL = `${environment.apiUrl}/administracion/conferencias`;
 
-  private conferencias: IConferencia[] = [];
-
-  constructor(private http: HttpClient) {
-    this.http.get<IConferencia[]>(`${ConferenciaService.BASE_URL}/conferencias.json`)
-      .subscribe(res => {
-        this.conferencias.push(...res);
-      }, console.error);
-  }
+  constructor(private http: HttpClient) { }
 
   public getAll(): Observable<IConferencia[]> {
-    return of(this.conferencias);
+    return this.http.get<IConferencia[]>(`${ConferenciaService.BASE_URL}/`);
   }
 
-  public create(conferencia: IConferencia): Observable<number> {
-    const id = 2200 + this.conferencias.length + 1;
-    conferencia.id = id;
-    this.conferencias.push(conferencia);
-    return of(id);
+  public create(conferencia: IConferencia): Observable<any> {
+    return this.http.post<any>(`${ConferenciaService.BASE_URL}/`, conferencia);
   }
 
+  public delete(idConferencia: number): Observable<any> {
+    return this.http.delete<any>(`${ConferenciaService.BASE_URL}/`);
+  }
 
 }

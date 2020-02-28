@@ -1,32 +1,28 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, of } from 'rxjs';
+import { Observable } from 'rxjs';
 import { ICuenta } from '../models/ICuenta';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class CuentaService {
 
-  static BASE_URL = 'assets/mock';
+  static BASE_URL = `${environment.apiUrl}/administracion/cuentas`;
 
-  private cuentas: ICuenta[] = [];
-
-  constructor(private http: HttpClient) {
-    http.get<ICuenta[]>(`${CuentaService.BASE_URL}/cuentas.json`).subscribe(res => {
-      this.cuentas.push(...res);
-    }, console.error);
-  }
+  constructor(private http: HttpClient) { }
 
   public getAll(): Observable<ICuenta[]> {
-    return of(this.cuentas);
+    return this.http.get<ICuenta[]>(`${CuentaService.BASE_URL}/`);
   }
 
-  public create(cuenta: ICuenta): Observable<number> {
-    const id = 3000 + this.cuentas.length + 1;
-    cuenta.id = id;
-    this.cuentas.push(cuenta);
-    return of(id);
+  public create(cuenta: ICuenta): Observable<any> {
+    return this.http.post<any>(`${CuentaService.BASE_URL}/`, cuenta);
+  }
+
+  public delete(idCuenta: number): Observable<any> {
+    return this.http.delete<any>(`${CuentaService.BASE_URL}/${idCuenta}`);
   }
 
 }
