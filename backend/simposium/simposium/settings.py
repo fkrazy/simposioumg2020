@@ -40,7 +40,8 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework.authtoken',
     'administracion',
-    'cliente'
+    'cliente',
+    'corsheaders',
 ]
 
 REST_FRAMEWORK = {
@@ -55,6 +56,7 @@ REST_FRAMEWORK = {
 TOKEN_EXPIRED_AFTER_SECONDS = 3600
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -94,7 +96,7 @@ DATABASES = {
         'NAME': 'simposium',
         'USER': 'Solomeo',
         'PASSWORD': '4525MySql1225',
-        'HOST': 'localhost',  # Or an IP Address that your DB is hosted on
+        'HOST': '192.168.10.10',  # Or an IP Address that your DB is hosted on
         #'PORT': '3306',
     }
 }
@@ -132,6 +134,7 @@ USE_L10N = True
 
 USE_TZ = True
 
+CORS_ORIGIN_ALLOW_ALL = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
@@ -143,3 +146,5 @@ try:
     from .local_settings import *
 except ImportError:
     pass
+
+
