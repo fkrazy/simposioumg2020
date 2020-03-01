@@ -11,8 +11,8 @@ import { CarouselModule } from 'ngx-bootstrap/carousel';
 export class ConferenciasComponent implements OnInit {
   num_lista = 0;
   Lista_conferencias : IConferencia [] = [];
-  
-  constructor( 
+
+  constructor(
     private cuentaservicio: ConferenciaService
   ) { }
 
@@ -20,12 +20,11 @@ export class ConferenciasComponent implements OnInit {
     this.cuentaservicio.getAll().subscribe((res) => {
       this.Lista_conferencias = res;
     }, console.error);
-    imports:  [CarouselModule.forRoot()];
   }
 
   obtenerNm(t){
  this.num_lista = t;
- 
+
   }
 
 }
