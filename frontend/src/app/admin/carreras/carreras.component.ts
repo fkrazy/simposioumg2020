@@ -40,9 +40,7 @@ export class CarrerasComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.carreraService.getAll().subscribe((res) => {
-      this.carreras = res;
-    }, console.error);
+    this.cargarCarreras();
   }
 
   public onSubmitFormCarrera(): void {
@@ -52,22 +50,36 @@ export class CarrerasComponent implements OnInit {
 
     if (this.opcionNuevaCarrera) {
       this.carreraService.create(this.formCarrera.value)
-        .subscribe(res => {
+        .subscribe((res) => {
+
+          this.carreras.push(res);
 
           this.guardando = false;
           this.modalService.dismissAll();
 
         }, console.error);
     } else {
+      const carrera = this.formCarrera.value;
+      carrera.id = this.selectedCarrera.id;
+      this.carreraService.update(carrera).subscribe((res) => {
 
-      this.guardando = false;
+        this.selectedCarrera.codigo = res.codigo;
+        this.selectedCarrera.nombre = res.nombre;
 
+        this.guardando = false;
+        this.modalService.dismissAll();
+      }, console.error);
     }
 
   }
 
   public onEliminarCarrera(): void {
     if (this.selectedCarrera == null) return;
+    this.carreraService.delete(this.selectedCarrera.id).subscribe((res) => {
+      // this.cargarCarreras();
+      this.carreras.splice(this.carreras.findIndex((c) => c.id == this.selectedCarrera.id), 1);
+      this.selectedCarrera = null;
+    }, console.error);
   }
 
   public onCarreraClicked(carrera: ICarrera): void {
@@ -99,4 +111,9 @@ export class CarrerasComponent implements OnInit {
     });
   }
 
+  private cargarCarreras(): void {
+    this.carreraService.getAll().subscribe((res) => {
+      this.carreras = res;
+    }, console.error);
+  }
 }

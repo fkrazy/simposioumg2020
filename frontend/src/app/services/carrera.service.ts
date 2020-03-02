@@ -13,16 +13,20 @@ export class CarreraService {
 
   constructor(private http: HttpClient) { }
 
-  public getAll(): Observable<any> {
-    return this.http.get<any>(`${CarreraService.BASE_URL}/`);
+  public getAll(): Observable<ICarrera[]> {
+    return this.http.get<ICarrera[]>(`${CarreraService.BASE_URL}/`);
   }
 
-  public create(carrera: ICarrera): Observable<any> {
+  public create(carrera: ICarrera): Observable<ICarrera> {
     return this.http.post<any>(`${CarreraService.BASE_URL}/`, carrera);
   }
 
-  public delete(codigoCarrera: number): Observable<any> {
-    return this.http.delete<any>(`${CarreraService.BASE_URL}/${codigoCarrera}`);
+  public delete(idCarrera: number): Observable<any> {
+    return this.http.delete<any>(`${CarreraService.BASE_URL}/${idCarrera}`);
+  }
+
+  public update(carrera: ICarrera): Observable<ICarrera> {
+    return this.http.put<ICarrera>(`${CarreraService.BASE_URL}/${carrera.id}/`, carrera);
   }
 
 }
