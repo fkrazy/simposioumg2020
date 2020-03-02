@@ -27,7 +27,7 @@
   <table class="table table-hover">
     <thead>
       <tr>
-        <th>Id</th>
+        <!--<th>Id</th>-->
         <th>Nombre</th>
         <th>Ubicaci&oacute;n</th>
         <th>Capacidad</th>
@@ -35,7 +35,7 @@
     </thead>
     <tbody>
       <tr *ngFor="let salon of salones" (click)="onSalonClicked(salon)" [ngClass]="{'bg-dark text-light': salon == selectedSalon}">
-        <td>{{salon.id}}</td>
+        <!--<td>{{salon.id}}</td>-->
         <td>{{salon.nombre}}</td>
         <td>{{salon.ubicacion}}</td>
         <td>{{salon.capacidad}}</td>
