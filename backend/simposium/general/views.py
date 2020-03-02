@@ -1,6 +1,6 @@
 from django.shortcuts import render
+from datetime import datetime
 
-# Create your views here.
 from django.contrib.auth import authenticate
 from rest_framework.authtoken.models import Token
 from rest_framework.decorators import api_view, permission_classes
@@ -28,7 +28,7 @@ def signin(request):
         password=signin_serializer.data['password']
     )
     if not user:
-        return Response({'detail': 'Credenciales invalidas o usuario inactivo'}, status=HTTP_404_NOT_FOUND)
+        return Response({'detail': 'Credenciales invalidas'}, status=HTTP_404_NOT_FOUND)
 
     # TOKEN STUFF
     token, _ = Token.objects.get_or_create(user=user)
@@ -37,8 +37,22 @@ def signin(request):
     is_expired, token = token_expire_handler(token)  # The implementation will be described further
     user_serialized = UserSerializer(user)
 
+    first_login = user.last_login is None # si last_login es null el usuario esta haciendo login por primera vez
+    user.last_login = datetime.now() # se establece ahora como el ultimo login
+    user.save()
+
+    groups = ''
+    for group in user.groups.all():
+        groups += ',' + group.name
+
     return Response({
-        'user': user_serialized.data,
+        'username': user.username,
+        'email': user.email,
+        'firstLogin': first_login,
+        #'user': user_serialized.data,
+        'nombres': user.first_name,
+        'apellidos': user.last_name,
+        'roles': groups,
         'expires_in': expires_in(token),
         'token': token.key
     }, status=HTTP_200_OK)
