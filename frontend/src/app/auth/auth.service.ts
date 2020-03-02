@@ -1,12 +1,15 @@
-import {Injectable} from '@angular/core';
-import {HttpClient} from '@angular/common/http';
-import {Router} from '@angular/router';
-import {IUser} from '../models/IUser';
+import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { Router } from '@angular/router';
+import { IUser } from '../models/IUser';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
+
+  static BASE_URL = `${environment.apiUrl}`;
 
   private loggedUser: IUser = null;
   private users: IUser[] = [];
@@ -24,7 +27,15 @@ export class AuthService {
   public signIn(username: string, password: string): Promise<IUser> {
     return new Promise<IUser>((resolve, reject) => {
 
-      const user = this.users.find(u => u.username === username);
+      this.http.post<any>(`${AuthService.BASE_URL}/login/`, {username, password})
+        .subscribe((res) => {
+          this.loggedUser = res;
+          this.saveUserToStorage();
+          // console.log(res);
+          resolve(res.user);
+        }, reject);
+
+      /*const user = this.users.find(u => u.username === username);
       if(user) {
         if(user.password === password) {
           this.loggedUser = user;
@@ -32,7 +43,7 @@ export class AuthService {
           resolve(user);
         }
       }
-      reject('Credenciales inválidas');
+      reject('Credenciales inválidas');*/
     });
   }
 
@@ -81,6 +92,11 @@ export class AuthService {
 
   public isEstudiante(): boolean {
     return this.hasRole('ESTUDIANTE');
+  }
+
+  private saveUserToStorage(): void {
+    if (this.loggedUser == null) return;
+    localStorage.setItem('logged_user', JSON.stringify(this.loggedUser));
   }
 
   private getUserFromStorage(): void {
