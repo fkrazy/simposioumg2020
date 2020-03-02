@@ -22,7 +22,7 @@ class Pago(models.Model):
 
     codigo_pago = models.CharField(max_length=30, verbose_name="Número de cuenta", unique=True)
     cuenta = models.ForeignKey(Cuenta, related_name='pagos', verbose_name='Cuenta', on_delete=models.PROTECT)
-    foto = models.FileField(verbose_name='Foto')
+    foto = models.TextField(verbose_name='Foto', null=False)
     titular = models.OneToOneField(Asistente, related_name='asistente', verbose_name='Asistente', on_delete=models.PROTECT)
     fecha = models.DateField(verbose_name='Fecha')
     hora = models.TimeField(verbose_name='Hora')
