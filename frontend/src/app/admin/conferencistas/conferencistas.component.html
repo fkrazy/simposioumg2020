@@ -27,7 +27,7 @@
   <table class="table table-hover">
     <thead>
     <tr>
-      <th>Id</th>
+      <!--<th>Id</th>-->
       <th>Nombre</th>
       <th>Profesion</th>
       <th>Resumen</th>
@@ -35,7 +35,7 @@
     </thead>
     <tbody>
     <tr *ngFor="let conf of conferencistas" (click)="onConfClicked(conf)" [ngClass]="{'bg-dark text-light': conf == selectedConf}">
-      <td>{{conf.id}}</td>
+      <!--<td>{{conf.id}}</td>-->
       <td>{{conf.nombre}}</td>
       <td>{{conf.profesion}}</td>
       <td>{{conf.resumen | slice: 0:64}}</td>
