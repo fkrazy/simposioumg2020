@@ -17,12 +17,16 @@ export class ConferencistaService{
     return this.http.get<IConferencista[]>(`${ConferencistaService.BASE_URL}/`);
   }
 
-  public create(conferencista: IConferencista): Observable<any> {
-    return this.http.post<any>(`${ConferencistaService.BASE_URL}/`, conferencista);
+  public create(conferencista: IConferencista): Observable<IConferencista> {
+    return this.http.post<IConferencista>(`${ConferencistaService.BASE_URL}/`, conferencista);
   }
 
-  public delete(idConferencista: number): Observable<any> {
-    return this.http.delete<any>(`${ConferencistaService.BASE_URL}/${idConferencista}`);
+  public delete(idConferencista: number): Observable<null> {
+    return this.http.delete<null>(`${ConferencistaService.BASE_URL}/${idConferencista}`);
+  }
+
+  public update(conferencista: IConferencista): Observable<IConferencista> {
+    return this.http.put<IConferencista>(`${ConferencistaService.BASE_URL}/${conferencista.id}/`, conferencista);
   }
 
 }

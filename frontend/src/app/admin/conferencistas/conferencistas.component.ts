@@ -58,7 +58,9 @@ export class ConferencistasComponent implements OnInit {
 
     if (this.opcionNuevoConf) {
       this.confService.create(this.formConf.value)
-        .subscribe(res => {
+        .subscribe((res) => {
+
+          this.conferencistas.push(res);
 
           this.guardando = false;
           this.modalService.dismissAll();
@@ -66,7 +68,20 @@ export class ConferencistasComponent implements OnInit {
         }, console.error);
     } else {
 
-      this.guardando = false;
+      const conf = this.formConf.value;
+      conf.id = this.selectedConf.id;
+
+      this.confService.update(conf)
+        .subscribe((res) => {
+
+          this.selectedConf.nombre = res.nombre;
+          this.selectedConf.profesion = res.profesion;
+          this.selectedConf.resumen = res.resumen;
+
+          this.guardando = false;
+          this.modalService.dismissAll();
+
+        }, console.error);
 
     }
 
@@ -74,6 +89,12 @@ export class ConferencistasComponent implements OnInit {
 
   public onEliminarConf(): void {
     if (this.selectedConf == null) return;
+
+    this.confService.delete(this.selectedConf.id)
+      .subscribe((res) => {
+        this.conferencistas.splice(this.conferencistas.findIndex((c) => c.id === this.selectedConf.id), 1);
+        this.selectedConf = null;
+      }, console.error);
   }
 
   public onConfClicked(conferencista: IConferencista): void {
