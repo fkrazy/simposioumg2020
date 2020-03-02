@@ -12,17 +12,11 @@ export class AuthService {
   static BASE_URL = `${environment.apiUrl}`;
 
   private loggedUser: IUser = null;
-  private users: IUser[] = [];
 
   constructor(
     private http: HttpClient,
     private router: Router
-  ) {
-    http.get('assets/mock/users.json')
-      .subscribe((users: IUser[]) => {
-        this.users = users;
-      });
-  }
+  ) { }
 
   public signIn(username: string, password: string): Promise<IUser> {
     return new Promise<IUser>((resolve, reject) => {
