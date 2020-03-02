@@ -17,12 +17,16 @@ export class SalonService {
     return this.http.get<ISalon[]>(`${SalonService.BASE_URL}/`);
   }
 
-  public create(salon: ISalon): Observable<any> {
-    return this.http.post<any>(`${SalonService.BASE_URL}/`, salon);
+  public create(salon: ISalon): Observable<ISalon> {
+    return this.http.post<ISalon>(`${SalonService.BASE_URL}/`, salon);
   }
 
-  public delete(idSalon: number): Observable<any> {
-    return this.http.delete<any>(`${SalonService.BASE_URL}/${idSalon}`);
+  public delete(idSalon: number): Observable<null> {
+    return this.http.delete<null>(`${SalonService.BASE_URL}/${idSalon}`);
+  }
+
+  public update(salon: ISalon): Observable<ISalon> {
+    return this.http.put<ISalon>(`${SalonService.BASE_URL}/${salon.id}/`, salon);
   }
 
 }

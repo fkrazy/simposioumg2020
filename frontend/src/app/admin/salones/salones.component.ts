@@ -58,7 +58,9 @@ export class SalonesComponent implements OnInit {
 
     if (this.opcionNuevoSalon) {
       this.salonService.create(this.formSalon.value)
-        .subscribe(res => {
+        .subscribe((res) => {
+
+          this.salones.push(res);
 
           this.guardando = false;
           this.modalService.dismissAll();
@@ -66,7 +68,18 @@ export class SalonesComponent implements OnInit {
         }, console.error);
     } else {
 
-      this.guardando = false;
+      const salon = this.formSalon.value;
+      salon.id = this.selectedSalon.id;
+      this.salonService.update(salon)
+        .subscribe((res) => {
+
+          this.selectedSalon.nombre = res.nombre;
+          this.selectedSalon.ubicacion = res.ubicacion;
+          this.selectedSalon.capacidad = res.capacidad;
+
+          this.guardando = false;
+          this.modalService.dismissAll();
+        }, console.error);
 
     }
 
@@ -74,6 +87,12 @@ export class SalonesComponent implements OnInit {
 
   public onEliminarSalon(): void {
     if (this.selectedSalon == null) return;
+
+    this.salonService.delete(this.selectedSalon.id)
+      .subscribe((res) => {
+        this.salones.splice(this.salones.findIndex((s) => s.id === this.selectedSalon.id), 1);
+        this.selectedSalon = null;
+      }, console.error);
   }
 
   public onSalonClicked(salon: ISalon): void {
