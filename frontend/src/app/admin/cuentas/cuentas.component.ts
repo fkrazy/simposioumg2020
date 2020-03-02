@@ -57,15 +57,27 @@ export class CuentasComponent implements OnInit {
 
     if (this.opcionNuevaCuenta) {
       this.cuentaService.create(this.formCuenta.value)
-        .subscribe(res => {
+        .subscribe((res) => {
+
+          this.cuentas.push(res);
 
           this.guardando = false;
           this.modalService.dismissAll();
 
         }, console.error);
     } else {
+      const cuenta = this.formCuenta.value;
+      cuenta.id = this.selectedCuenta.id;
+      this.cuentaService.update(cuenta)
+        .subscribe((res) => {
 
-      this.guardando = false;
+          this.selectedCuenta.numero = res.numero;
+          this.selectedCuenta.banco = res.banco;
+          this.selectedCuenta.titular = res.titular;
+
+          this.guardando = false;
+          this.modalService.dismissAll();
+        }, console.error);
 
     }
 
@@ -73,6 +85,13 @@ export class CuentasComponent implements OnInit {
 
   public onEliminarCuenta(): void {
     if (this.selectedCuenta == null) return;
+    this.cuentaService.delete(this.selectedCuenta.id)
+      .subscribe((res) => {
+
+        this.cuentas.splice(this.cuentas.findIndex((c) => c.id == this.selectedCuenta.id), 1);
+        this.selectedCuenta = null;
+
+      }, console.error);
   }
 
   public onCuentaClicked(cuenta: ICuenta): void {

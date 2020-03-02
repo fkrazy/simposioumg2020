@@ -17,12 +17,16 @@ export class CuentaService {
     return this.http.get<ICuenta[]>(`${CuentaService.BASE_URL}/`);
   }
 
-  public create(cuenta: ICuenta): Observable<any> {
+  public create(cuenta: ICuenta): Observable<ICuenta> {
     return this.http.post<any>(`${CuentaService.BASE_URL}/`, cuenta);
   }
 
-  public delete(idCuenta: number): Observable<any> {
-    return this.http.delete<any>(`${CuentaService.BASE_URL}/${idCuenta}`);
+  public delete(idCuenta: number): Observable<null> {
+    return this.http.delete<null>(`${CuentaService.BASE_URL}/${idCuenta}`);
+  }
+
+  public update(cuenta: ICuenta): Observable<ICuenta> {
+    return this.http.put<ICuenta>(`${CuentaService.BASE_URL}/${cuenta.id}/`, cuenta);
   }
 
 }
