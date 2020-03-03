@@ -24,8 +24,8 @@ class Pago(models.Model):
     cuenta = models.ForeignKey(Cuenta, related_name='pagos', verbose_name='Cuenta', on_delete=models.PROTECT)
     foto = models.TextField(verbose_name='Foto', null=False)
     titular = models.OneToOneField(Asistente, related_name='pago', verbose_name='Asistente', on_delete=models.PROTECT)
-    fecha = models.DateField(verbose_name='Fecha')
-    hora = models.TimeField(verbose_name='Hora')
+    fecha = models.DateField(verbose_name='Fecha', null=True)
+    hora = models.TimeField(verbose_name='Hora', null=True)
     estado = models.SmallIntegerField(verbose_name='Estado', choices=ESTADOS, default=PENDIENTE_VALIDACION)
 
     def __str__(self):
