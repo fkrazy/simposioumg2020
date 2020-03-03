@@ -63,27 +63,31 @@
   </div>
 
   <div *ngIf="pago.estado == PAGO_PENDIENTE_VALIDACION" class="col-12">
-
+    <p>Tu pago se encuentra en proceso de validaci&oacute;n, te notificaremos cuando haya sido validado por un administrador.</p>
   </div>
 
   <div *ngIf="pago.estado == PAGO_ACEPTADO" class="col-12">
-
+    <p>Tu pago ha sido aceptado, ¡Ya cuentas con un ticket!</p>
   </div>
 
   <div *ngIf="pago.estado == PAGO_RECHAZADO" class="col-12">
+    MENSAJES DE VALIDACION
+  </div>
 
+  <div *ngIf="pago.estado == PAGO_ACEPTADO" class="col-12">
+    MENSAJES DE REEMBOLSO RECHAZADO
   </div>
 
   <div *ngIf="pago.estado == PAGO_EVALUACION_REEMBOLSO" class="col-12">
-
+    <p>Tu pago se encuentra en evaluaci&oacute;n de reembolso, te notificaremos cuando un administrador eval&iacute;e tu solicitud.</p>
   </div>
 
   <div *ngIf="pago.estado == PAGO_REEMBOLSO_APROBADO" class="col-12">
-
+    <p>El reembolso de tu pago ha sido aprobado, debes acercarte con un administrador para que devuelvan tu dinero.</p>
   </div>
 
   <div *ngIf="pago.estado == PAGO_REEMBOLSADO" class="col-12">
-
+    <p>Tu pago ya ha sido reembolsado.</p>
   </div>
 
 </div>
@@ -150,7 +154,7 @@
 
   <div class="modal-header">
 
-    <h1 class="modal-title">Edici&oacute;n de pago</h1>
+    <h1 class="modal-title">Editar pago</h1>
 
     <button type="button" class="close" aria-label="Close" (click)="modalEdicionPago.dismiss('')">
       <fa-icon [icon]="faTimes"></fa-icon>
