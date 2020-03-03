@@ -60,7 +60,7 @@
   <div class="modal-body">
 
     <form (ngSubmit)="onSubmitFormCarrera()" [formGroup]="formCarrera" id="form-carrera">
-      <div class="form-group row">
+      <div *ngIf="opcionNuevaCarrera == true" class="form-group row">
         <label for="codigo" class="col-12 col-md-2 col-form-label">C&oacute;digo</label>
         <div class="col-12 col-md-10">
           <input formControlName="codigo" type="text" id="codigo" class="form-control" placeholder="C&oacute;digo">

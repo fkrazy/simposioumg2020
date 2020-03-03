@@ -60,10 +60,8 @@ export class CarrerasComponent implements OnInit {
         }, console.error);
     } else {
       const carrera = this.formCarrera.value;
-      carrera.id = this.selectedCarrera.id;
       this.carreraService.update(carrera).subscribe((res) => {
 
-        this.selectedCarrera.codigo = res.codigo;
         this.selectedCarrera.nombre = res.nombre;
 
         this.guardando = false;
@@ -75,9 +73,9 @@ export class CarrerasComponent implements OnInit {
 
   public onEliminarCarrera(): void {
     if (this.selectedCarrera == null) return;
-    this.carreraService.delete(this.selectedCarrera.id).subscribe((res) => {
+    this.carreraService.delete(this.selectedCarrera.codigo).subscribe((res) => {
       // this.cargarCarreras();
-      this.carreras.splice(this.carreras.findIndex((c) => c.id == this.selectedCarrera.id), 1);
+      this.carreras.splice(this.carreras.findIndex((c) => c.codigo == this.selectedCarrera.codigo), 1);
       this.selectedCarrera = null;
     }, console.error);
   }

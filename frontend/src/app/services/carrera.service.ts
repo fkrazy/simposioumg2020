@@ -21,12 +21,12 @@ export class CarreraService {
     return this.http.post<any>(`${CarreraService.BASE_URL}/`, carrera);
   }
 
-  public delete(idCarrera: number): Observable<any> {
-    return this.http.delete<any>(`${CarreraService.BASE_URL}/${idCarrera}`);
+  public delete(codigoCarrera: number): Observable<null> {
+    return this.http.delete<null>(`${CarreraService.BASE_URL}/${codigoCarrera}`);
   }
 
   public update(carrera: ICarrera): Observable<ICarrera> {
-    return this.http.put<ICarrera>(`${CarreraService.BASE_URL}/${carrera.id}/`, carrera);
+    return this.http.put<ICarrera>(`${CarreraService.BASE_URL}/${carrera.codigo}/`, carrera);
   }
 
 }
