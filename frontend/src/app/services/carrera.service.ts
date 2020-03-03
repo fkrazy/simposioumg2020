@@ -13,6 +13,10 @@ export class CarreraService {
 
   constructor(private http: HttpClient) { }
 
+  public get(codigoCarrera: number): Observable<ICarrera> {
+    return this.http.get<ICarrera>(`${CarreraService.BASE_URL}/${codigoCarrera}`);
+  }
+
   public getAll(): Observable<ICarrera[]> {
     return this.http.get<ICarrera[]>(`${CarreraService.BASE_URL}/`);
   }
