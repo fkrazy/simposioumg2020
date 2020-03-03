@@ -13,6 +13,7 @@ from rest_framework.status import (
 from rest_framework.response import Response
 
 from .serializers import UserSigninSerializer, UserSerializer
+from administracion.serializers import AsistenteSerializer, EstudianteUmgSerializer
 from .authentication import token_expire_handler, expires_in
 
 
@@ -38,14 +39,15 @@ def signin(request):
     user_serialized = UserSerializer(user)
 
     first_login = user.last_login is None # si last_login es null el usuario esta haciendo login por primera vez
-    user.last_login = datetime.now() # se establece ahora como el ultimo login
+    user.last_login = datetime.utcnow() # se establece ahora como el ultimo login
     user.save()
 
     groups = ''
     for group in user.groups.all():
         groups += ',' + group.name
 
-    return Response({
+    payload = {
+        'id': user.pk,
         'username': user.username,
         'email': user.email,
         'firstLogin': first_login,
@@ -55,4 +57,12 @@ def signin(request):
         'roles': groups,
         'expires_in': expires_in(token),
         'token': token.key
-    }, status=HTTP_200_OK)
+    }
+
+    try:
+        payload['asistente'] = AsistenteSerializer(user.asistente).data
+        payload['estudiante'] = EstudianteUmgSerializer(user.Asistente.estudianteUmg).data
+    except:
+        print('NO ES ASISTENTE O ESTUDIANTE')
+
+    return Response(payload, status=HTTP_200_OK)
