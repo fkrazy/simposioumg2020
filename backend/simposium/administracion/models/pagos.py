@@ -1,4 +1,5 @@
 from django.db import models
+from datetime import datetime
 
 from .asistentes import Asistente
 from .cuentas import Cuenta
@@ -20,13 +21,19 @@ class Pago(models.Model):
         (REEMBOLSADO, 'Reembolsado')
     )
 
-    codigo_pago = models.CharField(max_length=30, verbose_name="Código de recibo", unique=True)
-    cuenta = models.ForeignKey(Cuenta, related_name='pagos', verbose_name='Cuenta', on_delete=models.PROTECT)
+    titular = models.OneToOneField(Asistente, primary_key=True, related_name='pago', verbose_name='Asistente', null=False, on_delete=models.PROTECT)
+    codigo_pago = models.CharField(max_length=32, verbose_name="Código de recibo", null=False)
+    cuenta = models.ForeignKey(Cuenta, null=False, related_name='pagos', verbose_name='Cuenta', on_delete=models.PROTECT)
     foto = models.TextField(verbose_name='Foto', null=False)
-    titular = models.OneToOneField(Asistente, related_name='pago', verbose_name='Asistente', on_delete=models.PROTECT)
+
+    fecha_registro = models.DateTimeField(verbose_name='Fecha de registro', null=False, default=datetime.utcnow)
+
     fecha = models.DateField(verbose_name='Fecha', null=True)
     hora = models.TimeField(verbose_name='Hora', null=True)
-    estado = models.SmallIntegerField(verbose_name='Estado', choices=ESTADOS, default=PENDIENTE_VALIDACION)
+    estado = models.SmallIntegerField(verbose_name='Estado', choices=ESTADOS, default=PENDIENTE_VALIDACION, null=False)
+
+    class Meta:
+        unique_together = [['cuenta', 'codigo_pago']]
 
     def __str__(self):
         return self.codigo_pago

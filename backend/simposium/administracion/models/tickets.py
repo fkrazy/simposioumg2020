@@ -1,17 +1,18 @@
 from django.db import models
-from django.contrib.auth.models import User
+
+from .asistentes import Asistente
 
 
 class Ticket(models.Model):
 
-    VENDIDO = 1
-    NO_VENDIDO = 2
+    VALIDO = 1
+    INVALIDO = 2
 
-    ESTADO = (
-        (VENDIDO, "VENDIDO"),
-        (NO_VENDIDO, "NO VENDIDO")
+    ESTADOS = (
+        (VALIDO, "VALIDO"),
+        (INVALIDO, "INVALIDADO")
     )
 
-    usuario = models.ForeignKey(User, related_name="Ticket", verbose_name="Usuarios", on_delete=models.CASCADE)
-    codigo_qr = models.CharField(max_length=200, null=False)
-    estado = models.SmallIntegerField(verbose_name="ESTADOS", choices=ESTADO, default=NO_VENDIDO)
+    asistente = models.OneToOneField(Asistente, primary_key=True, related_name="ticket", verbose_name="Usuario", on_delete=models.CASCADE)
+    codigo_qr = models.CharField(max_length=256, null=False)
+    estado = models.PositiveSmallIntegerField(verbose_name="Estados", choices=ESTADOS, default=VALIDO, null=False)
