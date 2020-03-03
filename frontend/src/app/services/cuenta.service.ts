@@ -13,6 +13,10 @@ export class CuentaService {
 
   constructor(private http: HttpClient) { }
 
+  public get(idCuenta: number): Observable<ICuenta> {
+    return this.http.get<ICuenta>(`${CuentaService.BASE_URL}/${idCuenta}`);
+  }
+
   public getAll(): Observable<ICuenta[]> {
     return this.http.get<ICuenta[]>(`${CuentaService.BASE_URL}/`);
   }
