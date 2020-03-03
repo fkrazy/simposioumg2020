@@ -9,7 +9,7 @@ import { environment } from '../../environments/environment';
 })
 export class ConferencistaService{
 
-  static BASE_URL = `${environment.apiUrl}/administracion/conferencistas`;
+  static BASE_URL = `${environment.apiUrl}/api/administracion/conferencistas`;
 
   constructor(private http: HttpClient) { }
 

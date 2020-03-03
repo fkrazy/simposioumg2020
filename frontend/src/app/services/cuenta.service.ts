@@ -9,7 +9,7 @@ import { environment } from '../../environments/environment';
 })
 export class CuentaService {
 
-  static BASE_URL = `${environment.apiUrl}/administracion/cuentas`;
+  static BASE_URL = `${environment.apiUrl}/api/administracion/cuentas`;
 
   constructor(private http: HttpClient) { }
 

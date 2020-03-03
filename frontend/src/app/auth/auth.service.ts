@@ -21,7 +21,7 @@ export class AuthService {
   public signIn(username: string, password: string): Promise<IUser> {
     return new Promise<IUser>((resolve, reject) => {
 
-      this.http.post<any>(`${AuthService.BASE_URL}/login/`, {username, password})
+      this.http.post<any>(`${AuthService.BASE_URL}/api/login/`, {username, password})
         .subscribe((res) => {
           this.loggedUser = res;
           this.saveUserToStorage();

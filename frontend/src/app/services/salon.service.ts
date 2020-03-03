@@ -9,7 +9,7 @@ import { environment } from '../../environments/environment';
 })
 export class SalonService {
 
-  static BASE_URL = `${environment.apiUrl}/administracion/salones`;
+  static BASE_URL = `${environment.apiUrl}/api/administracion/salones`;
 
   constructor(private http: HttpClient) { }
 

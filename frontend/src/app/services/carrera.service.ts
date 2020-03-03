@@ -9,7 +9,7 @@ import { environment } from '../../environments/environment';
 })
 export class CarreraService {
 
-  static BASE_URL = `${environment.apiUrl}/administracion/carreras`;
+  static BASE_URL = `${environment.apiUrl}/api/administracion/carreras`;
 
   constructor(private http: HttpClient) { }
 
