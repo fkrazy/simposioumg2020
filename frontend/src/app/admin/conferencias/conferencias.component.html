@@ -27,7 +27,7 @@
   <table class="table table-hover">
     <thead>
     <tr>
-      <th>Id</th>
+      <!--<th>Id</th>-->
       <th>Tema</th>
       <th>Horario</th>
       <th>Conferencista</th>
@@ -36,7 +36,7 @@
     </thead>
     <tbody>
     <tr *ngFor="let conferencia of conferencias" (click)="onConferenciaClicked(conferencia)" [ngClass]="{'bg-dark text-light': conferencia == selectedConferencia}">
-      <td>{{conferencia.id}}</td>
+      <!--<td>{{conferencia.id}}</td>-->
       <td>{{conferencia.tema}}</td>
       <td>{{(conferencia.inicio | slice: 0:5) + '-' + (conferencia.fin | slice: 0:5)}}</td>
       <td>{{conferencia.conferencista.nombre}}</td>
