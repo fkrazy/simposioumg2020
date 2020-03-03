@@ -10,3 +10,4 @@ from .carreras import Carrera
 from .estudiantes_umg import EstudianteUmg
 from .reservaciones import Reservacion
 from .asistentes import Asistente
+from .evaluacion_reembolso import EvaluacionReembolso
