@@ -1,3 +1,5 @@
+import { IAsistente } from './IAsistente';
+import { IEstudianteUmg } from './IEstudianteUmg';
 
 export interface IUser {
   id?: number;
@@ -9,4 +11,6 @@ export interface IUser {
   token?: string;
   roles?: string;
   firstLogin?: boolean;
-};
+  asistente?: IAsistente;
+  estudiante?: IEstudianteUmg;
+}
