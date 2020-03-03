@@ -49,7 +49,7 @@ REST_FRAMEWORK = {
         'rest_framework.authentication.TokenAuthentication',
     ],
     'DEFAULT_PERMISSION_CLASSES': [
-        #'rest_framework.permissions.IsAuthenticated',
+        'rest_framework.permissions.IsAuthenticated',
     ]
 }
 
@@ -96,7 +96,7 @@ DATABASES = {
         'NAME': 'simposium',
         'USER': 'Solomeo',
         'PASSWORD': '4525MySql1225',
-        'HOST': '192.168.10.10',  # Or an IP Address that your DB is hosted on
+        'HOST': 'localhost',  # Or an IP Address that your DB is hosted on
         #'PORT': '3306',
     }
 }
