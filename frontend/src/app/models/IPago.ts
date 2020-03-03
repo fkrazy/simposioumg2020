@@ -11,11 +11,12 @@ export enum EstadoPago {
 }
 
 export interface IPago {
+  id?: number;
   codigo_pago: string;
-  cuenta?: ICuenta;
-  titular?: IAsistente;
+  cuenta: number;
+  titular: number;
   foto: string;
-  fecha: string;
-  hora: string;
+  fecha?: string;
+  hora?: string;
   estado: number;
 }
