@@ -16,6 +16,7 @@ export interface IPago {
   cuenta: number;
   titular: number;
   foto: string;
+  fecha_registro?: string;
   fecha?: string;
   hora?: string;
   estado: number;
