@@ -1,7 +1,5 @@
-import { IUser } from './IUser';
 
 export interface IAsistente {
-  usuario?: IUser;
+  usuario: number;
   telefono: string;
-  first_login: boolean;
 }
