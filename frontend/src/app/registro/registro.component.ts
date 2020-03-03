@@ -1,5 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { HttpClient } from '@angular/common/http';
+import { Router } from '@angular/router';
+import { environment } from '../../environments/environment';
 import { ICarrera } from '../models/ICarrera';
 import { CarreraService } from '../services/carrera.service';
 
@@ -57,7 +60,9 @@ export class RegistroComponent implements OnInit {
   });
 
   constructor(
-    private carreraService: CarreraService
+    private carreraService: CarreraService,
+    private http: HttpClient,
+    private router: Router
   ) { }
 
   ngOnInit() {
@@ -77,7 +82,23 @@ export class RegistroComponent implements OnInit {
       return;
     }
 
-    this.registrando = false;
+    const datosRegistro = this.formRegistro.value;
+    datosRegistro.es_estudiante = datosRegistro.es_estudiante == 'true';
+    if (datosRegistro.es_estudiante) {
+      datosRegistro.carnet = this.formEstudiante.value.carnet;
+      datosRegistro.semestre = this.formEstudiante.value.semestre * 1;
+      datosRegistro.codigo_carrera = this.formEstudiante.value.codigo_carrera * 1;
+    }
+    console.log(datosRegistro);
+
+    this.http.post<null>(`${environment.apiUrl}/api/registro/`, datosRegistro)
+      .subscribe((res) => {
+        this.router.navigateByUrl('/login');
+        this.registrando = false;
+      }, error => {
+        console.error(error);
+        this.registrando = false;
+      });
 
   }
 
