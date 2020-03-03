@@ -2,16 +2,14 @@
 <div class="row mt-3">
   <div class="col">
     <h2>Estado de pago</h2>
-    <p class="mt-0">Sin pagar</p>
+    <p class="mt-0">{{ TEXTO_ESTADOSPAGO[pago.estado] }}</p>
     <hr>
   </div>
 
 </div>
 <div class="row">
-  <div class="col-12 col-md-12">
 
-  </div>
-  <div class="col-12 col-md-12">
+  <div *ngIf="pago.estado == 0" class="col-12 col-md-12">
     <h3>Instrucciones</h3>
     <p class="text-justify">
       Para completar tu registro de asistencia debes realizar un dep&oacute;sito de <strong>Q.300</strong> en cualquiera de las siguientes cuentas bancarias:
@@ -37,6 +35,57 @@
     <button (click)="openModalRegistroPago(modalRegistroPagoContent)" class="btn btn-primary">Registrar pago</button>
 
   </div>
+
+  <div *ngIf="pago.estado != 0" class="col-12">
+    <div class="row">
+      <div class="col-12 col-md-6 col-lg-4">
+        <div>
+          <p>C&oacute;digo: {{ pago.codigo_pago }}</p>
+          <p *ngIf="pago.fecha">Fecha: {{ pago.fecha }}, Hora: {{ pago.hora }}</p>
+          <div *ngIf="cuenta != null">
+            <p>No. de cuenta: {{cuenta.numero}}</p>
+            <p>Banco: {{cuenta.banco}}</p>
+            <p>Titular: {{cuenta.titular}}</p>
+          </div>
+        </div>
+        <button *ngIf="pago.estado == PAGO_PENDIENTE_VALIDACION || pago.estado == PAGO_RECHAZADO"
+                (click)="openModalEdicionPago(modalEdicionPagoContent)"
+                class="btn btn-warning">
+          <fa-icon [icon]="faEdit"></fa-icon>&nbsp;
+          Modificar
+        </button>
+      </div>
+      <div class="col-12 col-md-6 col-lg-8 d-flex justify-content-center p-2 border-dark">
+        <img [src]="pago.foto" class="img-fluid" alt="Foto recibo">
+      </div>
+    </div>
+
+  </div>
+
+  <div *ngIf="pago.estado == PAGO_PENDIENTE_VALIDACION" class="col-12">
+
+  </div>
+
+  <div *ngIf="pago.estado == PAGO_ACEPTADO" class="col-12">
+
+  </div>
+
+  <div *ngIf="pago.estado == PAGO_RECHAZADO" class="col-12">
+
+  </div>
+
+  <div *ngIf="pago.estado == PAGO_EVALUACION_REEMBOLSO" class="col-12">
+
+  </div>
+
+  <div *ngIf="pago.estado == PAGO_REEMBOLSO_APROBADO" class="col-12">
+
+  </div>
+
+  <div *ngIf="pago.estado == PAGO_REEMBOLSADO" class="col-12">
+
+  </div>
+
 </div>
 
 
@@ -89,9 +138,66 @@
   </div>
 
   <div class="modal-footer">
-    <button [disabled]="!formRegistroPago.valid" type="submit" form="form-registro-pago" class="btn btn-primary">
+    <button [disabled]="!formRegistroPago.valid || guardando" type="submit" form="form-registro-pago" class="btn btn-primary">
       <!--<fa-icon [icon]="faSave"></fa-icon>-->
       Enviar
+    </button>
+  </div>
+
+</ng-template>
+
+<ng-template #modalEdicionPagoContent let-modalEdicionPago>
+
+  <div class="modal-header">
+
+    <h1 class="modal-title">Edici&oacute;n de pago</h1>
+
+    <button type="button" class="close" aria-label="Close" (click)="modalEdicionPago.dismiss('')">
+      <fa-icon [icon]="faTimes"></fa-icon>
+    </button>
+
+  </div>
+
+  <div class="modal-body">
+
+    <form (ngSubmit)="onSubmitFormEdicionPago()" [formGroup]="formEdicionPago" id="form-edicion-pago">
+
+      <div class="row">
+        <div class="col d-flex justify-content-center p-2 border-dark">
+          <img class="img-fluid" [src]="fotoStrEdicion" alt="Selecciona la imagen de tu recibo" id="img-edicion-recibo">
+        </div>
+      </div>
+      <div class="form-group row">
+        <label for="foto-edicion" class="col-12 col-md-9 col-lg-2 col-form-label">Foto de recibo</label>
+        <div class="col-12 col-md-9 col-lg-10">
+          <input (change)="onChangeFotoEdicionRecibo($event)" formControlName="foto" type="file" accept="image/*" id="foto-edicion" class="form-control form-control-file" placeholder="Foto">
+        </div>
+      </div>
+
+      <div class="form-group row">
+        <label for="codigo_recibo_edicion" class="col-12 col-md-2 col-form-label">C&oacute;digo</label>
+        <div class="col-12 col-md-10">
+          <input formControlName="codigo_recibo" type="text" id="codigo_recibo_edicion" class="form-control" placeholder="C&oacute;digo del recibo">
+        </div>
+      </div>
+
+      <div class="form-group row">
+        <label for="id_cuenta_edicion" class="col-12 col-md-2 col-form-label">Cuenta</label>
+        <div class="col-12 col-md-10">
+          <select formControlName="id_cuenta" id="id_cuenta_edicion" class="custom-select">
+            <option *ngFor="let cuenta of cuentas" [value]="cuenta.id">{{cuenta.numero + ' ' + cuenta.banco}}</option>
+          </select>
+        </div>
+      </div>
+
+    </form>
+
+  </div>
+
+  <div class="modal-footer">
+    <button [disabled]="!formEdicionPago.valid || guardando" type="submit" form="form-edicion-pago" class="btn btn-primary">
+      <fa-icon [icon]="faSave"></fa-icon>&nbsp;
+      Guardar
     </button>
   </div>
 
