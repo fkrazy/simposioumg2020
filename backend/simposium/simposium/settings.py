@@ -48,9 +48,9 @@ REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
         'rest_framework.authentication.TokenAuthentication',
     ],
-    # 'DEFAULT_PERMISSION_CLASSES': [
-    #     'rest_framework.permissions.IsAuthenticated',
-    # ]
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.IsAuthenticated',
+    ]
 }
 
 TOKEN_EXPIRED_AFTER_SECONDS = 3600
@@ -96,7 +96,7 @@ DATABASES = {
         'NAME': 'simposium',
         'USER': 'Solomeo',
         'PASSWORD': '4525MySql1225',
-        'HOST': '192.168.10.10',  # Or an IP Address that your DB is hosted on
+        'HOST': 'localhost',  # Or an IP Address that your DB is hosted on
         #'PORT': '3306',
     }
 }
