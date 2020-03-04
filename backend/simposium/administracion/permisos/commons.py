@@ -1,7 +1,10 @@
 from rest_framework import permissions
 
+# Permiso que permite que solo los administradores puedan insertar, actualizar
+# y eliminar. De lo contrario, solo leer.
+class EsAdminOrReadOnly(permissions.BasePermission):
 
-class PermisoConferencias(permissions.BasePermission):
+    message = 'No tienes permiso para realizar esta acción'
 
     def has_permission(self, request, view):
 

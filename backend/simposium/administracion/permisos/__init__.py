@@ -1,1 +1,1 @@
-from .conferencias import PermisoConferencias
+from .commons import EsAdminOrReadOnly
