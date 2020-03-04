@@ -18,12 +18,11 @@ class PagoViewSet(viewsets.ModelViewSet):
                 return queryset.filter(titular=self.request.user.asistente)
         return queryset
 
-
     # devuelve los pagos pendientes de validacion
     @action(detail=False, methods=['GET'])
     def pendientes(self, request):
-        pendientes_validacion = self.filter_queryset(self.get_queryset())\
-            .filter(estado=Pago.PENDIENTE_VALIDACION)\
+        pendientes_validacion = self.filter_queryset(self.get_queryset()) \
+            .filter(estado=Pago.PENDIENTE_VALIDACION) \
             .order_by('fecha_registro')
 
         page = self.paginate_queryset(pendientes_validacion)
@@ -33,7 +32,6 @@ class PagoViewSet(viewsets.ModelViewSet):
 
         serializer = self.get_serializer(pendientes_validacion, many=True)
         return Response(serializer.data)
-
 
     # devuelve los pagos que han solicitado reembolso
     @action(detail=False, methods=['GET'])
@@ -48,3 +46,32 @@ class PagoViewSet(viewsets.ModelViewSet):
         serializer = self.get_serializer(solicitud_reembolsos, many=True)
         return Response(serializer.data)
 
+    # devuelve los pagos que han sido aceptados
+    @action(detail=False, methods=['GET'])
+    def aceptados(self, request):
+        aceptados = self.filter_queryset(self.get_queryset())\
+            .filter(estado=Pago.ACEPTADO)\
+            .order_by('fecha_registro')
+
+        page = self.paginate_queryset(aceptados)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+
+        serializer = self.get_serializer(aceptados, many=True)
+        return Response(serializer.data)
+
+    # devuelve los pagos que han sido rechazados
+    @action(detail=False, methods=['GET'])
+    def rechazados(self, request):
+        rechazados = self.filter_queryset(self.get_queryset())\
+            .filter(estado=Pago.ACEPTADO)\
+            .order_by('fecha_registro')
+
+        page = self.paginate_queryset(rechazados)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+
+        serializer = self.get_serializer(rechazados, many=True)
+        return Response(serializer.data)
