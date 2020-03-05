@@ -25,9 +25,14 @@ class PermisoPagos(permissions.BasePermission):
             return False
 
         # tanto admins como asistentes pueden realizar las siguientes operaciones
-        if request.method in ['GET', 'HEAD', 'OPTIONS', 'POST', 'PUT', 'PATCH']:
+        if request.method in ['GET', 'HEAD', 'OPTIONS', 'PUT', 'PATCH']:
             return True
 
+        # solo los asistentes pueden crear pagos
+        if request.method == 'POST' and es_asistente:
+            return True
+
+        # solo los admins pueden eliminar un pago
         if request.method == 'DELETE' and es_admin:
             return True
 
