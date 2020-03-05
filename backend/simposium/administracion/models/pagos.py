@@ -1,5 +1,5 @@
 from django.db import models
-from datetime import datetime
+from django.utils import timezone
 
 from .asistentes import Asistente
 from .cuentas import Cuenta
@@ -26,7 +26,7 @@ class Pago(models.Model):
     cuenta = models.ForeignKey(Cuenta, null=False, related_name='pagos', verbose_name='Cuenta', on_delete=models.PROTECT)
     foto = models.TextField(verbose_name='Foto', null=False)
 
-    fecha_registro = models.DateTimeField(verbose_name='Fecha de registro', null=False, default=datetime.utcnow)
+    fecha_registro = models.DateTimeField(verbose_name='Fecha de registro', null=False, default=timezone.now)
 
     fecha = models.DateField(verbose_name='Fecha', null=True)
     hora = models.TimeField(verbose_name='Hora', null=True)
