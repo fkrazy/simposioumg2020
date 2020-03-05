@@ -1,4 +1,12 @@
 import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute, ParamMap } from '@angular/router';
+import { faCheck, faTimes, faEdit } from '@fortawesome/free-solid-svg-icons';
+
+import { EstadoPago, IPago } from '../../../models/IPago';
+import { PagoService } from '../../../services/pago.service';
+import { ICuenta } from '../../../models/ICuenta';
+import { CuentaService } from '../../../services/cuenta.service';
+
 
 @Component({
   selector: 'app-pago-detail',
@@ -7,9 +15,53 @@ import { Component, OnInit } from '@angular/core';
 })
 export class PagoDetailComponent implements OnInit {
 
-  constructor() { }
+  faCheck = faCheck;
+  faTimes = faTimes;
+  faEdit = faEdit;
+
+  PAGO_PENDIENTE_VALIDACION = EstadoPago.PENDIENTE_VALIDACION;
+  PAGO_ACEPTADO = EstadoPago.ACEPTADO;
+  PAGO_RECHAZADO = EstadoPago.RECHAZADO;
+  PAGO_EVALUACION_REEMBOLSO = EstadoPago.EVALUACION_REEMBOLSO;
+  PAGO_REEMBOLSO_APROBADO = EstadoPago.REEMBOLSO_APROBADO;
+  PAGO_REEMBOLSADO = EstadoPago.REEMBOLSADO;
+
+  TEXTO_ESTADOSPAGO: string[] = [];
+
+  public pago: IPago = null;
+  public cuenta: ICuenta = null;
+
+  constructor(
+    private pagoService: PagoService,
+    private cuentaService: CuentaService,
+    private route: ActivatedRoute,
+  ) {
+    this.TEXTO_ESTADOSPAGO[0] = null;
+    this.TEXTO_ESTADOSPAGO[EstadoPago.PENDIENTE_VALIDACION] = 'Pendiente';
+    this.TEXTO_ESTADOSPAGO[EstadoPago.ACEPTADO] = 'Aceptado';
+    this.TEXTO_ESTADOSPAGO[EstadoPago.RECHAZADO] = 'Rechazado';
+    this.TEXTO_ESTADOSPAGO[EstadoPago.EVALUACION_REEMBOLSO] = 'Solicitud de reembolso';
+    this.TEXTO_ESTADOSPAGO[EstadoPago.REEMBOLSO_APROBADO] = 'Reembolso aprobado';
+    this.TEXTO_ESTADOSPAGO[EstadoPago.REEMBOLSADO] = 'Reembolsado';
+  }
 
   ngOnInit() {
+    this.route.paramMap.forEach((params: ParamMap) => {
+      this.pagoService.get(Number.parseInt(params.get('id'),  10))
+        .subscribe((res) => {
+          this.pago = res;
+          this.cargarCuenta();
+        }, console.error);
+    });
+
   }
+
+  private cargarCuenta(): void {
+    this.cuentaService.get(this.pago.cuenta)
+      .subscribe((resCuenta) => {
+        this.cuenta = resCuenta;
+      }, console.error);
+  }
+
 
 }

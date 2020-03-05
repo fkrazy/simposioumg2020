@@ -1,1 +1,80 @@
-<p>pago-detail works!</p>
+
+
+<div class="container-not-found d-flex justify-content-center align-content-center align-items-center">
+  <h3 *ngIf="pago == null" class="mt-4 error-not-found">El pago que buscas no existe.</h3>
+</div>
+
+<ng-template [ngIf]="pago != null">
+
+  <div class="row mt-3">
+    <div class="col-12 d-flex justify-content-end">
+      <ng-container *ngIf="pago.estado == PAGO_PENDIENTE_VALIDACION">
+
+        <button class="btn btn-sm btn-danger mr-2">
+          <fa-icon [icon]="faTimes"></fa-icon>&nbsp;
+          Rechazar
+        </button>
+
+        <button class="btn btn-sm btn-success">
+          <fa-icon [icon]="faCheck"></fa-icon>&nbsp;
+          Aceptar
+        </button>
+      </ng-container>
+    </div>
+  </div>
+
+  <div class="row mt-3">
+    <div class="col-12 col-md-6 col-lg-3">
+        <div class="detail">
+          <label class="detail-label">No. de recibo</label>
+          <p class="detail-content">{{ pago.codigo_pago }}</p>
+        </div>
+
+      <div class="detail">
+        <label class="detail-label">Estado</label>
+        <p class="detail-content">{{ TEXTO_ESTADOSPAGO[pago.estado] }}</p>
+      </div>
+
+      <div *ngIf="cuenta != null" class="detail">
+        <label class="detail-label">No. de cuenta</label>
+        <p class="detail-content">{{ cuenta.numero }}</p>
+      </div>
+
+      <div *ngIf="cuenta != null" class="detail">
+        <label class="detail-label">Banco</label>
+        <p class="detail-content">{{ cuenta.banco }}</p>
+      </div>
+
+      <div *ngIf="cuenta != null" class="detail">
+        <label class="detail-label">Titular de cuenta</label>
+        <p class="detail-content">{{ cuenta.titular }}</p>
+      </div>
+
+      <div *ngIf="pago.fecha" class="detail">
+        <label class="detail-label">Fecha de dep&oacute;sito</label>
+        <p class="detail-content">{{ pago.fecha }}</p>
+      </div>
+
+      <div *ngIf="pago.hora" class="detail">
+        <label class="detail-label">Hora de dep&oacute;sito</label>
+        <p class="detail-content">{{ pago.hora }}</p>
+      </div>
+
+      <div class="detail">
+        <label class="detail-label">Fecha y hora de registro</label>
+        <p class="detail-content">{{ pago.fecha_registro }}</p>
+      </div>
+
+      <button *ngIf="pago.estado == PAGO_PENDIENTE_VALIDACION" class="btn btn-sm btn-warning mt-3">
+        <fa-icon [icon]="faEdit"></fa-icon>&nbsp;
+        Modificar
+      </button>
+
+    </div>
+    <div class="col-12 col-md-6 col-lg-9 mt-3 mt-md-0">
+      <div class="foto-recibo-container d-flex justify-content-center justify-content-md-end align-content-center">
+        <img [src]="pago.foto" alt="Foto del recibo" class="img-fluid">
+      </div>
+    </div>
+  </div>
+</ng-template>
