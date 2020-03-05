@@ -15,7 +15,7 @@
           Rechazar
         </button>
 
-        <button class="btn btn-sm btn-success">
+        <button [disabled]="pago.fecha == null || pago.hora == null" class="btn btn-sm btn-success">
           <fa-icon [icon]="faCheck"></fa-icon>&nbsp;
           Aceptar
         </button>
