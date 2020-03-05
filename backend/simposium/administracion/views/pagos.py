@@ -143,6 +143,8 @@ class PagoViewSet(viewsets.ModelViewSet):
                 datos['estado'] = request.data['estado']
             else:
                 datos['estado'] = instance.estado
+            if request.data['foto']:
+                datos['foto'] = request.data['foto']
 
         if es_asistente:
             if request.data['codigo_pago']:
