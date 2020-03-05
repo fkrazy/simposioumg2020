@@ -1,13 +1,15 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, ParamMap } from '@angular/router';
-import { faCheck, faTimes, faEdit } from '@fortawesome/free-solid-svg-icons';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { faCheck, faTimes, faEdit, faSave } from '@fortawesome/free-solid-svg-icons';
 
 import { EstadoPago, IPago } from '../../../models/IPago';
 import { PagoService } from '../../../services/pago.service';
 import { ICuenta } from '../../../models/ICuenta';
 import { CuentaService } from '../../../services/cuenta.service';
 import { IAsistente } from '../../../models/IAsistente';
-import {AsistenteService} from '../../../services/asistente.service';
+import { AsistenteService } from '../../../services/asistente.service';
 
 
 @Component({
@@ -20,6 +22,7 @@ export class PagoDetailComponent implements OnInit {
   faCheck = faCheck;
   faTimes = faTimes;
   faEdit = faEdit;
+  faSave = faSave;
 
   PAGO_PENDIENTE_VALIDACION = EstadoPago.PENDIENTE_VALIDACION;
   PAGO_ACEPTADO = EstadoPago.ACEPTADO;
@@ -33,12 +36,31 @@ export class PagoDetailComponent implements OnInit {
   public pago: IPago = null;
   public cuenta: ICuenta = null;
   public asistente: IAsistente = null;
+  public cuentas: ICuenta[] = [];
+
+  public actualizandoPago = false;
+
+  public formEdicionPago = new FormGroup({
+    codigo_pago: new FormControl('', [
+      Validators.required,
+    ]),
+    cuenta: new FormControl('',[
+      Validators.required
+    ]),
+    fecha: new FormControl('', [
+      Validators.required,
+    ]),
+    hora: new FormControl('', [
+      Validators.required,
+    ]),
+  });
 
   constructor(
     private pagoService: PagoService,
     private cuentaService: CuentaService,
     private asistenteService: AsistenteService,
     private route: ActivatedRoute,
+    private modalService: NgbModal,
   ) {
     this.TEXTO_ESTADOSPAGO[0] = null;
     this.TEXTO_ESTADOSPAGO[EstadoPago.PENDIENTE_VALIDACION] = 'Pendiente';
@@ -58,7 +80,37 @@ export class PagoDetailComponent implements OnInit {
           this.cargarAsistente();
         }, console.error);
     });
+    this.cuentaService.getAll().subscribe((res) => {
+      this.cuentas = res;
+    }, console.error);
 
+  }
+
+  public onSubmitFormEdicionPago(): void {
+    if (!this.formEdicionPago.valid) return;
+
+    this.actualizandoPago = true;
+
+    this.pagoService.update(Object.assign({}, this.pago, this.formEdicionPago.value))
+      .subscribe((res) => {
+        this.pago = res;
+        this.actualizandoPago = false;
+        this.cargarCuenta();
+        this.modalService.dismissAll();
+      }, error => {
+        this.actualizandoPago = false;
+        console.error(error);
+      });
+
+  }
+
+  public openModalEditarPago(content): void {
+    this.formEdicionPago.reset(this.pago);
+    this.modalService.open(content, {
+      centered: true,
+      size: 'lg',
+      windowClass: 'animated bounceIn'
+    });
   }
 
   private cargarCuenta(): void {
