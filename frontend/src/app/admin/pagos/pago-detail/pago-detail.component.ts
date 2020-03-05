@@ -39,6 +39,7 @@ export class PagoDetailComponent implements OnInit {
   public cuentas: ICuenta[] = [];
 
   public actualizandoPago = false;
+  public rechazandoPago = false;
 
   public formEdicionPago = new FormGroup({
     codigo_pago: new FormControl('', [
@@ -52,6 +53,13 @@ export class PagoDetailComponent implements OnInit {
     ]),
     hora: new FormControl('', [
       Validators.required,
+    ]),
+  });
+
+  public formValidacionPago = new FormGroup({
+    mensaje: new FormControl('', [
+      Validators.required,
+      Validators.maxLength(256),
     ]),
   });
 
@@ -104,8 +112,27 @@ export class PagoDetailComponent implements OnInit {
 
   }
 
+  public onSubmitFormValidacionPago(): void {
+    if (!this.formValidacionPago.valid) return;
+
+    this.rechazandoPago = true;
+
+    this.rechazandoPago = false;
+    this.modalService.dismissAll();
+  }
+
   public openModalEditarPago(content): void {
+    this.modalService.dismissAll();
     this.formEdicionPago.reset(this.pago);
+    this.modalService.open(content, {
+      centered: true,
+      size: 'lg',
+      windowClass: 'animated bounceIn'
+    });
+  }
+
+  public openModalRechazoPago(content): void {
+    this.modalService.dismissAll();
     this.modalService.open(content, {
       centered: true,
       size: 'lg',

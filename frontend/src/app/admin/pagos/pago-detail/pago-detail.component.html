@@ -10,7 +10,7 @@
     <div class="col-12 d-flex justify-content-end">
       <ng-container *ngIf="pago.estado == PAGO_PENDIENTE_VALIDACION">
 
-        <button class="btn btn-sm btn-danger mr-2">
+        <button (click)="openModalRechazoPago(contentModalRechazoPago)" class="btn btn-sm btn-danger mr-2">
           <fa-icon [icon]="faTimes"></fa-icon>&nbsp;
           Rechazar
         </button>
@@ -146,6 +146,45 @@
       </div>
 
     </form>
+  </div>
+
+</ng-template>
+
+<ng-template #contentModalRechazoPago let-modalRechazoPago>
+  <div class="modal-header">
+
+    <h1 class="modal-title">Rechazo de pago</h1>
+
+    <button type="button" class="close" aria-label="Close" (click)="modalRechazoPago.dismiss('')">
+      <fa-icon [icon]="faTimes"></fa-icon>
+    </button>
+
+  </div>
+
+  <div class="modal-body">
+
+    <form (ngSubmit)="onSubmitFormValidacionPago()" [formGroup]="formValidacionPago" id="form-validacion-pago">
+
+      <div class="form-group row">
+        <label for="mensaje" class="col-12 col-md-2 col-form-label">Mensaje</label>
+        <div class="col-12 col-md-10">
+          <textarea formControlName="mensaje" id="mensaje" class="form-control" placeholder="Mensaje para el usuario">
+
+          </textarea>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col d-flex justify-content-end">
+          <button [disabled]="!formValidacionPago.valid" type="submit" class="btn btn-danger">
+            <fa-icon [icon]="faTimes"></fa-icon>&nbsp;
+            Rechazar pago
+          </button>
+        </div>
+      </div>
+
+    </form>
+
   </div>
 
 </ng-template>
