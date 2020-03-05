@@ -1,7 +1,7 @@
 
 
-<div class="container-not-found d-flex justify-content-center align-content-center align-items-center">
-  <h3 *ngIf="pago == null" class="mt-4 error-not-found">El pago que buscas no existe.</h3>
+<div *ngIf="pago == null" class="container-not-found d-flex justify-content-center align-content-center align-items-center">
+  <h3 class="mt-4 error-not-found">El pago que buscas no existe.</h3>
 </div>
 
 <ng-template [ngIf]="pago != null">
@@ -33,6 +33,12 @@
       <div class="detail">
         <label class="detail-label">Estado</label>
         <p class="detail-content">{{ TEXTO_ESTADOSPAGO[pago.estado] }}</p>
+      </div>
+
+      <div *ngIf="asistente != null" class="detail">
+        <label class="detail-label">Asistente</label>
+        <p class="detail-content">{{ asistente.usuario.nombres + ' ' + asistente.usuario.apellidos }}</p>
+        <p class="detail-content">{{ asistente.usuario.username }}</p>
       </div>
 
       <div *ngIf="cuenta != null" class="detail">

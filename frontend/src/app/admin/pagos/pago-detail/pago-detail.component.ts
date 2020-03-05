@@ -6,6 +6,8 @@ import { EstadoPago, IPago } from '../../../models/IPago';
 import { PagoService } from '../../../services/pago.service';
 import { ICuenta } from '../../../models/ICuenta';
 import { CuentaService } from '../../../services/cuenta.service';
+import { IAsistente } from '../../../models/IAsistente';
+import {AsistenteService} from '../../../services/asistente.service';
 
 
 @Component({
@@ -30,10 +32,12 @@ export class PagoDetailComponent implements OnInit {
 
   public pago: IPago = null;
   public cuenta: ICuenta = null;
+  public asistente: IAsistente = null;
 
   constructor(
     private pagoService: PagoService,
     private cuentaService: CuentaService,
+    private asistenteService: AsistenteService,
     private route: ActivatedRoute,
   ) {
     this.TEXTO_ESTADOSPAGO[0] = null;
@@ -51,6 +55,7 @@ export class PagoDetailComponent implements OnInit {
         .subscribe((res) => {
           this.pago = res;
           this.cargarCuenta();
+          this.cargarAsistente();
         }, console.error);
     });
 
@@ -60,6 +65,13 @@ export class PagoDetailComponent implements OnInit {
     this.cuentaService.get(this.pago.cuenta)
       .subscribe((resCuenta) => {
         this.cuenta = resCuenta;
+      }, console.error);
+  }
+
+  private cargarAsistente(): void {
+    this.asistenteService.get(this.pago.titular)
+      .subscribe((res) => {
+        this.asistente = res;
       }, console.error);
   }
 
