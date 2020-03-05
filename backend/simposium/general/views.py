@@ -1,5 +1,6 @@
 from django.shortcuts import render
 from datetime import datetime
+from django.utils import timezone
 
 from django.contrib.auth.models import User, Group
 from django.contrib.auth import authenticate
@@ -41,7 +42,7 @@ def signin(request):
     user_serialized = UserSerializer(user)
 
     first_login = user.last_login is None # si last_login es null el usuario esta haciendo login por primera vez
-    user.last_login = datetime.utcnow() # se establece ahora como el ultimo login
+    user.last_login = timezone.now() # se establece ahora como el ultimo login
     user.save()
 
     groups = ''
