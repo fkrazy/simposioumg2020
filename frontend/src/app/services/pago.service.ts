@@ -19,6 +19,22 @@ export class PagoService {
     return this.http.get<IPago>(`${PagoService.BASE_URL}/${idPago}`);
   }
 
+  public getAllAceptados(): Observable<IPago> {
+    return this.http.get<IPago>(`${PagoService.BASE_URL}/aceptados`);
+  }
+
+  public getAllRechazados(): Observable<IPago> {
+    return this.http.get<IPago>(`${PagoService.BASE_URL}/rechazados`);
+  }
+
+  public getAllPendientes(): Observable<IPago> {
+    return this.http.get<IPago>(`${PagoService.BASE_URL}/pendientes`);
+  }
+
+  public getAllReembolsosPendientes(): Observable<IPago> {
+    return this.http.get<IPago>(`${PagoService.BASE_URL}/reembolsos`);
+  }
+
   public create(pago: IPago): Observable<IPago> {
     return this.http.post<IPago>(`${PagoService.BASE_URL}/`, pago);
   }
