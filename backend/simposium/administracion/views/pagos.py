@@ -1,6 +1,11 @@
+from django.utils import timezone
 from rest_framework import viewsets, mixins
 from rest_framework.decorators import action
 from rest_framework.response import Response
+from rest_framework.status import (
+    HTTP_201_CREATED,
+    HTTP_403_FORBIDDEN
+)
 
 from ..models import Pago
 from ..serializers import PagoSerializer
@@ -75,3 +80,24 @@ class PagoViewSet(viewsets.ModelViewSet):
 
         serializer = self.get_serializer(rechazados, many=True)
         return Response(serializer.data)
+
+
+    def create(self, request, *args, **kwargs):
+        es_asistente = False
+        for group in request.user.groups.all():
+            if group.name == 'ASISTENTE':
+                es_asistente = True
+
+        if not es_asistente:
+            return Response({"detail": "No estás autorizado para crear pagos"}, status=HTTP_403_FORBIDDEN)
+
+        serializer = self.get_serializer(data=request.data)
+
+        serializer.fecha_registro = timezone.now()
+        serializer.estado = Pago.PENDIENTE_VALIDACION
+        serializer.titular = request.user.asistente
+
+        serializer.is_valid(raise_exception=True)
+        self.perform_create(serializer)
+        headers = self.get_success_headers(serializer.data)
+        return Response(serializer.data, status=HTTP_201_CREATED, headers=headers)
