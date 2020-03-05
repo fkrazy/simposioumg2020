@@ -89,7 +89,7 @@ class PagoViewSet(viewsets.ModelViewSet):
                 es_asistente = True
 
         if not es_asistente:
-            return Response({"detail": "No estás autorizado para crear pagos"}, status=HTTP_403_FORBIDDEN)
+            return Response({"detail": "No tienes permiso para crear pagos"}, status=HTTP_403_FORBIDDEN)
 
         serializer = self.get_serializer(data=request.data)
 
@@ -101,3 +101,71 @@ class PagoViewSet(viewsets.ModelViewSet):
         self.perform_create(serializer)
         headers = self.get_success_headers(serializer.data)
         return Response(serializer.data, status=HTTP_201_CREATED, headers=headers)
+
+
+    def update(self, request, *args, **kwargs):
+        partial = kwargs.pop('partial', False)
+        instance = self.get_object()
+
+        es_admin = False
+        es_asistente = False
+
+        for group in request.user.groups.all():
+            if group.name == 'ADMIN':
+                es_admin = True
+            elif group.name == 'ASISTENTE':
+                es_asistente = True
+
+        if not(es_admin or es_asistente):
+            return Response({"detail": "No tienes permiso para actualizar pagos"}, status=HTTP_403_FORBIDDEN)
+
+        datos = {}
+        datos['titular'] = instance.titular.usuario.id
+
+        if es_admin:
+            if request.data['codigo_pago']:
+                datos['codigo_pago'] = request.data['codigo_pago']
+            else:
+                datos['codigo_pago'] = instance.codigo_pago
+            if request.data['cuenta']:
+                datos['cuenta'] = request.data['cuenta']
+            else:
+                datos['cuenta'] = instance.cuenta.id
+            if request.data['fecha']:
+                datos['fecha'] = request.data['fecha']
+            else:
+                datos['fecha'] = instance.fecha
+            if request.data['hora']:
+                datos['hora'] = request.data['hora']
+            else:
+                datos['hora'] = instance.hora
+            if request.data['estado']:
+                datos['estado'] = request.data['estado']
+            else:
+                datos['estado'] = instance.estado
+
+        if es_asistente:
+            if request.data['codigo_pago']:
+                datos['codigo_pago'] = request.data['codigo_pago']
+            elif not es_admin:
+                datos['codigo_pago'] = instance.codigo_pago
+            if request.data['cuenta']:
+                datos['cuenta'] = request.data['cuenta']
+            elif not es_admin:
+                datos['cuenta'] = instance.cuenta.id
+            if request.data['foto']:
+                datos['foto'] = request.data['foto']
+            request.data['fecha_registro'] = str(timezone.now())
+
+
+        serializer = self.get_serializer(instance, data=datos, partial=partial)
+
+        serializer.is_valid(raise_exception=True)
+        self.perform_update(serializer)
+
+        if getattr(instance, '_prefetched_objects_cache', None):
+            # If 'prefetch_related' has been applied to a queryset, we need to
+            # forcibly invalidate the prefetch cache on the instance.
+            instance._prefetched_objects_cache = {}
+
+        return Response(serializer.data)
