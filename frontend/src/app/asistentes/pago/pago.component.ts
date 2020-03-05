@@ -93,10 +93,7 @@ export class PagoComponent implements OnInit {
     this.pagoService.get(this.auth.user.id)
       .subscribe((res) => {
         this.pago = res;
-        this.cuentaService.get(this.pago.cuenta)
-          .subscribe((resCuenta) => {
-            this.cuenta = resCuenta;
-          }, console.error);
+        this.cargarCuenta();
       }, console.error);
     this.cuentaService.getAll().subscribe((res) => {
       this.cuentas = res;
@@ -117,7 +114,7 @@ export class PagoComponent implements OnInit {
       titular: this.auth.user.id
     }).subscribe((res) => {
       this.pago = res;
-
+      this.cargarCuenta();
       this.guardando = false;
       this.modalService.dismissAll();
     }, error => {
@@ -141,7 +138,7 @@ export class PagoComponent implements OnInit {
       titular: this.pago.titular
     }).subscribe((res) => {
       this.pago = res;
-
+      this.cargarCuenta();
       this.guardando = false;
       this.modalService.dismissAll();
     }, error => {
@@ -199,6 +196,13 @@ export class PagoComponent implements OnInit {
     if (event.target.files.length > 0) {
       reader.readAsDataURL(event.target.files[0]);
     }
+  }
+
+  private cargarCuenta(): void {
+    this.cuentaService.get(this.pago.cuenta)
+      .subscribe((resCuenta) => {
+        this.cuenta = resCuenta;
+      }, console.error);
   }
 
 }
