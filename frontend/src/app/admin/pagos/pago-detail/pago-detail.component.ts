@@ -10,6 +10,9 @@ import { ICuenta } from '../../../models/ICuenta';
 import { CuentaService } from '../../../services/cuenta.service';
 import { IAsistente } from '../../../models/IAsistente';
 import { AsistenteService } from '../../../services/asistente.service';
+import { IValidacionPago, ResultadoValidacionPago } from '../../../models/IValidacionPago';
+import { ValidacionPagoService } from '../../../services/validacion-pago.service';
+import { AuthService } from '../../../auth/auth.service';
 
 
 @Component({
@@ -65,8 +68,10 @@ export class PagoDetailComponent implements OnInit {
 
   constructor(
     private pagoService: PagoService,
+    private validacionPagoService: ValidacionPagoService,
     private cuentaService: CuentaService,
     private asistenteService: AsistenteService,
+    private auth: AuthService,
     private route: ActivatedRoute,
     private modalService: NgbModal,
   ) {
@@ -117,8 +122,26 @@ export class PagoDetailComponent implements OnInit {
 
     this.rechazandoPago = true;
 
-    this.rechazandoPago = false;
-    this.modalService.dismissAll();
+    const validacion: IValidacionPago = Object.assign({}, this.formValidacionPago.value);
+    validacion.resultado = ResultadoValidacionPago.RECHAZADO;
+    validacion.usuario = this.auth.user.id;
+    validacion.pago = this.pago.titular;
+    validacion.fecha_hora = '2020-03-01T11:00';
+
+    this.validacionPagoService.create(validacion)
+      .subscribe((res) => {
+        this.pagoService.get(this.pago.titular)
+          .subscribe((pagoUpdated) => {
+            this.pago = pagoUpdated;
+          }, console.error);
+        this.rechazandoPago = false;
+        this.modalService.dismissAll();
+      }, error => {
+        this.rechazandoPago = false;
+        console.error(error);
+      });
+
+
   }
 
   public openModalEditarPago(content): void {
