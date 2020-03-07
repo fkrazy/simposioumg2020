@@ -24,7 +24,7 @@ class ValidacionPagoViewSet(viewsets.ModelViewSet):
             if group.name == 'ASISTENTE':
                 es_asistente = True
         if es_asistente and not es_admin:
-            return queryset.filter(pago=Pago.get(pk=self.request.user.id))
+            return queryset.filter(pago=Pago.objects.get(pk=self.request.user.id))
         return queryset
 
     def perform_create(self, serializer):
