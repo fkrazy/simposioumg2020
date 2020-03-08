@@ -8,14 +8,19 @@ from rest_framework.status import (
 )
 
 from ..models import Pago
-from ..serializers import PagoSerializer
+from ..serializers import ReadPagoSerializer, CreatePagoSerializer
 from ..permisos import PermisoPagos
 
 
 class PagoViewSet(viewsets.ModelViewSet):
-    serializer_class = PagoSerializer
+    serializer_class = ReadPagoSerializer
     queryset = Pago.objects.all()
     permission_classes = [PermisoPagos]
+
+    def get_serializer_class(self):
+        if self.request.method in ['POST', 'PUT', 'PATCH']:
+            return CreatePagoSerializer
+        return ReadPagoSerializer
 
     def filter_queryset(self, queryset):
         for g in self.request.user.groups.all():
@@ -81,7 +86,6 @@ class PagoViewSet(viewsets.ModelViewSet):
         serializer = self.get_serializer(rechazados, many=True)
         return Response(serializer.data)
 
-
     def create(self, request, *args, **kwargs):
         es_asistente = False
         for group in request.user.groups.all():
@@ -100,7 +104,8 @@ class PagoViewSet(viewsets.ModelViewSet):
         serializer.is_valid(raise_exception=True)
         self.perform_create(serializer)
         headers = self.get_success_headers(serializer.data)
-        return Response(serializer.data, status=HTTP_201_CREATED, headers=headers)
+
+        return Response(ReadPagoSerializer(request.user.asistente.pago).data, status=HTTP_201_CREATED, headers=headers)
 
 
     def update(self, request, *args, **kwargs):
@@ -120,17 +125,17 @@ class PagoViewSet(viewsets.ModelViewSet):
             return Response({"detail": "No tienes permiso para actualizar pagos"}, status=HTTP_403_FORBIDDEN)
 
         datos = {}
-        datos['titular'] = instance.titular.usuario.id
+        datos['titular_id'] = instance.titular.usuario.id
 
         if es_admin:
             if request.data['codigo_pago']:
                 datos['codigo_pago'] = request.data['codigo_pago']
             else:
                 datos['codigo_pago'] = instance.codigo_pago
-            if request.data['cuenta']:
-                datos['cuenta'] = request.data['cuenta']
+            if request.data['cuenta_id']:
+                datos['cuenta_id'] = request.data['cuenta_id']
             else:
-                datos['cuenta'] = instance.cuenta.id
+                datos['cuenta_id'] = instance.cuenta.id
             if request.data['fecha']:
                 datos['fecha'] = request.data['fecha']
             else:
@@ -151,10 +156,10 @@ class PagoViewSet(viewsets.ModelViewSet):
                 datos['codigo_pago'] = request.data['codigo_pago']
             elif not es_admin:
                 datos['codigo_pago'] = instance.codigo_pago
-            if request.data['cuenta']:
-                datos['cuenta'] = request.data['cuenta']
+            if request.data['cuenta_id']:
+                datos['cuenta_id'] = request.data['cuenta_id']
             elif not es_admin:
-                datos['cuenta'] = instance.cuenta.id
+                datos['cuenta_id'] = instance.cuenta.id
             if request.data['foto']:
                 datos['foto'] = request.data['foto']
             request.data['fecha_registro'] = str(timezone.now())
@@ -170,4 +175,4 @@ class PagoViewSet(viewsets.ModelViewSet):
             # forcibly invalidate the prefetch cache on the instance.
             instance._prefetched_objects_cache = {}
 
-        return Response(serializer.data)
+        return Response(ReadPagoSerializer(instance).data)
