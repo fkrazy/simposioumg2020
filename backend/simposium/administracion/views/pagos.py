@@ -109,7 +109,7 @@ class PagoViewSet(viewsets.ModelViewSet):
 
 
     def update(self, request, *args, **kwargs):
-        partial = kwargs.pop('partial', False)
+        # partial = kwargs.pop('partial', False)
         instance = self.get_object()
 
         es_admin = False
@@ -130,42 +130,42 @@ class PagoViewSet(viewsets.ModelViewSet):
         if es_admin:
             if request.data['codigo_pago']:
                 datos['codigo_pago'] = request.data['codigo_pago']
-            else:
-                datos['codigo_pago'] = instance.codigo_pago
+            # else:
+            #     datos['codigo_pago'] = instance.codigo_pago
             if request.data['cuenta_id']:
                 datos['cuenta_id'] = request.data['cuenta_id']
-            else:
-                datos['cuenta_id'] = instance.cuenta.id
+            # else:
+            #     datos['cuenta_id'] = instance.cuenta.id
             if request.data['fecha']:
                 datos['fecha'] = request.data['fecha']
-            else:
-                datos['fecha'] = instance.fecha
+            # else:
+            #     datos['fecha'] = instance.fecha
             if request.data['hora']:
                 datos['hora'] = request.data['hora']
-            else:
-                datos['hora'] = instance.hora
+            # else:
+            #     datos['hora'] = instance.hora
             if request.data['estado']:
                 datos['estado'] = request.data['estado']
-            else:
-                datos['estado'] = instance.estado
-            if request.data['foto']:
-                datos['foto'] = request.data['foto']
+            # else:
+            #     datos['estado'] = instance.estado
+            # if request.data['foto']:
+            #     datos['foto'] = request.data['foto']
 
         if es_asistente:
             if request.data['codigo_pago']:
                 datos['codigo_pago'] = request.data['codigo_pago']
-            elif not es_admin:
-                datos['codigo_pago'] = instance.codigo_pago
+            # elif not es_admin:
+            #     datos['codigo_pago'] = instance.codigo_pago
             if request.data['cuenta_id']:
                 datos['cuenta_id'] = request.data['cuenta_id']
-            elif not es_admin:
-                datos['cuenta_id'] = instance.cuenta.id
+            # elif not es_admin:
+            #     datos['cuenta_id'] = instance.cuenta.id
             if request.data['foto']:
                 datos['foto'] = request.data['foto']
             request.data['fecha_registro'] = str(timezone.now())
 
 
-        serializer = self.get_serializer(instance, data=datos, partial=partial)
+        serializer = self.get_serializer(instance, data=datos, partial=True)
 
         serializer.is_valid(raise_exception=True)
         self.perform_update(serializer)
