@@ -13,8 +13,10 @@ export enum EstadoPago {
 export interface IPago {
   id?: number;
   codigo_pago: string;
-  cuenta: number;
-  titular: number;
+  cuenta_id?: number;
+  cuenta?: ICuenta;
+  titular_id?: number;
+  titular?: IAsistente;
   foto: string;
   fecha_registro?: string;
   fecha?: string;
