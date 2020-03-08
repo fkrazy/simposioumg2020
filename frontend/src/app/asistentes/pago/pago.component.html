@@ -71,7 +71,7 @@
   </div>
 
   <div *ngIf="pago.estado == PAGO_RECHAZADO" class="col-12">
-    MENSAJES DE VALIDACION
+    <!--MENSAJES DE VALIDACION-->
   </div>
 
   <div *ngIf="pago.estado == PAGO_ACEPTADO" class="col-12">
@@ -90,8 +90,19 @@
     <p>Tu pago ya ha sido reembolsado.</p>
   </div>
 
-</div>
+  <div *ngIf="pago.estado == PAGO_RECHAZADO" class="row mt-3">
+    <ul class="list-group">
+      <li *ngFor="let validacion of validacionesPago"
+          [ngClass]="{'list-group-item': true,
+                      'text-danger': validacion.resultado === VALIDACION_PAGO_RECHAZADO,
+                      'text-success': validacion.resultado === VALIDACION_PAGO_ACEPTADO}">
+        {{ validacion.fecha_hora + ' - ' +  validacion.mensaje }}
+      </li>
+    </ul>
+  </div>
 
+
+</div>
 
 <ng-template #modalRegistroPagoContent let-modalRegistroPago>
 

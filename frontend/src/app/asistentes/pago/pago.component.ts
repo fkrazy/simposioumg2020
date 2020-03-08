@@ -7,6 +7,8 @@ import { CuentaService } from '../../services/cuenta.service';
 import { IPago, EstadoPago } from '../../models/IPago';
 import { PagoService } from '../../services/pago.service';
 import { AuthService } from '../../auth/auth.service';
+import { IValidacionPago, ResultadoValidacionPago } from '../../models/IValidacionPago';
+import { ValidacionPagoService } from '../../services/validacion-pago.service';
 
 @Component({
   selector: 'app-pago',
@@ -33,6 +35,9 @@ export class PagoComponent implements OnInit {
   PAGO_REEMBOLSO_APROBADO = EstadoPago.REEMBOLSO_APROBADO;
   PAGO_REEMBOLSADO = EstadoPago.REEMBOLSADO;
 
+  VALIDACION_PAGO_ACEPTADO = ResultadoValidacionPago.ACEPTADO
+  VALIDACION_PAGO_RECHAZADO = ResultadoValidacionPago.RECHAZADO
+
   TEXTO_ESTADOSPAGO: string[] = [];
 
   faEdit = faEdit;
@@ -41,6 +46,7 @@ export class PagoComponent implements OnInit {
 
   public cuentas: ICuenta[] = [];
   public pago: IPago = null;
+  public validacionesPago: IValidacionPago[] = [];
   public registrandoPago = false;
 
   public guardando = false;
@@ -74,6 +80,7 @@ export class PagoComponent implements OnInit {
 
   constructor(
     private pagoService: PagoService,
+    private validacionPagoService: ValidacionPagoService,
     private cuentaService: CuentaService,
     private auth: AuthService,
     private modalService: NgbModal
@@ -195,6 +202,14 @@ export class PagoComponent implements OnInit {
     this.pagoService.get(this.auth.user.id)
       .subscribe((res) => {
         this.pago = res;
+        this.cargarValidacionesPago();
+      }, console.error);
+  }
+
+  private cargarValidacionesPago(): void {
+    this.validacionPagoService.getAllByPago(this.pago.titular_id)
+      .subscribe((res) => {
+        this.validacionesPago = res;
       }, console.error);
   }
 

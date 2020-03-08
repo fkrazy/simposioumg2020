@@ -33,9 +33,13 @@ export class PagoDetailComponent implements OnInit {
   PAGO_REEMBOLSO_APROBADO = EstadoPago.REEMBOLSO_APROBADO;
   PAGO_REEMBOLSADO = EstadoPago.REEMBOLSADO;
 
+  VALIDACION_PAGO_ACEPTADO = ResultadoValidacionPago.ACEPTADO
+  VALIDACION_PAGO_RECHAZADO = ResultadoValidacionPago.RECHAZADO
+
   TEXTO_ESTADOSPAGO: string[] = [];
 
   public pago: IPago = null;
+  public validacionesPago: IValidacionPago[] = [];
   public cuentas: ICuenta[] = [];
 
   public actualizandoPago = false;
@@ -86,6 +90,7 @@ export class PagoDetailComponent implements OnInit {
       this.pagoService.get(Number.parseInt(params.get('id'),  10))
         .subscribe((res) => {
           this.pago = res;
+          this.cargarValidacionesPago();
           // this.cargarCuenta();
           // this.cargarAsistente();
         }, console.error);
@@ -121,12 +126,13 @@ export class PagoDetailComponent implements OnInit {
     const validacion: IValidacionPago = Object.assign({}, this.formValidacionPago.value);
     validacion.resultado = ResultadoValidacionPago.RECHAZADO;
     validacion.usuario = this.auth.user.id;
-    validacion.pago = this.pago;
+    validacion.pago = this.pago.titular_id;
     validacion.fecha_hora = '2020-03-01T11:00';
 
     this.validacionPagoService.create(validacion)
       .subscribe((res) => {
-        this.pagoService.get(this.pago.titular.usuario.id)
+        this.validacionesPago.unshift(res);
+        this.pagoService.get(this.pago.titular_id)
           .subscribe((pagoUpdated) => {
             this.pago = pagoUpdated;
           }, console.error);
@@ -157,6 +163,13 @@ export class PagoDetailComponent implements OnInit {
       size: 'lg',
       windowClass: 'animated bounceIn'
     });
+  }
+
+  private cargarValidacionesPago(): void {
+    this.validacionPagoService.getAllByPago(this.pago.titular_id)
+      .subscribe((res) => {
+        this.validacionesPago = res;
+      }, console.error);
   }
 
 /*  private cargarCuenta(): void {
