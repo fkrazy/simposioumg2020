@@ -17,5 +17,8 @@ export class ValidacionPagoService {
     return this.http.post<IValidacionPago>(`${ValidacionPagoService.BASE_URL}/`, validacion);
   }
 
+  public getAllByPago(pagoId: number): Observable<IValidacionPago[]> {
+    return this.http.get<IValidacionPago[]>(`${environment.apiUrl}/api/administracion/validaciones/pago/${pagoId}`);
+  }
 
 }

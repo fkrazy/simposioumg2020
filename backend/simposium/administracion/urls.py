@@ -20,4 +20,5 @@ router.register(r'evaluacion_reembolso', views.EvaluacionReembolsoViewSet)
 
 urlpatterns = [
     path('', include(router.urls)),
+    path(r'validaciones/pago/<int:pago_id>', views.validaciones_de_pago),
 ]

@@ -1,6 +1,6 @@
-from rest_framework import viewsets
+from rest_framework import viewsets, generics
 from rest_framework.exceptions import ValidationError
-from rest_framework.decorators import action
+from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 from django.utils import timezone
 
@@ -39,3 +39,27 @@ class ValidacionPagoViewSet(viewsets.ModelViewSet):
             pago.estado = Pago.VALIDACION_RECHAZADA
         serializer.save(usuario=self.request.user, fecha_hora=timezone.now())
         pago.save()
+
+
+@api_view(['GET'])
+@permission_classes([PermisoValidacionesPago])
+def validaciones_de_pago(request, pago_id):
+    try:
+        pago = Pago.objects.get(pk=pago_id)
+    except Pago.DoesNotExist:
+        return Response({"detail": "El pago no existe"})
+
+    es_admin = False
+    es_asistente = False
+
+    for group in request.user.groups.all():
+        es_admin = es_admin or group.name == 'ADMIN'
+        es_asistente = es_asistente or group.name == 'ASISTENTE'
+
+    validaciones = ValidacionPago.objects.filter(pago=pago)
+    if es_asistente and not es_admin:
+        if pago.titular.usuario.id != request.user.id:
+            raise ValidationError("No tienes permiso para ver las validaciones de este pago")
+
+    serializer = ValidacionPagoSerializer(validaciones, many=True)
+    return Response(serializer.data)
