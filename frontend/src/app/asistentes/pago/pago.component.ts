@@ -18,8 +18,8 @@ export class PagoComponent implements OnInit {
   // representacion de un pago sin registrar
   static PAGO_SINREGISTRAR: IPago = {
     codigo_pago: '',
-    cuenta: 0,
-    titular: 0,
+    cuenta_id: 0,
+    titular_id: 0,
     foto: '',
     fecha: '',
     hora: '',
@@ -41,7 +41,6 @@ export class PagoComponent implements OnInit {
 
   public cuentas: ICuenta[] = [];
   public pago: IPago = null;
-  public cuenta: ICuenta = null;
   public registrandoPago = false;
 
   public guardando = false;
@@ -90,11 +89,7 @@ export class PagoComponent implements OnInit {
 
   ngOnInit() {
     this.pago = PagoComponent.PAGO_SINREGISTRAR;
-    this.pagoService.get(this.auth.user.id)
-      .subscribe((res) => {
-        this.pago = res;
-        this.cargarCuenta();
-      }, console.error);
+    this.cargarPago();
     this.cuentaService.getAll().subscribe((res) => {
       this.cuentas = res;
     }, console.error);
@@ -108,13 +103,12 @@ export class PagoComponent implements OnInit {
 
     this.pagoService.create({
       codigo_pago: pago.codigo_recibo,
-      cuenta: pago.id_cuenta,
+      cuenta_id: pago.id_cuenta,
       foto: this.fotoStr,
       estado: EstadoPago.PENDIENTE_VALIDACION,
-      titular: this.auth.user.id
+      titular_id: this.auth.user.id
     }).subscribe((res) => {
       this.pago = res;
-      this.cargarCuenta();
       this.guardando = false;
       this.modalService.dismissAll();
     }, error => {
@@ -132,13 +126,12 @@ export class PagoComponent implements OnInit {
 
     this.pagoService.update({
       codigo_pago: pago.codigo_recibo,
-      cuenta: pago.id_cuenta,
+      titular_id: this.pago.titular_id,
+      cuenta_id: pago.id_cuenta,
       foto: this.fotoStrEdicion,
       estado: this.pago.estado,
-      titular: this.pago.titular
     }).subscribe((res) => {
       this.pago = res;
-      this.cargarCuenta();
       this.guardando = false;
       this.modalService.dismissAll();
     }, error => {
@@ -161,7 +154,7 @@ export class PagoComponent implements OnInit {
     this.fotoStrEdicion = this.pago.foto;
     this.formEdicionPago.reset({
       codigo_recibo: this.pago.codigo_pago,
-      id_cuenta: this.pago.cuenta,
+      id_cuenta: this.pago.cuenta_id,
       foto: ''
     });
     this.modalService.dismissAll();
@@ -198,11 +191,18 @@ export class PagoComponent implements OnInit {
     }
   }
 
-  private cargarCuenta(): void {
-    this.cuentaService.get(this.pago.cuenta)
+  private cargarPago(): void {
+    this.pagoService.get(this.auth.user.id)
+      .subscribe((res) => {
+        this.pago = res;
+      }, console.error);
+  }
+
+  /*private cargarCuenta(): void {
+    this.cuentaService.get(this.pago.cuenta.id)
       .subscribe((resCuenta) => {
         this.cuenta = resCuenta;
       }, console.error);
-  }
+  }*/
 
 }

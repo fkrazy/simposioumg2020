@@ -8,7 +8,6 @@ import { EstadoPago, IPago } from '../../../models/IPago';
 import { PagoService } from '../../../services/pago.service';
 import { ICuenta } from '../../../models/ICuenta';
 import { CuentaService } from '../../../services/cuenta.service';
-import { IAsistente } from '../../../models/IAsistente';
 import { AsistenteService } from '../../../services/asistente.service';
 import { IValidacionPago, ResultadoValidacionPago } from '../../../models/IValidacionPago';
 import { ValidacionPagoService } from '../../../services/validacion-pago.service';
@@ -37,8 +36,6 @@ export class PagoDetailComponent implements OnInit {
   TEXTO_ESTADOSPAGO: string[] = [];
 
   public pago: IPago = null;
-  public cuenta: ICuenta = null;
-  public asistente: IAsistente = null;
   public cuentas: ICuenta[] = [];
 
   public actualizandoPago = false;
@@ -48,7 +45,7 @@ export class PagoDetailComponent implements OnInit {
     codigo_pago: new FormControl('', [
       Validators.required,
     ]),
-    cuenta: new FormControl('',[
+    cuenta_id: new FormControl('',[
       Validators.required
     ]),
     fecha: new FormControl('', [
@@ -89,8 +86,8 @@ export class PagoDetailComponent implements OnInit {
       this.pagoService.get(Number.parseInt(params.get('id'),  10))
         .subscribe((res) => {
           this.pago = res;
-          this.cargarCuenta();
-          this.cargarAsistente();
+          // this.cargarCuenta();
+          // this.cargarAsistente();
         }, console.error);
     });
     this.cuentaService.getAll().subscribe((res) => {
@@ -108,7 +105,6 @@ export class PagoDetailComponent implements OnInit {
       .subscribe((res) => {
         this.pago = res;
         this.actualizandoPago = false;
-        this.cargarCuenta();
         this.modalService.dismissAll();
       }, error => {
         this.actualizandoPago = false;
@@ -125,12 +121,12 @@ export class PagoDetailComponent implements OnInit {
     const validacion: IValidacionPago = Object.assign({}, this.formValidacionPago.value);
     validacion.resultado = ResultadoValidacionPago.RECHAZADO;
     validacion.usuario = this.auth.user.id;
-    validacion.pago = this.pago.titular;
+    validacion.pago = this.pago;
     validacion.fecha_hora = '2020-03-01T11:00';
 
     this.validacionPagoService.create(validacion)
       .subscribe((res) => {
-        this.pagoService.get(this.pago.titular)
+        this.pagoService.get(this.pago.titular.usuario.id)
           .subscribe((pagoUpdated) => {
             this.pago = pagoUpdated;
           }, console.error);
@@ -163,19 +159,19 @@ export class PagoDetailComponent implements OnInit {
     });
   }
 
-  private cargarCuenta(): void {
-    this.cuentaService.get(this.pago.cuenta)
+/*  private cargarCuenta(): void {
+    this.cuentaService.get(this.pago.cuenta.id)
       .subscribe((resCuenta) => {
         this.cuenta = resCuenta;
       }, console.error);
-  }
+  }*/
 
-  private cargarAsistente(): void {
+/*  private cargarAsistente(): void {
     this.asistenteService.get(this.pago.titular)
       .subscribe((res) => {
         this.asistente = res;
       }, console.error);
-  }
+  }*/
 
 
 }

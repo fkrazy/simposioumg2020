@@ -35,25 +35,25 @@
         <p class="detail-content">{{ TEXTO_ESTADOSPAGO[pago.estado] }}</p>
       </div>
 
-      <div *ngIf="asistente != null" class="detail">
+      <div class="detail">
         <label class="detail-label">Asistente</label>
-        <p class="detail-content">{{ asistente.usuario.nombres + ' ' + asistente.usuario.apellidos }}</p>
-        <p class="detail-content">{{ asistente.usuario.username }}</p>
+        <p class="detail-content">{{ pago.titular.usuario.nombres + ' ' + pago.titular.usuario.apellidos }}</p>
+        <p class="detail-content">{{ pago.titular.usuario.username }}</p>
       </div>
 
-      <div *ngIf="cuenta != null" class="detail">
+      <div class="detail">
         <label class="detail-label">No. de cuenta</label>
-        <p class="detail-content">{{ cuenta.numero }}</p>
+        <p class="detail-content">{{ pago.cuenta.numero }}</p>
       </div>
 
-      <div *ngIf="cuenta != null" class="detail">
+      <div class="detail">
         <label class="detail-label">Banco</label>
-        <p class="detail-content">{{ cuenta.banco }}</p>
+        <p class="detail-content">{{ pago.cuenta.banco }}</p>
       </div>
 
-      <div *ngIf="cuenta != null" class="detail">
+      <div class="detail">
         <label class="detail-label">Titular de cuenta</label>
-        <p class="detail-content">{{ cuenta.titular }}</p>
+        <p class="detail-content">{{ pago.cuenta.titular }}</p>
       </div>
 
       <div *ngIf="pago.fecha" class="detail">
@@ -114,9 +114,9 @@
       </div>
 
       <div class="form-group row">
-        <label for="cuenta" class="col-12 col-md-2 col-form-label">Cuenta</label>
+        <label for="cuenta_id" class="col-12 col-md-2 col-form-label">Cuenta</label>
         <div class="col-12 col-md-10">
-          <select formControlName="cuenta" id="cuenta" class="custom-select">
+          <select formControlName="cuenta_id" id="cuenta_id" class="custom-select">
             <option *ngFor="let cuenta of cuentas" [value]="cuenta.id">{{cuenta.numero + ' ' + cuenta.banco}}</option>
           </select>
         </div>

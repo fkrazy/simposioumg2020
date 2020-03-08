@@ -42,10 +42,10 @@
         <div>
           <p>C&oacute;digo: {{ pago.codigo_pago }}</p>
           <p *ngIf="pago.fecha">Fecha: {{ pago.fecha }}, Hora: {{ pago.hora }}</p>
-          <div *ngIf="cuenta != null">
-            <p>No. de cuenta: {{cuenta.numero}}</p>
-            <p>Banco: {{cuenta.banco}}</p>
-            <p>Titular: {{cuenta.titular}}</p>
+          <div>
+            <p>No. de cuenta: {{pago.cuenta.numero}}</p>
+            <p>Banco: {{pago.cuenta.banco}}</p>
+            <p>Titular: {{pago.cuenta.titular}}</p>
           </div>
         </div>
         <button *ngIf="pago.estado == PAGO_PENDIENTE_VALIDACION || pago.estado == PAGO_RECHAZADO"
