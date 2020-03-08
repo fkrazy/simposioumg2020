@@ -40,7 +40,7 @@ export class PagoService {
   }
 
   public update(pago: IPago): Observable<IPago> {
-    return this.http.put<IPago>(`${PagoService.BASE_URL}/${pago.titular}/`, pago);
+    return this.http.put<IPago>(`${PagoService.BASE_URL}/${pago.titular_id}/`, pago);
   }
 
 }
