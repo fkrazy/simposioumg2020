@@ -82,14 +82,13 @@ export class RegistroComponent implements OnInit {
       return;
     }
 
-    const datosRegistro = this.formRegistro.value;
+    const datosRegistro = Object.assign({}, this.formRegistro.value);
     datosRegistro.es_estudiante = datosRegistro.es_estudiante == 'true';
     if (datosRegistro.es_estudiante) {
       datosRegistro.carnet = this.formEstudiante.value.carnet;
       datosRegistro.semestre = this.formEstudiante.value.semestre * 1;
       datosRegistro.codigo_carrera = this.formEstudiante.value.codigo_carrera * 1;
     }
-    console.log(datosRegistro);
 
     this.http.post<null>(`${environment.apiUrl}/api/registro/`, datosRegistro)
       .subscribe((res) => {
@@ -97,6 +96,7 @@ export class RegistroComponent implements OnInit {
         this.registrando = false;
       }, error => {
         console.error(error);
+        this.errorRegistro = error.error.detail;
         this.registrando = false;
       });
 
