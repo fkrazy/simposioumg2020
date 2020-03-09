@@ -1,4 +1,7 @@
 import { Component, OnInit } from '@angular/core';
+import { environment } from '../../../../environments/environment';
+import { PagoService } from '../../../services/pago.service';
+import { IPago } from '../../../models/IPago';
 
 @Component({
   selector: 'app-validaciones-pagos',
@@ -7,9 +10,22 @@ import { Component, OnInit } from '@angular/core';
 })
 export class ValidacionesPagosComponent implements OnInit {
 
-  constructor() { }
+  API_URL = environment.apiUrl;
+
+  private pagosPendientes: IPago[] = [];
+
+  constructor(
+    private pagoService: PagoService
+  ) { }
 
   ngOnInit() {
+    this.cargarPagosPendientes();
+  }
+
+  private cargarPagosPendientes(): void {
+    this.pagoService.getAllPendientes().subscribe((res) => {
+      this.pagosPendientes = res;
+    }, console.error);
   }
 
 }
