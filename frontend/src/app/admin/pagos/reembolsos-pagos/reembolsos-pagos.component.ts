@@ -13,6 +13,8 @@ export class ReembolsosPagosComponent implements OnInit {
   API_URL = environment.apiUrl;
 
   private pagosReembolsoPendiente: IPago[] = [];
+  private pagosReembolsoAprobado: IPago[] = [];
+  private pagosReembolsados: IPago[] = [];
 
   constructor(
     private pagoService: PagoService
@@ -20,11 +22,25 @@ export class ReembolsosPagosComponent implements OnInit {
 
   ngOnInit() {
     this.cargarPagosPendientesReembolso();
+    this.cargarPagosReembolsoAprobado();
+    this.cargarPagosReembolsados();
   }
 
   private cargarPagosPendientesReembolso(): void {
     this.pagoService.getAllReembolsosPendientes().subscribe((res) => {
       this.pagosReembolsoPendiente = res;
+    }, console.error);
+  }
+
+  private cargarPagosReembolsoAprobado(): void {
+    this.pagoService.getAllReembolsosAprobados().subscribe((res) => {
+      this.pagosReembolsoAprobado = res;
+    }, console.error);
+  }
+
+  private cargarPagosReembolsados(): void {
+    this.pagoService.getAllReembolsados().subscribe((res) => {
+      this.pagosReembolsados = res;
     }, console.error);
   }
 
