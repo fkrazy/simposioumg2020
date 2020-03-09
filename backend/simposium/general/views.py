@@ -1,5 +1,4 @@
-from django.shortcuts import render
-from datetime import datetime
+from django.db import IntegrityError, DatabaseError, transaction
 from django.utils import timezone
 
 from django.contrib.auth.models import User, Group
@@ -89,23 +88,27 @@ def registrar(request):
         if carrera is None:
             return Response({"detail": "La carrera no existe"})
 
-    user = User.objects.create_user(username=registro_serializer.data['correo'],
-                                    email=registro_serializer.data['correo'],
-                                    password=registro_serializer.data['password'])
+    try:
+        with transaction.atomic():
+            user = User.objects.create_user(username=registro_serializer.data['correo'],
+                                            email=registro_serializer.data['correo'],
+                                            password=registro_serializer.data['password'])
 
-    user.first_name = registro_serializer.data['nombres']
-    user.last_name = registro_serializer.data['apellidos']
-    user.groups.add(Group.objects.get(name='ASISTENTE'))
-    user.save()
+            user.first_name = registro_serializer.data['nombres']
+            user.last_name = registro_serializer.data['apellidos']
+            user.groups.add(Group.objects.get(name='ASISTENTE'))
+            user.save()
 
+            asistente = Asistente(usuario=user, telefono=registro_serializer.data['telefono'])
+            asistente.save()
 
-    asistente = Asistente(usuario=user, telefono=registro_serializer.data['telefono'])
-    asistente.save()
-
-    if registro_serializer.data['es_estudiante']:
-        user.groups.add(Group.objects.get(name='ESTUDIANTE'))
-        user.save()
-        estudiante = EstudianteUmg(asistente=asistente, semestre=registro_serializer.data['semestre'], carrera=carrera)
-        estudiante.save()
+            if registro_serializer.data['es_estudiante']:
+                user.groups.add(Group.objects.get(name='ESTUDIANTE'))
+                user.save()
+                estudiante = EstudianteUmg(asistente=asistente, semestre=registro_serializer.data['semestre'],
+                                           carrera=carrera)
+                estudiante.save()
+    except (IntegrityError, DatabaseError) as error:
+        return Response({"detail": str(error)}, status=HTTP_400_BAD_REQUEST)
 
     return Response(status=HTTP_204_NO_CONTENT)
