@@ -56,6 +56,32 @@ class PagoViewSet(viewsets.ModelViewSet):
         serializer = self.get_serializer(solicitud_reembolsos, many=True)
         return Response(serializer.data)
 
+    # devuelve los pagos cuyo reembolso fue aprobado
+    @action(detail=False, methods=['GET'])
+    def reembolsos_aprobados(self, request):
+        pagos = self.filter_queryset(self.get_queryset()).filter(estado=Pago.REEMBOLSO_APROBADO)
+
+        page = self.paginate_queryset(pagos)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+
+        serializer = self.get_serializer(pagos, many=True)
+        return Response(serializer.data)
+
+    # devuelve los pagos que ya han sido reembolsados
+    @action(detail=False, methods=['GET'])
+    def reembolsados(self, request):
+        pagos = self.filter_queryset(self.get_queryset()).filter(estado=Pago.REEMBOLSADO)
+
+        page = self.paginate_queryset(pagos)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+
+        serializer = self.get_serializer(pagos, many=True)
+        return Response(serializer.data)
+
     # devuelve los pagos que han sido aceptados
     @action(detail=False, methods=['GET'])
     def aceptados(self, request):

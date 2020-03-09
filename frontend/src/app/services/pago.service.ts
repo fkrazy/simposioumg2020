@@ -35,6 +35,14 @@ export class PagoService {
     return this.http.get<IPago[]>(`${PagoService.BASE_URL}/reembolsos`);
   }
 
+  public getAllReembolsosAprobados(): Observable<IPago[]> {
+    return this.http.get<IPago[]>(`${PagoService.BASE_URL}/reembolsos_aprobados`);
+  }
+
+  public getAllReembolsados(): Observable<IPago[]> {
+    return this.http.get<IPago[]>(`${PagoService.BASE_URL}/reembolsados`);
+  }
+
   public create(pago: IPago): Observable<IPago> {
     return this.http.post<IPago>(`${PagoService.BASE_URL}/`, pago);
   }
