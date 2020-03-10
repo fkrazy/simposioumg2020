@@ -29,8 +29,8 @@ class ValidacionPagoViewSet(viewsets.ModelViewSet):
             if group.name == 'ASISTENTE':
                 es_asistente = True
         if es_asistente and not es_admin:
-            return queryset.filter(pago=Pago.objects.get(pk=self.request.user.id))
-        return queryset
+            return queryset.filter(pago=Pago.objects.get(pk=self.request.user.id)).order_by('-fecha-hora')
+        return queryset.order_by('-fecha_hora')
 
     def perform_create(self, serializer):
         pago = Pago.objects.get(pk=self.request.data['pago'])
@@ -69,7 +69,7 @@ def validaciones_de_pago(request, pago_id):
         es_admin = es_admin or group.name == 'ADMIN'
         es_asistente = es_asistente or group.name == 'ASISTENTE'
 
-    validaciones = ValidacionPago.objects.filter(pago=pago)
+    validaciones = ValidacionPago.objects.filter(pago=pago).order_by('-fecha_hora')
     if es_asistente and not es_admin:
         if pago.titular.usuario.id != request.user.id:
             raise ValidationError("No tienes permiso para ver las validaciones de este pago")
