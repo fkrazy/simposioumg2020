@@ -42,10 +42,10 @@ class ValidacionPagoViewSet(viewsets.ModelViewSet):
             pago.estado = Pago.ACEPTADO
         elif self.request.data['resultado'] == ValidacionPago.RECHAZADO:
             pago.estado = Pago.VALIDACION_RECHAZADA
-        serializer.save(usuario=self.request.user, fecha_hora=timezone.now())
 
         try:
             with transaction.atomic():
+                serializer.save(usuario=self.request.user, fecha_hora=timezone.now())
                 pago.save()
                 if self.request.data['resultado'] == ValidacionPago.ACEPTADO:
                     ticket = Ticket(asistente=pago.titular, codigo_qr='data:image/png;base64,' + crear_qr(str(pago.titular.usuario.id)))
