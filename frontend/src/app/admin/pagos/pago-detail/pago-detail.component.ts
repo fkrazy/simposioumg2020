@@ -1,17 +1,17 @@
-import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, ParamMap } from '@angular/router';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { faCheck, faTimes, faEdit, faSave } from '@fortawesome/free-solid-svg-icons';
+import {Component, OnInit} from '@angular/core';
+import {ActivatedRoute, ParamMap} from '@angular/router';
+import {FormControl, FormGroup, Validators} from '@angular/forms';
+import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
+import {faCheck, faEdit, faSave, faTimes} from '@fortawesome/free-solid-svg-icons';
 
-import { EstadoPago, IPago } from '../../../models/IPago';
-import { PagoService } from '../../../services/pago.service';
-import { ICuenta } from '../../../models/ICuenta';
-import { CuentaService } from '../../../services/cuenta.service';
-import { AsistenteService } from '../../../services/asistente.service';
-import { IValidacionPago, ResultadoValidacionPago } from '../../../models/IValidacionPago';
-import { ValidacionPagoService } from '../../../services/validacion-pago.service';
-import { AuthService } from '../../../auth/auth.service';
+import {EstadoPago, IPago} from '../../../models/IPago';
+import {PagoService} from '../../../services/pago.service';
+import {ICuenta} from '../../../models/ICuenta';
+import {CuentaService} from '../../../services/cuenta.service';
+import {AsistenteService} from '../../../services/asistente.service';
+import {IValidacionPago, ResultadoValidacionPago} from '../../../models/IValidacionPago';
+import {ValidacionPagoService} from '../../../services/validacion-pago.service';
+import {AuthService} from '../../../auth/auth.service';
 
 
 @Component({
@@ -43,6 +43,7 @@ export class PagoDetailComponent implements OnInit {
   public cuentas: ICuenta[] = [];
 
   public actualizandoPago = false;
+  public aceptandoPago = false;
   public rechazandoPago = false;
 
   public formEdicionPago = new FormGroup({
@@ -114,6 +115,31 @@ export class PagoDetailComponent implements OnInit {
       }, error => {
         this.actualizandoPago = false;
         console.error(error);
+      });
+
+  }
+
+  public onAceptarPago(): void {
+    if (this.pago.estado !== this.PAGO_PENDIENTE_VALIDACION) return;
+
+    this.aceptandoPago = true;
+    const validacion: IValidacionPago = {
+      mensaje: 'OK',
+      resultado: ResultadoValidacionPago.ACEPTADO,
+      pago: this.pago.titular_id,
+      usuario: this.auth.user.id
+    };
+
+    this.validacionPagoService.create(validacion)
+      .subscribe((res) => {
+        this.validacionesPago.unshift(res);
+        this.pagoService.get(this.pago.titular_id)
+          .subscribe((pagoUpdated) => {
+            this.pago = pagoUpdated;
+          }, console.error);
+        this.aceptandoPago = false;
+      }, error => {
+        this.aceptandoPago = false;
       });
 
   }

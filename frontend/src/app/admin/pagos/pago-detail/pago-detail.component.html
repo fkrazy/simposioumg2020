@@ -10,12 +10,16 @@
     <div class="col-12 d-flex justify-content-end">
       <ng-container *ngIf="pago.estado == PAGO_PENDIENTE_VALIDACION">
 
-        <button (click)="openModalRechazoPago(contentModalRechazoPago)" class="btn btn-sm btn-danger mr-2">
+        <button (click)="openModalRechazoPago(contentModalRechazoPago)"
+                [disabled]="rechazandoPago || aceptandoPago"
+                class="btn btn-sm btn-danger mr-2">
           <fa-icon [icon]="faTimes"></fa-icon>&nbsp;
           Rechazar
         </button>
 
-        <button [disabled]="pago.fecha == null || pago.hora == null" class="btn btn-sm btn-success">
+        <button (click)="onAceptarPago()"
+                [disabled]="pago.fecha == null || pago.hora == null || rechazandoPago || aceptandoPago"
+                class="btn btn-sm btn-success">
           <fa-icon [icon]="faCheck"></fa-icon>&nbsp;
           Aceptar
         </button>
