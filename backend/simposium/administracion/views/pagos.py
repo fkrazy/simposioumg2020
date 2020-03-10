@@ -149,13 +149,15 @@ class PagoViewSet(viewsets.ModelViewSet):
 
         if not(es_admin or es_asistente):
             return Response({"detail": "No tienes permiso para actualizar pagos"}, status=HTTP_403_FORBIDDEN)
-        if instance.estado == Pago.ACEPTADO or instance.estado == Pago.REEMBOLSADO:
+        if instance.estado == Pago.REEMBOLSADO:
             return Response({"detail": "Este pago ya no puede ser actualizado"}, status=HTTP_400_BAD_REQUEST)
+
+        solicitando_reembolso = instance.estado == Pago.ACEPTADO and request.data['estado'] == Pago.EVALUACION_REEMBOLSO
 
         datos = {}
         datos['titular_id'] = instance.titular.usuario.id
 
-        if es_admin:
+        if not solicitando_reembolso and es_admin:
             if request.data['codigo_pago']:
                 datos['codigo_pago'] = request.data['codigo_pago']
             # else:
@@ -189,7 +191,7 @@ class PagoViewSet(viewsets.ModelViewSet):
             # if request.data['foto']:
             #     datos['foto'] = request.data['foto']
 
-        if es_asistente:
+        if not solicitando_reembolso and es_asistente:
             if request.data['codigo_pago']:
                 datos['codigo_pago'] = request.data['codigo_pago']
             # elif not es_admin:
@@ -208,7 +210,10 @@ class PagoViewSet(viewsets.ModelViewSet):
                     raise PermissionDenied("No tienes permiso para cambiar el estado de tu pago")
             datos['fecha_registro'] = str(timezone.now())
 
-        serializer = self.get_serializer(instance, data=datos, partial=True)
+        if not solicitando_reembolso:
+            serializer = self.get_serializer(instance, data=datos, partial=True)
+        else:
+            serializer = self.get_serializer(instance, data={"estado": Pago.EVALUACION_REEMBOLSO}, partial=True)
 
         serializer.is_valid(raise_exception=True)
         self.perform_update(serializer)
