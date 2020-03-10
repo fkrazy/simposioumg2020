@@ -136,7 +136,7 @@ export class PagoComponent implements OnInit {
       titular_id: this.pago.titular_id,
       cuenta_id: pago.id_cuenta,
       foto: this.fotoStrEdicion,
-      estado: this.pago.estado,
+      estado: this.pago.estado === this.PAGO_RECHAZADO ? this.PAGO_PENDIENTE_VALIDACION : this.pago.estado,
     }).subscribe((res) => {
       this.pago = res;
       this.guardando = false;

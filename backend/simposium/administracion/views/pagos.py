@@ -188,8 +188,9 @@ class PagoViewSet(viewsets.ModelViewSet):
             #     datos['cuenta_id'] = instance.cuenta.id
             if request.data['foto']:
                 datos['foto'] = request.data['foto']
+            if not es_admin and instance.estado == Pago.VALIDACION_RECHAZADA and request.data['estado'] and request.data['estado'] == Pago.PENDIENTE_VALIDACION:
+                datos['estado'] = Pago.PENDIENTE_VALIDACION;
             request.data['fecha_registro'] = str(timezone.now())
-
 
         serializer = self.get_serializer(instance, data=datos, partial=True)
 
