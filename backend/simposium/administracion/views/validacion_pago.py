@@ -3,8 +3,13 @@ from rest_framework.exceptions import ValidationError
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 from django.utils import timezone
+from django.db import transaction, DatabaseError, IntegrityError
 
-from ..models import ValidacionPago, Pago
+import qrcode
+from io import BytesIO
+import base64
+
+from ..models import ValidacionPago, Pago, Ticket
 from ..serializers import ValidacionPagoSerializer
 from ..permisos import PermisoValidacionesPago
 
@@ -38,7 +43,15 @@ class ValidacionPagoViewSet(viewsets.ModelViewSet):
         elif self.request.data['resultado'] == ValidacionPago.RECHAZADO:
             pago.estado = Pago.VALIDACION_RECHAZADA
         serializer.save(usuario=self.request.user, fecha_hora=timezone.now())
-        pago.save()
+
+        try:
+            with transaction.atomic():
+                pago.save()
+                if self.request.data['resultado'] == ValidacionPago.ACEPTADO:
+                    ticket = Ticket(asistente=pago.titular, codigo_qr='data:image/png;base64,' + crear_qr(str(pago.titular.usuario.id)))
+                    ticket.save()
+        except DatabaseError as error:
+            raise ValidationError(str(error))
 
 
 @api_view(['GET'])
@@ -63,3 +76,19 @@ def validaciones_de_pago(request, pago_id):
 
     serializer = ValidacionPagoSerializer(validaciones, many=True)
     return Response(serializer.data)
+
+
+def crear_qr(datos):
+    qr = qrcode.QRCode(
+        version=1,
+        error_correction=qrcode.constants.ERROR_CORRECT_H,
+        box_size=4,
+        border=4
+    )
+    qr.add_data(datos)
+    qr.make(fit=True)
+
+    img = qr.make_image()
+    buffered = BytesIO()
+    img.save(buffered, format='PNG')
+    return base64.b64encode(buffered.getvalue()).decode('utf-8')
