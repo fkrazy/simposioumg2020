@@ -12,6 +12,8 @@ import {AsistenteService} from '../../../services/asistente.service';
 import {IValidacionPago, ResultadoValidacionPago} from '../../../models/IValidacionPago';
 import {ValidacionPagoService} from '../../../services/validacion-pago.service';
 import {AuthService} from '../../../auth/auth.service';
+import {IEvaluacionReembolso, ResultadoEvaluacionReembolso} from '../../../models/IEvaluacionReembolso';
+import {EvaluacionReembolsoService} from '../../../services/evaluacion-reembolso.service';
 
 
 @Component({
@@ -33,18 +35,25 @@ export class PagoDetailComponent implements OnInit {
   PAGO_REEMBOLSO_APROBADO = EstadoPago.REEMBOLSO_APROBADO;
   PAGO_REEMBOLSADO = EstadoPago.REEMBOLSADO;
 
-  VALIDACION_PAGO_ACEPTADO = ResultadoValidacionPago.ACEPTADO
-  VALIDACION_PAGO_RECHAZADO = ResultadoValidacionPago.RECHAZADO
+  VALIDACION_PAGO_ACEPTADO = ResultadoValidacionPago.ACEPTADO;
+  VALIDACION_PAGO_RECHAZADO = ResultadoValidacionPago.RECHAZADO;
+
+  EVALREEMBOLSO_PAGO_ACEPTADO = ResultadoEvaluacionReembolso.ACEPTADO;
+  EVALREEMBOLSO_PAGO_RECHAZADO = ResultadoEvaluacionReembolso.RECHAZADO;
+  EVALREEMBOLSO_PAGO_REEMBOLSADO = ResultadoEvaluacionReembolso.REEMBOLSADO;
 
   TEXTO_ESTADOSPAGO: string[] = [];
 
   public pago: IPago = null;
   public validacionesPago: IValidacionPago[] = [];
+  public reembolsosPago: IEvaluacionReembolso[] = [];
   public cuentas: ICuenta[] = [];
 
   public actualizandoPago = false;
   public aceptandoPago = false;
   public rechazandoPago = false;
+  public aceptandoReembolso = false;
+  public rechazandoReembolso = false;
 
   public formEdicionPago = new FormGroup({
     codigo_pago: new FormControl('', [
@@ -68,9 +77,17 @@ export class PagoDetailComponent implements OnInit {
     ]),
   });
 
+  public formReembolsoPago = new FormGroup({
+    mensaje: new FormControl('', [
+      Validators.required,
+      Validators.maxLength(256),
+    ]),
+  });
+
   constructor(
     private pagoService: PagoService,
     private validacionPagoService: ValidacionPagoService,
+    private evaluacionReembolsoService: EvaluacionReembolsoService,
     private cuentaService: CuentaService,
     private asistenteService: AsistenteService,
     private auth: AuthService,
@@ -92,6 +109,7 @@ export class PagoDetailComponent implements OnInit {
         .subscribe((res) => {
           this.pago = res;
           this.cargarValidacionesPago();
+          this.cargarReembolsosPago();
           // this.cargarCuenta();
           // this.cargarAsistente();
         }, console.error);
@@ -172,6 +190,59 @@ export class PagoDetailComponent implements OnInit {
 
   }
 
+  public onAceptarReembolso(): void {
+    if (this.pago.estado !== this.PAGO_EVALUACION_REEMBOLSO) return;
+
+    this.aceptandoReembolso = true;
+    const evaluacion: IEvaluacionReembolso = {
+      mensaje: 'OK',
+      resultado: ResultadoEvaluacionReembolso.ACEPTADO,
+      pago: this.pago.titular_id,
+      usuario: this.auth.user.id
+    };
+
+    this.evaluacionReembolsoService.create(evaluacion)
+      .subscribe((res) => {
+        this.reembolsosPago.unshift(res);
+        this.pagoService.get(this.pago.titular_id)
+          .subscribe((pagoUpdated) => {
+            this.pago = pagoUpdated;
+          }, console.error);
+        this.aceptandoReembolso = false;
+      }, error => {
+        this.aceptandoReembolso = false;
+      });
+
+  }
+
+  public onSubmitFormEvaluacionReembolso(): void {
+    if (!this.formReembolsoPago.valid) return;
+
+    this.rechazandoReembolso = true;
+
+    const evaluacion: IEvaluacionReembolso = Object.assign({}, this.formReembolsoPago.value);
+    evaluacion.resultado = ResultadoEvaluacionReembolso.RECHAZADO;
+    evaluacion.usuario = this.auth.user.id;
+    evaluacion.pago = this.pago.titular_id;
+    evaluacion.fecha_hora = '2020-03-01T11:00';
+
+    this.evaluacionReembolsoService.create(evaluacion)
+      .subscribe((res) => {
+        this.reembolsosPago.unshift(res);
+        this.pagoService.get(this.pago.titular_id)
+          .subscribe((pagoUpdated) => {
+            this.pago = pagoUpdated;
+          }, console.error);
+        this.rechazandoReembolso = false;
+        this.modalService.dismissAll();
+      }, error => {
+        this.rechazandoReembolso = false;
+        console.error(error);
+      });
+
+
+  }
+
   public openModalEditarPago(content): void {
     this.modalService.dismissAll();
     this.formEdicionPago.reset(this.pago);
@@ -191,10 +262,26 @@ export class PagoDetailComponent implements OnInit {
     });
   }
 
+  public openModalRechazoReembolso(content): void {
+    this.modalService.dismissAll();
+    this.modalService.open(content, {
+      centered: true,
+      size: 'lg',
+      windowClass: 'animated bounceIn'
+    });
+  }
+
   private cargarValidacionesPago(): void {
     this.validacionPagoService.getAllByPago(this.pago.titular_id)
       .subscribe((res) => {
         this.validacionesPago = res;
+      }, console.error);
+  }
+
+  private cargarReembolsosPago(): void {
+    this.evaluacionReembolsoService.getAllByPago(this.pago.titular_id)
+      .subscribe((res) => {
+        this.reembolsosPago = res;
       }, console.error);
   }
 

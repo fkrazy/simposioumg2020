@@ -8,6 +8,7 @@
 
   <div class="row mt-3">
     <div class="col-12 d-flex justify-content-end">
+
       <ng-container *ngIf="pago.estado == PAGO_PENDIENTE_VALIDACION">
 
         <button (click)="openModalRechazoPago(contentModalRechazoPago)"
@@ -24,6 +25,24 @@
           Aceptar
         </button>
       </ng-container>
+
+      <ng-container *ngIf="pago.estado == PAGO_EVALUACION_REEMBOLSO">
+
+        <button (click)="openModalRechazoReembolso(contentModalRechazoReembolso)"
+                [disabled]="rechazandoReembolso || aceptandoReembolso"
+                class="btn btn-sm btn-danger mr-2">
+          <fa-icon [icon]="faTimes"></fa-icon>&nbsp;
+          Rechazar
+        </button>
+
+        <button (click)="onAceptarReembolso()"
+                [disabled]="rechazandoReembolso || aceptandoReembolso"
+                class="btn btn-sm btn-success">
+          <fa-icon [icon]="faCheck"></fa-icon>&nbsp;
+          Aceptar
+        </button>
+      </ng-container>
+
     </div>
   </div>
 
@@ -89,15 +108,29 @@
   </div>
 
 
-  <div *ngIf="validacionesPago.length > 0" class="row mt-3">
-    <ul class="list-group">
-      <li *ngFor="let validacion of validacionesPago"
-          [ngClass]="{'list-group-item': true,
+  <div class="row mt-3">
+    <div *ngIf="reembolsosPago.length > 0" class="col">
+      <h5>Evaluaciones de reembolso</h5>
+      <ul class="list-group">
+        <li *ngFor="let evaluacion of reembolsosPago"
+            [ngClass]="{'list-group-item': true,
+                      'text-danger': evaluacion.resultado === EVALREEMBOLSO_PAGO_RECHAZADO,
+                      'text-success': evaluacion.resultado === EVALREEMBOLSO_PAGO_ACEPTADO || evaluacion.resultado === EVALREEMBOLSO_PAGO_REEMBOLSADO}">
+          {{ evaluacion.fecha_hora + ' - ' +  evaluacion.mensaje }}
+        </li>
+      </ul>
+    </div>
+    <div *ngIf="validacionesPago.length > 0" class="col">
+      <h5>Validaciones</h5>
+      <ul class="list-group">
+        <li *ngFor="let validacion of validacionesPago"
+            [ngClass]="{'list-group-item': true,
                       'text-danger': validacion.resultado === VALIDACION_PAGO_RECHAZADO,
                       'text-success': validacion.resultado === VALIDACION_PAGO_ACEPTADO}">
-        {{ validacion.fecha_hora + ' - ' +  validacion.mensaje }}
-      </li>
-    </ul>
+          {{ validacion.fecha_hora + ' - ' +  validacion.mensaje }}
+        </li>
+      </ul>
+    </div>
   </div>
 </ng-template>
 
@@ -195,6 +228,45 @@
           <button [disabled]="!formValidacionPago.valid || rechazandoPago" type="submit" class="btn btn-danger">
             <fa-icon [icon]="faTimes"></fa-icon>&nbsp;
             Rechazar pago
+          </button>
+        </div>
+      </div>
+
+    </form>
+
+  </div>
+
+</ng-template>
+
+<ng-template #contentModalRechazoReembolso let-modalRechazoReembolso>
+  <div class="modal-header">
+
+    <h1 class="modal-title">Rechazo de reembolso</h1>
+
+    <button type="button" class="close" aria-label="Close" (click)="modalRechazoReembolso.dismiss('')">
+      <fa-icon [icon]="faTimes"></fa-icon>
+    </button>
+
+  </div>
+
+  <div class="modal-body">
+
+    <form (ngSubmit)="onSubmitFormEvaluacionReembolso()" [formGroup]="formReembolsoPago">
+
+      <div class="form-group row">
+        <label for="mensaje_reembolso" class="col-12 col-md-2 col-form-label">Mensaje</label>
+        <div class="col-12 col-md-10">
+          <textarea formControlName="mensaje" id="mensaje_reembolso" class="form-control" placeholder="Mensaje para el usuario">
+
+          </textarea>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col d-flex justify-content-end">
+          <button [disabled]="!formReembolsoPago.valid || rechazandoReembolso" type="submit" class="btn btn-danger">
+            <fa-icon [icon]="faTimes"></fa-icon>&nbsp;
+            Rechazar reembolso
           </button>
         </div>
       </div>
