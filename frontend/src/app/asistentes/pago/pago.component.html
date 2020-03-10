@@ -39,7 +39,15 @@
   <div *ngIf="pago.estado != 0" class="col-12">
     <div class="row">
       <div class="col-12 col-md-6 col-lg-4">
-        <div>
+        <div class="d-flex justify-content-start">
+          <button *ngIf="pago.estado == PAGO_PENDIENTE_VALIDACION || pago.estado == PAGO_RECHAZADO"
+                  (click)="openModalEdicionPago(modalEdicionPagoContent)"
+                  class="btn btn-sm btn-warning">
+            <fa-icon [icon]="faEdit"></fa-icon>&nbsp;
+            Modificar
+          </button>
+        </div>
+        <div class="mt-2">
           <p>C&oacute;digo: {{ pago.codigo_pago }}</p>
           <p *ngIf="pago.fecha">Fecha: {{ pago.fecha }}, Hora: {{ pago.hora }}</p>
           <div>
@@ -48,12 +56,6 @@
             <p>Titular: {{pago.cuenta.titular}}</p>
           </div>
         </div>
-        <button *ngIf="pago.estado == PAGO_PENDIENTE_VALIDACION || pago.estado == PAGO_RECHAZADO"
-                (click)="openModalEdicionPago(modalEdicionPagoContent)"
-                class="btn btn-warning">
-          <fa-icon [icon]="faEdit"></fa-icon>&nbsp;
-          Modificar
-        </button>
       </div>
       <div class="col-12 col-md-6 col-lg-8 d-flex justify-content-center p-2 border-dark">
         <img [src]="pago.foto" class="img-fluid" alt="Foto recibo">
