@@ -27,8 +27,11 @@ class CreatePagoSerializer(serializers.ModelSerializer):
     hora = serializers.TimeField(required=False)
 
     def to_internal_value(self, data):
-        data["cuenta"] = data["cuenta_id"]
-        data["titular"] = data["titular_id"]
+        try:
+            data["cuenta"] = data["cuenta_id"]
+            data["titular"] = data["titular_id"]
+        except KeyError:
+            pass
         return super().to_internal_value(data)
 
 
