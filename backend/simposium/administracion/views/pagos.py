@@ -1,10 +1,12 @@
 from django.utils import timezone
-from rest_framework import viewsets, mixins
+from rest_framework import viewsets
+from rest_framework.exceptions import PermissionDenied, ValidationError
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework.status import (
     HTTP_201_CREATED,
-    HTTP_403_FORBIDDEN
+    HTTP_403_FORBIDDEN,
+    HTTP_400_BAD_REQUEST
 )
 
 from ..models import Pago
@@ -142,13 +144,13 @@ class PagoViewSet(viewsets.ModelViewSet):
         es_asistente = False
 
         for group in request.user.groups.all():
-            if group.name == 'ADMIN':
-                es_admin = True
-            elif group.name == 'ASISTENTE':
-                es_asistente = True
+            es_admin = es_admin or group.name == 'ADMIN'
+            es_asistente = es_asistente or group.name == 'ASISTENTE'
 
         if not(es_admin or es_asistente):
             return Response({"detail": "No tienes permiso para actualizar pagos"}, status=HTTP_403_FORBIDDEN)
+        if instance.estado == Pago.ACEPTADO or instance.estado == Pago.REEMBOLSADO:
+            return Response({"detail": "Este pago ya no puede ser actualizado"}, status=HTTP_400_BAD_REQUEST)
 
         datos = {}
         datos['titular_id'] = instance.titular.usuario.id
@@ -170,8 +172,18 @@ class PagoViewSet(viewsets.ModelViewSet):
                 datos['hora'] = request.data['hora']
             # else:
             #     datos['hora'] = instance.hora
-            if request.data['estado']:
-                datos['estado'] = request.data['estado']
+            if request.data['estado'] and instance.estado != request.data['estado']:
+                new_estado = request.data['estado']
+                if ((new_estado == Pago.VALIDACION_RECHAZADA or new_estado == Pago.ACEPTADO) and instance.estado == Pago.PENDIENTE_VALIDACION) \
+                        or (new_estado == Pago.REEMBOLSO_APROBADO and instance.estado == Pago.EVALUACION_REEMBOLSO)\
+                        or (new_estado == Pago.REEMBOLSADO and instance.estado == Pago.REEMBOLSO_APROBADO):
+                    datos['estado'] = request.data['estado']
+                    if new_estado == Pago.ACEPTADO:
+                        pass # crear ticket
+                    if new_estado == Pago.REEMBOLSO_APROBADO:
+                        pass # invalidar ticket, invalidar asignaciones a conferencias
+                else:
+                    raise ValidationError("Estado inválido")
             # else:
             #     datos['estado'] = instance.estado
             # if request.data['foto']:
@@ -188,9 +200,13 @@ class PagoViewSet(viewsets.ModelViewSet):
             #     datos['cuenta_id'] = instance.cuenta.id
             if request.data['foto']:
                 datos['foto'] = request.data['foto']
-            if not es_admin and instance.estado == Pago.VALIDACION_RECHAZADA and request.data['estado'] and request.data['estado'] == Pago.PENDIENTE_VALIDACION:
-                datos['estado'] = Pago.PENDIENTE_VALIDACION;
-            request.data['fecha_registro'] = str(timezone.now())
+            if not es_admin and request.data['estado']:
+                if (instance.estado == Pago.VALIDACION_RECHAZADA and request.data['estado'] == Pago.PENDIENTE_VALIDACION)\
+                        or (instance.estado == Pago.ACEPTADO and request.data['estado'] == Pago.EVALUACION_REEMBOLSO):
+                    datos['estado'] = request.data['estado']
+                elif instance.estado != request.data['estado']:
+                    raise PermissionDenied("No tienes permiso para cambiar el estado de tu pago")
+            datos['fecha_registro'] = str(timezone.now())
 
         serializer = self.get_serializer(instance, data=datos, partial=True)
 
