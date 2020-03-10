@@ -34,8 +34,16 @@ class EvaluacionReembolsoViewSet(viewsets.ModelViewSet):
         if evaluaciones.exists():
             raise ValidationError('Este pago ya fue reembolsado')
         if self.request.data['resultado'] == EvaluacionReembolso.ACEPTADO:
+            evaluaciones = EvaluacionReembolso.objects.filter(pago=pago) \
+                .filter(resultado=EvaluacionReembolso.ACEPTADO)
+            if evaluaciones.exists():
+                raise ValidationError('El reembolso de este pago ya fue aceptado')
             pago.estado = Pago.REEMBOLSO_APROBADO
         elif self.request.data['resultado'] == EvaluacionReembolso.RECHAZADO:
+            evaluaciones = EvaluacionReembolso.objects.filter(pago=pago) \
+                .filter(resultado=EvaluacionReembolso.ACEPTADO)
+            if evaluaciones.exists():
+                raise ValidationError('El reembolso de este pago ya fue aceptado')
             pago.estado = Pago.ACEPTADO
         elif self.request.data['resultado'] == EvaluacionReembolso.REEMBOLSADO:
             pago.estado = Pago.REEMBOLSADO
