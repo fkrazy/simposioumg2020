@@ -43,6 +43,13 @@
         </button>
       </ng-container>
 
+      <button *ngIf="pago.estado === PAGO_REEMBOLSO_APROBADO" (click)="onReembolsar()"
+              [disabled]="reembolsando"
+              class="btn btn-sm btn-success">
+        <fa-icon [icon]="faMoneyBill"></fa-icon>&nbsp;
+        Reembolsar
+      </button>
+
     </div>
   </div>
 

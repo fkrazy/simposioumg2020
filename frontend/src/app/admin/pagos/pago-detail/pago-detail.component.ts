@@ -2,7 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import {ActivatedRoute, ParamMap} from '@angular/router';
 import {FormControl, FormGroup, Validators} from '@angular/forms';
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
-import {faCheck, faEdit, faSave, faTimes} from '@fortawesome/free-solid-svg-icons';
+import {faCheck, faEdit, faSave, faTimes, faMoneyBill} from '@fortawesome/free-solid-svg-icons';
 
 import {EstadoPago, IPago} from '../../../models/IPago';
 import {PagoService} from '../../../services/pago.service';
@@ -27,6 +27,7 @@ export class PagoDetailComponent implements OnInit {
   faTimes = faTimes;
   faEdit = faEdit;
   faSave = faSave;
+  faMoneyBill = faMoneyBill;
 
   PAGO_PENDIENTE_VALIDACION = EstadoPago.PENDIENTE_VALIDACION;
   PAGO_ACEPTADO = EstadoPago.ACEPTADO;
@@ -54,6 +55,7 @@ export class PagoDetailComponent implements OnInit {
   public rechazandoPago = false;
   public aceptandoReembolso = false;
   public rechazandoReembolso = false;
+  public reembolsando = false;
 
   public formEdicionPago = new FormGroup({
     codigo_pago: new FormControl('', [
@@ -195,7 +197,7 @@ export class PagoDetailComponent implements OnInit {
 
     this.aceptandoReembolso = true;
     const evaluacion: IEvaluacionReembolso = {
-      mensaje: 'OK',
+      mensaje: 'REEMBOLSO APROBADO',
       resultado: ResultadoEvaluacionReembolso.ACEPTADO,
       pago: this.pago.titular_id,
       usuario: this.auth.user.id
@@ -240,6 +242,31 @@ export class PagoDetailComponent implements OnInit {
         console.error(error);
       });
 
+
+  }
+
+  public onReembolsar(): void {
+    if (this.pago.estado !== this.PAGO_REEMBOLSO_APROBADO) return;
+
+    this.reembolsando = true;
+    const evaluacion: IEvaluacionReembolso = {
+      mensaje: 'DINERO DEVUELTO',
+      resultado: ResultadoEvaluacionReembolso.REEMBOLSADO,
+      pago: this.pago.titular_id,
+      usuario: this.auth.user.id
+    };
+
+    this.evaluacionReembolsoService.create(evaluacion)
+      .subscribe((res) => {
+        this.reembolsosPago.unshift(res);
+        this.pagoService.get(this.pago.titular_id)
+          .subscribe((pagoUpdated) => {
+            this.pago = pagoUpdated;
+          }, console.error);
+        this.reembolsando = false;
+      }, error => {
+        this.reembolsando = false;
+      });
 
   }
 
