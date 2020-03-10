@@ -10,4 +10,4 @@ from .reservaciones import ReservacionViewSet
 from .salones import SalonViewSet
 from .tickets import TicketViewSet
 from .validacion_pago import ValidacionPagoViewSet, validaciones_de_pago
-from .evaluacion_reembolso import EvaluacionReembolsoViewSet
+from .evaluacion_reembolso import EvaluacionReembolsoViewSet, reembolsos_de_pago
