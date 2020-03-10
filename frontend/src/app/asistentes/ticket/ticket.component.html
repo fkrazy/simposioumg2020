@@ -1,1 +1,24 @@
-<p>ticket works!</p>
+
+<ng-container *ngIf="ticket != null">
+  <div class="row">
+
+    <div class="col-12 col-md-6 d-flex justify-content-center align-items-center">
+
+        <div class="card-body h-auto">
+          <h2 class="card-title">{{ ticket.asistente.usuario.nombres + ' ' + ticket.asistente.usuario.apellidos }}</h2>
+          <h5 class="card-subtitle mb-2 text-info">{{ ticket.asistente.usuario.username }}</h5>
+
+        </div>
+
+    </div>
+
+    <div class="col-12 col-md-6 d-flex justify-content-center">
+      <img [src]="ticket.codigo_qr" class="d-block img-fluid w-75" alt="C&oacute;digo QR">
+    </div>
+
+  </div>
+</ng-container>
+
+<div *ngIf="ticket == null" class="ticket-not-found d-flex justify-content-center align-content-center align-items-center">
+  <h3 class="mt-4 error-not-found">A&uacute;n no tienes ticket.</h3>
+</div>
