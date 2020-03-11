@@ -296,7 +296,6 @@ export class ConferenciasComponent implements OnInit {
   // valida que el fin sea mayor al inicio
   private horaFinGtHoraInicio(): ValidatorFn {
     return (controlFin: AbstractControl): {[key: string]: any} | null => {
-      console.log('validando fin');
       const horaFin = controlFin.value;
 
       const error = { horarioInvalido: { value: horaFin } };
