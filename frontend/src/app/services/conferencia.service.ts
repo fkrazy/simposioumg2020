@@ -13,12 +13,20 @@ export class ConferenciaService {
 
   constructor(private http: HttpClient) { }
 
+  public get(idConferencia: number): Observable<IConferencia> {
+    return this.http.get<IConferencia>(`${ConferenciaService.BASE_URL}/${idConferencia}/`);
+  }
+
   public getAll(): Observable<IConferencia[]> {
     return this.http.get<IConferencia[]>(`${ConferenciaService.BASE_URL}/`);
   }
 
   public create(conferencia: FormData): Observable<IConferencia> {
     return this.http.post<IConferencia>(`${ConferenciaService.BASE_URL}/`, conferencia);
+  }
+
+  public update(idConferencia: number, conferencia: FormData): Observable<IConferencia> {
+    return this.http.put<IConferencia>(`${ConferenciaService.BASE_URL}/${idConferencia}/`, conferencia);
   }
 
   public delete(idConferencia: number): Observable<null> {
