@@ -1,7 +1,7 @@
 from .asistencias import AsistenciaSerializer
 from .asistentes import AsistenteSerializer, ReadAsistenteSerializer
 from .carreras import CarreraSerializer
-from .conferencias import ConferenciaSerializer
+from .conferencias import ConferenciaSerializer, ReadConferenciaSerializer
 from .conferencistas import ConferencistaSerializer
 from .cuentas import CuentaSerializer
 from .estudiantes_umg import EstudianteUmgSerializer
