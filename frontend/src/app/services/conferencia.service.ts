@@ -17,12 +17,12 @@ export class ConferenciaService {
     return this.http.get<IConferencia[]>(`${ConferenciaService.BASE_URL}/`);
   }
 
-  public create(conferencia: IConferencia): Observable<any> {
-    return this.http.post<any>(`${ConferenciaService.BASE_URL}/`, conferencia);
+  public create(conferencia: FormData): Observable<IConferencia> {
+    return this.http.post<IConferencia>(`${ConferenciaService.BASE_URL}/`, conferencia);
   }
 
-  public delete(idConferencia: number): Observable<any> {
-    return this.http.delete<any>(`${ConferenciaService.BASE_URL}/`);
+  public delete(idConferencia: number): Observable<null> {
+    return this.http.delete<null>(`${ConferenciaService.BASE_URL}/`);
   }
 
 }
