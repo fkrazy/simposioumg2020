@@ -22,7 +22,7 @@ export class ConferenciaService {
   }
 
   public delete(idConferencia: number): Observable<null> {
-    return this.http.delete<null>(`${ConferenciaService.BASE_URL}/`);
+    return this.http.delete<null>(`${ConferenciaService.BASE_URL}/${idConferencia}/`);
   }
 
 }
