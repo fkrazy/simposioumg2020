@@ -13,3 +13,7 @@ class Conferencia(models.Model):
 
     def __str__(self):
         return self.tema
+
+    def delete(self, using=None, keep_parents=False):
+        self.foto.storage.delete(self.foto.name) # elimina la foto
+        return super().delete(using, keep_parents)
