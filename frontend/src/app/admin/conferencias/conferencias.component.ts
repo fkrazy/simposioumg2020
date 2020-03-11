@@ -31,6 +31,8 @@ export class ConferenciasComponent implements OnInit {
 
   public guardando = false;
 
+  public fotoUrl: string = null;
+
   public formConferencia = new FormGroup({
     tema: new FormControl('', [
       Validators.required,
@@ -54,6 +56,9 @@ export class ConferenciasComponent implements OnInit {
       Validators.required,
       Validators.pattern('^\\d+$'),
     ]),
+    foto: new FormControl('', [
+      Validators.required,
+    ])
   });
 
   private horarioInicio = undefined;
@@ -91,19 +96,32 @@ export class ConferenciasComponent implements OnInit {
     this.guardando = true;
 
     const conf = this.formConferencia.value;
-    conf.conferencista = this.conferencistas.find(c => c.id == conf.id_conferencista);
-    conf.salon = this.salones.find(s => s.id == conf.id_salon);
+    // conf.conferencista = this.conferencistas.find(c => c.id == conf.id_conferencista);
+    // conf.salon = this.salones.find(s => s.id == conf.id_salon);
     conf.inicio = this.strToTime(conf.inicio);
     conf.fin = this.strToTime(conf.fin);
 
+    const formData = new FormData();
+    formData.append('conferencista', conf.id_conferencista);
+    formData.append('salon', conf.id_salon);
+    formData.append('tema', conf.tema);
+    formData.append('inicio', conf.inicio);
+    formData.append('fin', conf.fin);
+    formData.append('foto', this.formConferencia.get('foto').value);
+
     if (this.opcionNuevaConferencia) {
-      this.conferenciaService.create(this.formConferencia.value)
-        .subscribe(res => {
+      this.conferenciaService.create(formData)
+        .subscribe((res) => {
+
+          this.conferencias.push(res);
 
           this.guardando = false;
           this.modalService.dismissAll();
 
-        }, console.error);
+        }, error => {
+          this.guardando = false;
+          console.error(error);
+        });
     } else {
 
       this.guardando = false;
@@ -125,6 +143,7 @@ export class ConferenciasComponent implements OnInit {
   }
 
   public openModalNuevo(content): void {
+    this.fotoUrl = null;
     this.opcionNuevaConferencia = true;
     this.formConferencia.reset();
     this.openModal(content);
@@ -132,6 +151,7 @@ export class ConferenciasComponent implements OnInit {
 
   public openModalEditar(content): void {
     if (this.selectedConferencia == null) return;
+    this.fotoUrl = this.selectedConferencia.foto;
     this.opcionNuevaConferencia = false;
     this.formConferencia.reset(this.selectedConferencia);
     this.openModal(content);
@@ -143,6 +163,25 @@ export class ConferenciasComponent implements OnInit {
       centered: true,
       windowClass: 'animated bounceIn'
     });
+  }
+
+  public onFotoChange(event) {
+    if (event.target.files.length > 0) {
+      const file = event.target.files[0];
+      this.formConferencia.get('foto').setValue(file);
+
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const fotoBase64 = reader.result + '';
+        this.fotoUrl = fotoBase64;
+
+        /*const img = document.querySelector('#img-foto-conferencia');
+        if (img != null)
+          img.setAttribute('src', fotoBase64);*/
+
+      };
+      reader.readAsDataURL(file);
+    }
   }
 
   // convierte el string ingresado como inicio o fin al
