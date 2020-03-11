@@ -46,4 +46,6 @@
 /frontend/.DS_Store
 /frontend/Thumbs.db
 
+/backend/simposium/media/
+
 /**/__pycache__/
