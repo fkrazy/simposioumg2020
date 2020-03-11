@@ -56,9 +56,7 @@ export class ConferenciasComponent implements OnInit {
       Validators.required,
       Validators.pattern('^\\d+$'),
     ]),
-    foto: new FormControl('', [
-      Validators.required,
-    ])
+    foto: new FormControl('', [])
   });
 
   private horarioInicio = undefined;
@@ -101,15 +99,16 @@ export class ConferenciasComponent implements OnInit {
     conf.inicio = this.strToTime(conf.inicio);
     conf.fin = this.strToTime(conf.fin);
 
-    const formData = new FormData();
-    formData.append('conferencista', conf.id_conferencista);
-    formData.append('salon', conf.id_salon);
-    formData.append('tema', conf.tema);
-    formData.append('inicio', conf.inicio);
-    formData.append('fin', conf.fin);
-    formData.append('foto', this.formConferencia.get('foto').value);
-
     if (this.opcionNuevaConferencia) {
+
+      const formData = new FormData();
+      formData.append('conferencista', conf.id_conferencista);
+      formData.append('salon', conf.id_salon);
+      formData.append('tema', conf.tema);
+      formData.append('inicio', conf.inicio);
+      formData.append('fin', conf.fin);
+      formData.append('foto', this.formConferencia.get('foto').value);
+
       this.conferenciaService.create(formData)
         .subscribe((res) => {
 
@@ -124,7 +123,39 @@ export class ConferenciasComponent implements OnInit {
         });
     } else {
 
-      this.guardando = false;
+      const formData = new FormData();
+      if (this.selectedConferencia.id_conferencista !== conf.id_conferencista) {
+        formData.append('conferencista', conf.id_conferencista);
+      }
+      if (this.selectedConferencia.id_salon !== conf.id_salon) {
+        formData.append('salon', conf.id_salon);
+      }
+      if (this.selectedConferencia.tema !== conf.tema) {
+        formData.append('tema', conf.tema);
+      }
+      if (this.selectedConferencia.inicio !== conf.inicio) {
+        formData.append('inicio', conf.inicio);
+      }
+      if (this.selectedConferencia.fin !== conf.fin) {
+        formData.append('fin', conf.fin);
+      }
+      if (this.selectedConferencia.foto !== this.fotoUrl) {
+        formData.append('foto', this.formConferencia.get('foto').value);
+      }
+
+      this.conferenciaService.update(this.selectedConferencia.id, formData)
+        .subscribe((res) => {
+
+          this.conferencias[this.conferencias.findIndex((c) => c.id === this.selectedConferencia.id)] = res;
+          this.selectedConferencia = res;
+
+          this.guardando = false;
+          this.modalService.dismissAll();
+
+        }, error => {
+          this.guardando = false;
+          console.error(error);
+        });
 
     }
 
@@ -158,7 +189,10 @@ export class ConferenciasComponent implements OnInit {
     if (this.selectedConferencia == null) return;
     this.fotoUrl = this.selectedConferencia.foto;
     this.opcionNuevaConferencia = false;
-    this.formConferencia.reset(this.selectedConferencia);
+    const conferencia = Object.assign({}, this.selectedConferencia);
+    conferencia.inicio = conferencia.inicio.substring(0, 5);
+    conferencia.fin = conferencia.fin.substring(0, 5);
+    this.formConferencia.reset(conferencia);
     this.openModal(content);
   }
 

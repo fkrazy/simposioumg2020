@@ -123,7 +123,7 @@
   </div>
 
   <div class="modal-footer">
-    <button [disabled]="!formConferencia.valid || guardando" type="submit" form="form-conferencia" class="btn btn-primary">
+    <button [disabled]="!formConferencia.valid || guardando || (opcionNuevaConferencia && fotoUrl == null)" type="submit" form="form-conferencia" class="btn btn-primary">
       <fa-icon [icon]="faSave"></fa-icon>
       Guardar
     </button>
