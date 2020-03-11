@@ -10,5 +10,5 @@ export interface IConferencia {
   conferencista?: IConferencista;
   id_salon?: number;
   salon?: ISalon;
-  url: string;
+  foto: string;
 }
