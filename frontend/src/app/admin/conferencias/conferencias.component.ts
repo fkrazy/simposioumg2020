@@ -132,6 +132,11 @@ export class ConferenciasComponent implements OnInit {
 
   public onEliminarConferencia(): void {
     if (this.selectedConferencia == null) return;
+    this.conferenciaService.delete(this.selectedConferencia.id)
+      .subscribe((res) => {
+        this.conferencias.splice(this.conferencias.findIndex((c) => c.id === this.selectedConferencia.id), 1);
+        this.selectedConferencia = null;
+      }, console.error);
   }
 
   public onConferenciaClicked(conferencia: IConferencia): void {
