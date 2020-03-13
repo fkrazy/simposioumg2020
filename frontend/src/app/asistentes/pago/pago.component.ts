@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { faEdit, faSave, faTimes } from '@fortawesome/free-solid-svg-icons';
+import { faEdit, faSave, faTimes, faMoneyBill } from '@fortawesome/free-solid-svg-icons';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ICuenta } from '../../models/ICuenta';
@@ -7,6 +7,10 @@ import { CuentaService } from '../../services/cuenta.service';
 import { IPago, EstadoPago } from '../../models/IPago';
 import { PagoService } from '../../services/pago.service';
 import { AuthService } from '../../auth/auth.service';
+import { IValidacionPago, ResultadoValidacionPago } from '../../models/IValidacionPago';
+import { ValidacionPagoService } from '../../services/validacion-pago.service';
+import { IEvaluacionReembolso, ResultadoEvaluacionReembolso } from '../../models/IEvaluacionReembolso';
+import { EvaluacionReembolsoService } from '../../services/evaluacion-reembolso.service';
 
 @Component({
   selector: 'app-pago',
@@ -18,8 +22,8 @@ export class PagoComponent implements OnInit {
   // representacion de un pago sin registrar
   static PAGO_SINREGISTRAR: IPago = {
     codigo_pago: '',
-    cuenta: 0,
-    titular: 0,
+    cuenta_id: 0,
+    titular_id: 0,
     foto: '',
     fecha: '',
     hora: '',
@@ -33,18 +37,28 @@ export class PagoComponent implements OnInit {
   PAGO_REEMBOLSO_APROBADO = EstadoPago.REEMBOLSO_APROBADO;
   PAGO_REEMBOLSADO = EstadoPago.REEMBOLSADO;
 
+  VALIDACION_PAGO_ACEPTADO = ResultadoValidacionPago.ACEPTADO;
+  VALIDACION_PAGO_RECHAZADO = ResultadoValidacionPago.RECHAZADO;
+
+  EVALREEMBOLSO_PAGO_ACEPTADO = ResultadoEvaluacionReembolso.ACEPTADO;
+  EVALREEMBOLSO_PAGO_RECHAZADO = ResultadoEvaluacionReembolso.RECHAZADO;
+  EVALREEMBOLSO_PAGO_REEMBOLSADO = ResultadoEvaluacionReembolso.REEMBOLSADO;
+
   TEXTO_ESTADOSPAGO: string[] = [];
 
   faEdit = faEdit;
   faSave = faSave;
   faTimes = faTimes;
+  faMoneyBill = faMoneyBill;
 
   public cuentas: ICuenta[] = [];
   public pago: IPago = null;
-  public cuenta: ICuenta = null;
+  public validacionesPago: IValidacionPago[] = [];
+  public reembolsosPago: IEvaluacionReembolso[] = [];
   public registrandoPago = false;
 
   public guardando = false;
+  public solicitandoReembolso = false;
 
   private fotoStr = '';
   private fotoStrEdicion = '';
@@ -75,6 +89,8 @@ export class PagoComponent implements OnInit {
 
   constructor(
     private pagoService: PagoService,
+    private validacionPagoService: ValidacionPagoService,
+    private evaluacionReembolsoService: EvaluacionReembolsoService,
     private cuentaService: CuentaService,
     private auth: AuthService,
     private modalService: NgbModal
@@ -90,11 +106,7 @@ export class PagoComponent implements OnInit {
 
   ngOnInit() {
     this.pago = PagoComponent.PAGO_SINREGISTRAR;
-    this.pagoService.get(this.auth.user.id)
-      .subscribe((res) => {
-        this.pago = res;
-        this.cargarCuenta();
-      }, console.error);
+    this.cargarPago();
     this.cuentaService.getAll().subscribe((res) => {
       this.cuentas = res;
     }, console.error);
@@ -103,22 +115,21 @@ export class PagoComponent implements OnInit {
   public onSubmitFormRegistroPago(): void {
     if (!this.formRegistroPago.valid) return;
 
-    this.guardando = true;
+    this.registrandoPago = true;
     const pago = this.formRegistroPago.value;
 
     this.pagoService.create({
       codigo_pago: pago.codigo_recibo,
-      cuenta: pago.id_cuenta,
+      cuenta_id: pago.id_cuenta,
       foto: this.fotoStr,
       estado: EstadoPago.PENDIENTE_VALIDACION,
-      titular: this.auth.user.id
+      titular_id: this.auth.user.id
     }).subscribe((res) => {
       this.pago = res;
-      this.cargarCuenta();
-      this.guardando = false;
+      this.registrandoPago = false;
       this.modalService.dismissAll();
     }, error => {
-      this.guardando = false;
+      this.registrandoPago = false;
       console.error(error);
     });
 
@@ -132,13 +143,12 @@ export class PagoComponent implements OnInit {
 
     this.pagoService.update({
       codigo_pago: pago.codigo_recibo,
-      cuenta: pago.id_cuenta,
+      titular_id: this.pago.titular_id,
+      cuenta_id: pago.id_cuenta,
       foto: this.fotoStrEdicion,
-      estado: this.pago.estado,
-      titular: this.pago.titular
+      estado: this.pago.estado === this.PAGO_RECHAZADO ? this.PAGO_PENDIENTE_VALIDACION : this.pago.estado,
     }).subscribe((res) => {
       this.pago = res;
-      this.cargarCuenta();
       this.guardando = false;
       this.modalService.dismissAll();
     }, error => {
@@ -161,7 +171,7 @@ export class PagoComponent implements OnInit {
     this.fotoStrEdicion = this.pago.foto;
     this.formEdicionPago.reset({
       codigo_recibo: this.pago.codigo_pago,
-      id_cuenta: this.pago.cuenta,
+      id_cuenta: this.pago.cuenta_id,
       foto: ''
     });
     this.modalService.dismissAll();
@@ -170,6 +180,21 @@ export class PagoComponent implements OnInit {
       centered: true,
       windowClass: 'animated bounceIn'
     });
+  }
+
+  public onSolicitarReembolso(): void {
+    if (this.pago.estado !== this.PAGO_ACEPTADO) return;
+    this.solicitandoReembolso = true;
+    const pago = Object.assign({}, this.pago);
+    pago.estado = this.PAGO_EVALUACION_REEMBOLSO;
+    this.pagoService.update(pago)
+      .subscribe((res) => {
+        this.pago = res;
+        this.solicitandoReembolso = false;
+      }, error => {
+        this.solicitandoReembolso = false;
+        console.error(error);
+      });
   }
 
   public onChangeFotoRecibo(event): void {
@@ -198,11 +223,34 @@ export class PagoComponent implements OnInit {
     }
   }
 
-  private cargarCuenta(): void {
-    this.cuentaService.get(this.pago.cuenta)
+  private cargarPago(): void {
+    this.pagoService.get(this.auth.user.id)
+      .subscribe((res) => {
+        this.pago = res;
+        this.cargarValidacionesPago();
+        this.cargarReembolsosPago();
+      }, console.error);
+  }
+
+  private cargarValidacionesPago(): void {
+    this.validacionPagoService.getAllByPago(this.pago.titular_id)
+      .subscribe((res) => {
+        this.validacionesPago = res;
+      }, console.error);
+  }
+
+  private cargarReembolsosPago(): void {
+    this.evaluacionReembolsoService.getAllByPago(this.pago.titular_id)
+      .subscribe((res) => {
+        this.reembolsosPago = res;
+      }, console.error);
+  }
+
+  /*private cargarCuenta(): void {
+    this.cuentaService.get(this.pago.cuenta.id)
       .subscribe((resCuenta) => {
         this.cuenta = resCuenta;
       }, console.error);
-  }
+  }*/
 
 }

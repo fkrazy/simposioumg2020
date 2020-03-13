@@ -1,18 +1,19 @@
-import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, ParamMap } from '@angular/router';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { faCheck, faTimes, faEdit, faSave } from '@fortawesome/free-solid-svg-icons';
+import {Component, OnInit} from '@angular/core';
+import {ActivatedRoute, ParamMap} from '@angular/router';
+import {FormControl, FormGroup, Validators} from '@angular/forms';
+import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
+import {faCheck, faEdit, faSave, faTimes, faMoneyBill} from '@fortawesome/free-solid-svg-icons';
 
-import { EstadoPago, IPago } from '../../../models/IPago';
-import { PagoService } from '../../../services/pago.service';
-import { ICuenta } from '../../../models/ICuenta';
-import { CuentaService } from '../../../services/cuenta.service';
-import { IAsistente } from '../../../models/IAsistente';
-import { AsistenteService } from '../../../services/asistente.service';
-import { IValidacionPago, ResultadoValidacionPago } from '../../../models/IValidacionPago';
-import { ValidacionPagoService } from '../../../services/validacion-pago.service';
-import { AuthService } from '../../../auth/auth.service';
+import {EstadoPago, IPago} from '../../../models/IPago';
+import {PagoService} from '../../../services/pago.service';
+import {ICuenta} from '../../../models/ICuenta';
+import {CuentaService} from '../../../services/cuenta.service';
+import {AsistenteService} from '../../../services/asistente.service';
+import {IValidacionPago, ResultadoValidacionPago} from '../../../models/IValidacionPago';
+import {ValidacionPagoService} from '../../../services/validacion-pago.service';
+import {AuthService} from '../../../auth/auth.service';
+import {IEvaluacionReembolso, ResultadoEvaluacionReembolso} from '../../../models/IEvaluacionReembolso';
+import {EvaluacionReembolsoService} from '../../../services/evaluacion-reembolso.service';
 
 
 @Component({
@@ -26,6 +27,7 @@ export class PagoDetailComponent implements OnInit {
   faTimes = faTimes;
   faEdit = faEdit;
   faSave = faSave;
+  faMoneyBill = faMoneyBill;
 
   PAGO_PENDIENTE_VALIDACION = EstadoPago.PENDIENTE_VALIDACION;
   PAGO_ACEPTADO = EstadoPago.ACEPTADO;
@@ -34,21 +36,32 @@ export class PagoDetailComponent implements OnInit {
   PAGO_REEMBOLSO_APROBADO = EstadoPago.REEMBOLSO_APROBADO;
   PAGO_REEMBOLSADO = EstadoPago.REEMBOLSADO;
 
+  VALIDACION_PAGO_ACEPTADO = ResultadoValidacionPago.ACEPTADO;
+  VALIDACION_PAGO_RECHAZADO = ResultadoValidacionPago.RECHAZADO;
+
+  EVALREEMBOLSO_PAGO_ACEPTADO = ResultadoEvaluacionReembolso.ACEPTADO;
+  EVALREEMBOLSO_PAGO_RECHAZADO = ResultadoEvaluacionReembolso.RECHAZADO;
+  EVALREEMBOLSO_PAGO_REEMBOLSADO = ResultadoEvaluacionReembolso.REEMBOLSADO;
+
   TEXTO_ESTADOSPAGO: string[] = [];
 
   public pago: IPago = null;
-  public cuenta: ICuenta = null;
-  public asistente: IAsistente = null;
+  public validacionesPago: IValidacionPago[] = [];
+  public reembolsosPago: IEvaluacionReembolso[] = [];
   public cuentas: ICuenta[] = [];
 
   public actualizandoPago = false;
+  public aceptandoPago = false;
   public rechazandoPago = false;
+  public aceptandoReembolso = false;
+  public rechazandoReembolso = false;
+  public reembolsando = false;
 
   public formEdicionPago = new FormGroup({
     codigo_pago: new FormControl('', [
       Validators.required,
     ]),
-    cuenta: new FormControl('',[
+    cuenta_id: new FormControl('',[
       Validators.required
     ]),
     fecha: new FormControl('', [
@@ -66,9 +79,17 @@ export class PagoDetailComponent implements OnInit {
     ]),
   });
 
+  public formReembolsoPago = new FormGroup({
+    mensaje: new FormControl('', [
+      Validators.required,
+      Validators.maxLength(256),
+    ]),
+  });
+
   constructor(
     private pagoService: PagoService,
     private validacionPagoService: ValidacionPagoService,
+    private evaluacionReembolsoService: EvaluacionReembolsoService,
     private cuentaService: CuentaService,
     private asistenteService: AsistenteService,
     private auth: AuthService,
@@ -89,8 +110,10 @@ export class PagoDetailComponent implements OnInit {
       this.pagoService.get(Number.parseInt(params.get('id'),  10))
         .subscribe((res) => {
           this.pago = res;
-          this.cargarCuenta();
-          this.cargarAsistente();
+          this.cargarValidacionesPago();
+          this.cargarReembolsosPago();
+          // this.cargarCuenta();
+          // this.cargarAsistente();
         }, console.error);
     });
     this.cuentaService.getAll().subscribe((res) => {
@@ -108,11 +131,35 @@ export class PagoDetailComponent implements OnInit {
       .subscribe((res) => {
         this.pago = res;
         this.actualizandoPago = false;
-        this.cargarCuenta();
         this.modalService.dismissAll();
       }, error => {
         this.actualizandoPago = false;
         console.error(error);
+      });
+
+  }
+
+  public onAceptarPago(): void {
+    if (this.pago.estado !== this.PAGO_PENDIENTE_VALIDACION) return;
+
+    this.aceptandoPago = true;
+    const validacion: IValidacionPago = {
+      mensaje: 'OK',
+      resultado: ResultadoValidacionPago.ACEPTADO,
+      pago: this.pago.titular_id,
+      usuario: this.auth.user.id
+    };
+
+    this.validacionPagoService.create(validacion)
+      .subscribe((res) => {
+        this.validacionesPago.unshift(res);
+        this.pagoService.get(this.pago.titular_id)
+          .subscribe((pagoUpdated) => {
+            this.pago = pagoUpdated;
+          }, console.error);
+        this.aceptandoPago = false;
+      }, error => {
+        this.aceptandoPago = false;
       });
 
   }
@@ -125,12 +172,13 @@ export class PagoDetailComponent implements OnInit {
     const validacion: IValidacionPago = Object.assign({}, this.formValidacionPago.value);
     validacion.resultado = ResultadoValidacionPago.RECHAZADO;
     validacion.usuario = this.auth.user.id;
-    validacion.pago = this.pago.titular;
+    validacion.pago = this.pago.titular_id;
     validacion.fecha_hora = '2020-03-01T11:00';
 
     this.validacionPagoService.create(validacion)
       .subscribe((res) => {
-        this.pagoService.get(this.pago.titular)
+        this.validacionesPago.unshift(res);
+        this.pagoService.get(this.pago.titular_id)
           .subscribe((pagoUpdated) => {
             this.pago = pagoUpdated;
           }, console.error);
@@ -141,6 +189,84 @@ export class PagoDetailComponent implements OnInit {
         console.error(error);
       });
 
+
+  }
+
+  public onAceptarReembolso(): void {
+    if (this.pago.estado !== this.PAGO_EVALUACION_REEMBOLSO) return;
+
+    this.aceptandoReembolso = true;
+    const evaluacion: IEvaluacionReembolso = {
+      mensaje: 'REEMBOLSO APROBADO',
+      resultado: ResultadoEvaluacionReembolso.ACEPTADO,
+      pago: this.pago.titular_id,
+      usuario: this.auth.user.id
+    };
+
+    this.evaluacionReembolsoService.create(evaluacion)
+      .subscribe((res) => {
+        this.reembolsosPago.unshift(res);
+        this.pagoService.get(this.pago.titular_id)
+          .subscribe((pagoUpdated) => {
+            this.pago = pagoUpdated;
+          }, console.error);
+        this.aceptandoReembolso = false;
+      }, error => {
+        this.aceptandoReembolso = false;
+      });
+
+  }
+
+  public onSubmitFormEvaluacionReembolso(): void {
+    if (!this.formReembolsoPago.valid) return;
+
+    this.rechazandoReembolso = true;
+
+    const evaluacion: IEvaluacionReembolso = Object.assign({}, this.formReembolsoPago.value);
+    evaluacion.resultado = ResultadoEvaluacionReembolso.RECHAZADO;
+    evaluacion.usuario = this.auth.user.id;
+    evaluacion.pago = this.pago.titular_id;
+    evaluacion.fecha_hora = '2020-03-01T11:00';
+
+    this.evaluacionReembolsoService.create(evaluacion)
+      .subscribe((res) => {
+        this.reembolsosPago.unshift(res);
+        this.pagoService.get(this.pago.titular_id)
+          .subscribe((pagoUpdated) => {
+            this.pago = pagoUpdated;
+          }, console.error);
+        this.rechazandoReembolso = false;
+        this.modalService.dismissAll();
+      }, error => {
+        this.rechazandoReembolso = false;
+        console.error(error);
+      });
+
+
+  }
+
+  public onReembolsar(): void {
+    if (this.pago.estado !== this.PAGO_REEMBOLSO_APROBADO) return;
+
+    this.reembolsando = true;
+    const evaluacion: IEvaluacionReembolso = {
+      mensaje: 'DINERO DEVUELTO',
+      resultado: ResultadoEvaluacionReembolso.REEMBOLSADO,
+      pago: this.pago.titular_id,
+      usuario: this.auth.user.id
+    };
+
+    this.evaluacionReembolsoService.create(evaluacion)
+      .subscribe((res) => {
+        this.reembolsosPago.unshift(res);
+        this.pagoService.get(this.pago.titular_id)
+          .subscribe((pagoUpdated) => {
+            this.pago = pagoUpdated;
+          }, console.error);
+        this.reembolsando = false;
+      }, error => {
+        this.reembolsando = false;
+      });
 
   }
 
@@ -163,19 +289,42 @@ export class PagoDetailComponent implements OnInit {
     });
   }
 
-  private cargarCuenta(): void {
-    this.cuentaService.get(this.pago.cuenta)
-      .subscribe((resCuenta) => {
-        this.cuenta = resCuenta;
+  public openModalRechazoReembolso(content): void {
+    this.modalService.dismissAll();
+    this.modalService.open(content, {
+      centered: true,
+      size: 'lg',
+      windowClass: 'animated bounceIn'
+    });
+  }
+
+  private cargarValidacionesPago(): void {
+    this.validacionPagoService.getAllByPago(this.pago.titular_id)
+      .subscribe((res) => {
+        this.validacionesPago = res;
       }, console.error);
   }
 
-  private cargarAsistente(): void {
+  private cargarReembolsosPago(): void {
+    this.evaluacionReembolsoService.getAllByPago(this.pago.titular_id)
+      .subscribe((res) => {
+        this.reembolsosPago = res;
+      }, console.error);
+  }
+
+/*  private cargarCuenta(): void {
+    this.cuentaService.get(this.pago.cuenta.id)
+      .subscribe((resCuenta) => {
+        this.cuenta = resCuenta;
+      }, console.error);
+  }*/
+
+/*  private cargarAsistente(): void {
     this.asistenteService.get(this.pago.titular)
       .subscribe((res) => {
         this.asistente = res;
       }, console.error);
-  }
+  }*/
 
 
 }

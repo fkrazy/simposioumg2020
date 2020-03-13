@@ -1,1 +1,94 @@
-<p>reembolsos-pagos works!</p>
+
+<div class="row mt-3">
+  <div class="col">
+
+    <h2>Solicitudes de reembolso</h2>
+
+    <div class="table-responsive">
+
+      <table class="table table-hover">
+        <thead>
+        <tr>
+          <th>Registro</th>
+          <th>Titular</th>
+          <th>Cuenta</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr *ngFor="let pago of pagosReembolsoPendiente">
+          <!--<td>{{conf.id}}</td>-->
+          <td [routerLink]="['/admin/pagos', pago.titular_id]"><span class="btn btn-link text-dark">{{ pago.fecha_registro }}</span></td>
+          <td>{{ pago.titular.usuario.username }}</td>
+          <td>{{ pago.cuenta.numero }}</td>
+        </tr>
+        </tbody>
+      </table>
+
+    </div>
+    <ng-container *ngIf="pagosReembolsoPendiente.length === 0">
+      <p>No hay pagos con solicitud de reembolso</p>
+    </ng-container>
+  </div>
+</div>
+
+<div class="row mt-3">
+  <div class="col">
+
+    <h2>Reembolsos aprobados</h2>
+
+    <div class="table-responsive">
+
+      <table class="table table-hover">
+        <thead>
+        <tr>
+          <th>Registro</th>
+          <th>Titular</th>
+          <th>Cuenta</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr *ngFor="let pago of pagosReembolsoAprobado">
+          <td [routerLink]="['/admin/pagos', pago.titular_id]"><span class="btn btn-link text-dark">{{ pago.fecha_registro }}</span></td>
+          <td>{{ pago.titular.usuario.username }}</td>
+          <td>{{ pago.cuenta.numero }}</td>
+        </tr>
+        </tbody>
+      </table>
+
+    </div>
+    <ng-container *ngIf="pagosReembolsoAprobado.length === 0">
+      <p>No hay pagos con reembolso aprobado</p>
+    </ng-container>
+  </div>
+</div>
+
+<div class="row mt-3">
+  <div class="col">
+
+    <h2>Pagos reembolsados</h2>
+
+    <div class="table-responsive">
+
+      <table class="table table-hover">
+        <thead>
+        <tr>
+          <th>Registro</th>
+          <th>Titular</th>
+          <th>Cuenta</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr *ngFor="let pago of pagosReembolsados">
+          <td [routerLink]="['/admin/pagos', pago.titular_id]"><span class="btn btn-link text-dark">{{ pago.fecha_registro }}</span></td>
+          <td>{{ pago.titular.usuario.username }}</td>
+          <td>{{ pago.cuenta.numero }}</td>
+        </tr>
+        </tbody>
+      </table>
+
+    </div>
+    <ng-container *ngIf="pagosReembolsoAprobado.length === 0">
+      <p>No se ha reembolsado ning&uacute;n pago</p>
+    </ng-container>
+  </div>
+</div>

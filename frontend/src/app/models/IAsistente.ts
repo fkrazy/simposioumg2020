@@ -1,6 +1,6 @@
 import { IUser } from './IUser';
 
 export interface IAsistente {
-  usuario: number|IUser;
+  usuario: IUser;
   telefono: string;
 }

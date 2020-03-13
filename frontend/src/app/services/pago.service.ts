@@ -19,20 +19,28 @@ export class PagoService {
     return this.http.get<IPago>(`${PagoService.BASE_URL}/${idPago}`);
   }
 
-  public getAllAceptados(): Observable<IPago> {
-    return this.http.get<IPago>(`${PagoService.BASE_URL}/aceptados`);
+  public getAllAceptados(): Observable<IPago[]> {
+    return this.http.get<IPago[]>(`${PagoService.BASE_URL}/aceptados`);
   }
 
-  public getAllRechazados(): Observable<IPago> {
-    return this.http.get<IPago>(`${PagoService.BASE_URL}/rechazados`);
+  public getAllRechazados(): Observable<IPago[]> {
+    return this.http.get<IPago[]>(`${PagoService.BASE_URL}/rechazados`);
   }
 
-  public getAllPendientes(): Observable<IPago> {
-    return this.http.get<IPago>(`${PagoService.BASE_URL}/pendientes`);
+  public getAllPendientes(): Observable<IPago[]> {
+    return this.http.get<IPago[]>(`${PagoService.BASE_URL}/pendientes`);
   }
 
-  public getAllReembolsosPendientes(): Observable<IPago> {
-    return this.http.get<IPago>(`${PagoService.BASE_URL}/reembolsos`);
+  public getAllReembolsosPendientes(): Observable<IPago[]> {
+    return this.http.get<IPago[]>(`${PagoService.BASE_URL}/reembolsos`);
+  }
+
+  public getAllReembolsosAprobados(): Observable<IPago[]> {
+    return this.http.get<IPago[]>(`${PagoService.BASE_URL}/reembolsos_aprobados`);
+  }
+
+  public getAllReembolsados(): Observable<IPago[]> {
+    return this.http.get<IPago[]>(`${PagoService.BASE_URL}/reembolsados`);
   }
 
   public create(pago: IPago): Observable<IPago> {
@@ -40,7 +48,7 @@ export class PagoService {
   }
 
   public update(pago: IPago): Observable<IPago> {
-    return this.http.put<IPago>(`${PagoService.BASE_URL}/${pago.titular}/`, pago);
+    return this.http.put<IPago>(`${PagoService.BASE_URL}/${pago.titular_id}/`, pago);
   }
 
 }

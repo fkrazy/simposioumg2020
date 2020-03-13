@@ -31,6 +31,8 @@ export class ConferenciasComponent implements OnInit {
 
   public guardando = false;
 
+  public fotoUrl: string = null;
+
   public formConferencia = new FormGroup({
     tema: new FormControl('', [
       Validators.required,
@@ -54,6 +56,7 @@ export class ConferenciasComponent implements OnInit {
       Validators.required,
       Validators.pattern('^\\d+$'),
     ]),
+    foto: new FormControl('', [])
   });
 
   private horarioInicio = undefined;
@@ -91,22 +94,68 @@ export class ConferenciasComponent implements OnInit {
     this.guardando = true;
 
     const conf = this.formConferencia.value;
-    conf.conferencista = this.conferencistas.find(c => c.id == conf.id_conferencista);
-    conf.salon = this.salones.find(s => s.id == conf.id_salon);
+    // conf.conferencista = this.conferencistas.find(c => c.id == conf.id_conferencista);
+    // conf.salon = this.salones.find(s => s.id == conf.id_salon);
     conf.inicio = this.strToTime(conf.inicio);
     conf.fin = this.strToTime(conf.fin);
 
     if (this.opcionNuevaConferencia) {
-      this.conferenciaService.create(this.formConferencia.value)
-        .subscribe(res => {
+
+      const formData = new FormData();
+      formData.append('conferencista', conf.id_conferencista);
+      formData.append('salon', conf.id_salon);
+      formData.append('tema', conf.tema);
+      formData.append('inicio', conf.inicio);
+      formData.append('fin', conf.fin);
+      formData.append('foto', this.formConferencia.get('foto').value);
+
+      this.conferenciaService.create(formData)
+        .subscribe((res) => {
+
+          this.conferencias.push(res);
 
           this.guardando = false;
           this.modalService.dismissAll();
 
-        }, console.error);
+        }, error => {
+          this.guardando = false;
+          console.error(error);
+        });
     } else {
 
-      this.guardando = false;
+      const formData = new FormData();
+      if (this.selectedConferencia.id_conferencista !== conf.id_conferencista) {
+        formData.append('conferencista', conf.id_conferencista);
+      }
+      if (this.selectedConferencia.id_salon !== conf.id_salon) {
+        formData.append('salon', conf.id_salon);
+      }
+      if (this.selectedConferencia.tema !== conf.tema) {
+        formData.append('tema', conf.tema);
+      }
+      if (this.selectedConferencia.inicio !== conf.inicio) {
+        formData.append('inicio', conf.inicio);
+      }
+      if (this.selectedConferencia.fin !== conf.fin) {
+        formData.append('fin', conf.fin);
+      }
+      if (this.selectedConferencia.foto !== this.fotoUrl) {
+        formData.append('foto', this.formConferencia.get('foto').value);
+      }
+
+      this.conferenciaService.update(this.selectedConferencia.id, formData)
+        .subscribe((res) => {
+
+          this.conferencias[this.conferencias.findIndex((c) => c.id === this.selectedConferencia.id)] = res;
+          this.selectedConferencia = res;
+
+          this.guardando = false;
+          this.modalService.dismissAll();
+
+        }, error => {
+          this.guardando = false;
+          console.error(error);
+        });
 
     }
 
@@ -114,6 +163,11 @@ export class ConferenciasComponent implements OnInit {
 
   public onEliminarConferencia(): void {
     if (this.selectedConferencia == null) return;
+    this.conferenciaService.delete(this.selectedConferencia.id)
+      .subscribe((res) => {
+        this.conferencias.splice(this.conferencias.findIndex((c) => c.id === this.selectedConferencia.id), 1);
+        this.selectedConferencia = null;
+      }, console.error);
   }
 
   public onConferenciaClicked(conferencia: IConferencia): void {
@@ -125,6 +179,7 @@ export class ConferenciasComponent implements OnInit {
   }
 
   public openModalNuevo(content): void {
+    this.fotoUrl = null;
     this.opcionNuevaConferencia = true;
     this.formConferencia.reset();
     this.openModal(content);
@@ -132,8 +187,12 @@ export class ConferenciasComponent implements OnInit {
 
   public openModalEditar(content): void {
     if (this.selectedConferencia == null) return;
+    this.fotoUrl = this.selectedConferencia.foto;
     this.opcionNuevaConferencia = false;
-    this.formConferencia.reset(this.selectedConferencia);
+    const conferencia = Object.assign({}, this.selectedConferencia);
+    conferencia.inicio = conferencia.inicio.substring(0, 5);
+    conferencia.fin = conferencia.fin.substring(0, 5);
+    this.formConferencia.reset(conferencia);
     this.openModal(content);
   }
 
@@ -143,6 +202,25 @@ export class ConferenciasComponent implements OnInit {
       centered: true,
       windowClass: 'animated bounceIn'
     });
+  }
+
+  public onFotoChange(event) {
+    if (event.target.files.length > 0) {
+      const file = event.target.files[0];
+      this.formConferencia.get('foto').setValue(file);
+
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const fotoBase64 = reader.result + '';
+        this.fotoUrl = fotoBase64;
+
+        /*const img = document.querySelector('#img-foto-conferencia');
+        if (img != null)
+          img.setAttribute('src', fotoBase64);*/
+
+      };
+      reader.readAsDataURL(file);
+    }
   }
 
   // convierte el string ingresado como inicio o fin al
@@ -218,7 +296,6 @@ export class ConferenciasComponent implements OnInit {
   // valida que el fin sea mayor al inicio
   private horaFinGtHoraInicio(): ValidatorFn {
     return (controlFin: AbstractControl): {[key: string]: any} | null => {
-      console.log('validando fin');
       const horaFin = controlFin.value;
 
       const error = { horarioInvalido: { value: horaFin } };

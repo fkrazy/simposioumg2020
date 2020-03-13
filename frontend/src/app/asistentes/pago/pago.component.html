@@ -39,21 +39,32 @@
   <div *ngIf="pago.estado != 0" class="col-12">
     <div class="row">
       <div class="col-12 col-md-6 col-lg-4">
-        <div>
+        <div class="d-flex justify-content-start">
+
+          <button *ngIf="pago.estado == PAGO_PENDIENTE_VALIDACION || pago.estado == PAGO_RECHAZADO"
+                  (click)="openModalEdicionPago(modalEdicionPagoContent)"
+                  class="btn btn-sm btn-warning">
+            <fa-icon [icon]="faEdit"></fa-icon>&nbsp;
+            Modificar
+          </button>
+
+          <button *ngIf="pago.estado == PAGO_ACEPTADO"
+                  (click)="onSolicitarReembolso()"
+                  class="btn btn-sm btn-info">
+            <fa-icon [icon]="faMoneyBill"></fa-icon>&nbsp;
+            Solicitar reembolso
+          </button>
+
+        </div>
+        <div class="mt-2">
           <p>C&oacute;digo: {{ pago.codigo_pago }}</p>
           <p *ngIf="pago.fecha">Fecha: {{ pago.fecha }}, Hora: {{ pago.hora }}</p>
-          <div *ngIf="cuenta != null">
-            <p>No. de cuenta: {{cuenta.numero}}</p>
-            <p>Banco: {{cuenta.banco}}</p>
-            <p>Titular: {{cuenta.titular}}</p>
+          <div>
+            <p>No. de cuenta: {{pago.cuenta.numero}}</p>
+            <p>Banco: {{pago.cuenta.banco}}</p>
+            <p>Titular: {{pago.cuenta.titular}}</p>
           </div>
         </div>
-        <button *ngIf="pago.estado == PAGO_PENDIENTE_VALIDACION || pago.estado == PAGO_RECHAZADO"
-                (click)="openModalEdicionPago(modalEdicionPagoContent)"
-                class="btn btn-warning">
-          <fa-icon [icon]="faEdit"></fa-icon>&nbsp;
-          Modificar
-        </button>
       </div>
       <div class="col-12 col-md-6 col-lg-8 d-flex justify-content-center p-2 border-dark">
         <img [src]="pago.foto" class="img-fluid" alt="Foto recibo">
@@ -71,15 +82,22 @@
   </div>
 
   <div *ngIf="pago.estado == PAGO_RECHAZADO" class="col-12">
-    MENSAJES DE VALIDACION
+    <!--MENSAJES DE VALIDACION-->
   </div>
 
   <div *ngIf="pago.estado == PAGO_ACEPTADO" class="col-12">
-    MENSAJES DE REEMBOLSO RECHAZADO
+    <ul *ngIf="reembolsosPago.length > 0" class="list-group">
+      <li *ngFor="let evaluacion of reembolsosPago"
+          [ngClass]="{'list-group-item': true,
+                      'text-danger': evaluacion.resultado === EVALREEMBOLSO_PAGO_RECHAZADO,
+                      'text-success': evaluacion.resultado === EVALREEMBOLSO_PAGO_ACEPTADO || evaluacion.resultado === EVALREEMBOLSO_PAGO_REEMBOLSADO}">
+        {{ evaluacion.fecha_hora + ' - ' +  evaluacion.mensaje }}
+      </li>
+    </ul>
   </div>
 
   <div *ngIf="pago.estado == PAGO_EVALUACION_REEMBOLSO" class="col-12">
-    <p>Tu pago se encuentra en evaluaci&oacute;n de reembolso, te notificaremos cuando un administrador eval&iacute;e tu solicitud.</p>
+    <p>Tu pago se encuentra en evaluaci&oacute;n de reembolso, te notificaremos cuando un administrador eval&uacute;e tu solicitud.</p>
   </div>
 
   <div *ngIf="pago.estado == PAGO_REEMBOLSO_APROBADO" class="col-12">
@@ -90,8 +108,19 @@
     <p>Tu pago ya ha sido reembolsado.</p>
   </div>
 
-</div>
+  <div *ngIf="pago.estado == PAGO_RECHAZADO" class="row mt-3">
+    <ul class="list-group">
+      <li *ngFor="let validacion of validacionesPago"
+          [ngClass]="{'list-group-item': true,
+                      'text-danger': validacion.resultado === VALIDACION_PAGO_RECHAZADO,
+                      'text-success': validacion.resultado === VALIDACION_PAGO_ACEPTADO}">
+        {{ validacion.fecha_hora + ' - ' +  validacion.mensaje }}
+      </li>
+    </ul>
+  </div>
 
+
+</div>
 
 <ng-template #modalRegistroPagoContent let-modalRegistroPago>
 
@@ -142,7 +171,7 @@
   </div>
 
   <div class="modal-footer">
-    <button [disabled]="!formRegistroPago.valid || guardando" type="submit" form="form-registro-pago" class="btn btn-primary">
+    <button [disabled]="!formRegistroPago.valid || registrandoPago" type="submit" form="form-registro-pago" class="btn btn-primary">
       <!--<fa-icon [icon]="faSave"></fa-icon>-->
       Enviar
     </button>

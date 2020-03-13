@@ -46,6 +46,7 @@
 /frontend/.DS_Store
 /frontend/Thumbs.db
 
+<<<<<<< HEAD
 /**/__pycache__/
 
 
@@ -137,3 +138,8 @@
 
 # Copied web assets
 /validacionApp/app/src/main/assets/public
+=======
+/backend/simposium/media/
+
+/**/__pycache__/
+>>>>>>> 48a574020bf1bf27f0bba5c493ddb4fbf64b3dc7
