@@ -6,7 +6,7 @@ from .conferencistas import ConferencistaSerializer
 from .cuentas import CuentaSerializer
 from .estudiantes_umg import EstudianteUmgSerializer
 from .pagos import ReadPagoSerializer, CreatePagoSerializer
-from .reservaciones import ReservacionSerializer
+from .reservaciones import ReservacionSerializer, ReadReservacionSerializer
 from .salones import SalonSerializer
 from .tickets import TicketSerializer
 from .validacion_pago import ValidacionPagoSerializer
