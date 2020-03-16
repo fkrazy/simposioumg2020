@@ -6,12 +6,14 @@ from .conferencias import Conferencia
 
 class Reservacion(models.Model):
 
-    PAGADA = 1
-    NO_PAGADA = 2
+    CONFIRMADA = 1
+    PAGO_POR_VALIDAR = 3 # significa que el asistente ya registro su pago y esta pendiente de validar
+    PAGO_SIN_REGISTRAR = 4 # significa que el asistente aun no ha registrado su pago
 
     ESTADOS = (
-        (PAGADA, "PAGADA"),
-        (NO_PAGADA, "NO PAGADA")
+        (CONFIRMADA, "Confirmada"),
+        (PAGO_POR_VALIDAR, "Pago pendiente de validar"),
+        (PAGO_SIN_REGISTRAR, "Pago sin registrar")
     )
 
     asistente = models.ForeignKey(Asistente, null=False, related_name='reservaciones', verbose_name='Asistente',
@@ -19,7 +21,7 @@ class Reservacion(models.Model):
     conferencia = models.ForeignKey(Conferencia, null=False, related_name="reservaciones", verbose_name="Conferencia",
                                     on_delete=models.CASCADE)
     fecha = models.DateTimeField(verbose_name='Fecha de reservación', null=False)
-    estado = models.SmallIntegerField(verbose_name="Estado", choices=ESTADOS, default=NO_PAGADA, null=False)
+    estado = models.SmallIntegerField(verbose_name="Estado", choices=ESTADOS, default=CONFIRMADA, null=False)
 
     class Meta:
         index_together = [
