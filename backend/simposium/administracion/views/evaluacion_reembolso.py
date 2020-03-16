@@ -6,7 +6,7 @@ from rest_framework.response import Response
 from django.db import transaction, DatabaseError
 from django.utils import timezone
 
-from ..models import EvaluacionReembolso, Pago, Ticket
+from ..models import EvaluacionReembolso, Pago, Ticket, Reservacion
 from ..serializers import EvaluacionReembolsoSerializer
 from ..permisos import PermisoEvaluacionesReembolso
 
@@ -54,6 +54,7 @@ class EvaluacionReembolsoViewSet(viewsets.ModelViewSet):
                 pago.save()
                 # cuando se acepta el reembolso de un pago, se invalida el ticket asociado
                 if self.request.data['resultado'] == EvaluacionReembolso.ACEPTADO:
+                    Reservacion.objects.filter(asistente=pago.titular).delete()
                     ticket = Ticket.objects.get(asistente=pago.titular)
                     ticket.estado = Ticket.INVALIDO
                     ticket.save()
