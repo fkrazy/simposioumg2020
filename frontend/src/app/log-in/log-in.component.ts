@@ -1,9 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import {FormControl, FormGroup, Validators} from '@angular/forms';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { ToastrService } from 'ngx-toastr';
 import { faTimes } from '@fortawesome/free-solid-svg-icons';
-import {IUser} from '../models/IUser';
-import {AuthService} from '../auth/auth.service';
+
+import { IUser } from '../models/IUser';
+import { AuthService } from '../auth/auth.service';
 
 @Component({
   selector: 'app-log-in',
@@ -15,7 +17,6 @@ export class LogInComponent implements OnInit {
   faTimes = faTimes;
 
   public entrando = false;
-  public errorLogin: string = null;
 
   public formLogin = new FormGroup({
     username: new FormControl('', [
@@ -28,6 +29,7 @@ export class LogInComponent implements OnInit {
 
   constructor(
     private auth: AuthService,
+    private toastr: ToastrService,
     private router: Router
   ) { }
 
@@ -41,7 +43,12 @@ export class LogInComponent implements OnInit {
       .then((user: IUser) => {
         this.router.navigateByUrl('/');
       }).catch((error: any) => {
-      this.errorLogin = error;
+      if (error.error.detail) {
+        this.toastr.error(error.error.detail, undefined, {
+          positionClass: 'toast-bottom-right'
+        });
+      }
+
     }).finally(() => this.entrando = false);
   }
 

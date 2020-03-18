@@ -4,12 +4,6 @@
     <div class="col-12 col-md-6">
         <h4 class="modal-title">Inicio de sesi&oacute;n</h4>
 
-        <ng-template [ngIf]="errorLogin != null">
-          <div class="alert alert-danger" role="alert">
-            {{errorLogin}}
-          </div>
-        </ng-template>
-
         <form (ngSubmit)="onEntrar()" [formGroup]="formLogin" id="formLogin">
           <div class="form-group row">
             <label for="username" class="col-sm-2 col-form-label">Usuario</label>
