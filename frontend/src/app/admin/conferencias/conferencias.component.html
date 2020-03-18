@@ -32,6 +32,7 @@
       <th>Horario</th>
       <th>Conferencista</th>
       <th>Sal&oacute;n</th>
+      <th>Lugares</th>
     </tr>
     </thead>
     <tbody>
@@ -41,6 +42,11 @@
       <td>{{(conferencia.inicio | slice: 0:5) + '-' + (conferencia.fin | slice: 0:5)}}</td>
       <td>{{conferencia.conferencista.nombre}}</td>
       <td>{{conferencia.salon.nombre}}</td>
+      <td>
+        <span class="badge badge-info">{{conferencia.lugares.confirmados}}</span>
+        <span class="badge badge-warning">{{conferencia.lugares.pendientes}}</span>
+        <span class="badge badge-success">{{conferencia.lugares.disponibles}}</span>
+      </td>
     </tr>
     </tbody>
   </table>

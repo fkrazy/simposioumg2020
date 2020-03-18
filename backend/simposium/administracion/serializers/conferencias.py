@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from ..models import Conferencia
+from ..models import Conferencia, Reservacion
 from .conferencistas import ConferencistaSerializer
 from .salones import SalonSerializer
 
@@ -25,6 +25,16 @@ class ReadConferenciaSerializer(serializers.ModelSerializer):
         rep = super().to_representation(instance)
         rep["id_conferencista"] = rep["conferencista"]["id"]
         rep["id_salon"] = rep["salon"]["id"]
+
+        confirmados = Reservacion.objects.filter(conferencia=instance).filter(estado=Reservacion.CONFIRMADA).count()
+        pendientes = Reservacion.objects.filter(conferencia=instance).filter(estado=Reservacion.PAGO_POR_VALIDAR).count()
+        total = instance.salon.capacidad
+
+        rep["lugares"] = {
+            "confirmados": confirmados,
+            "pendientes": pendientes,
+            "disponibles": total
+        }
         return rep
 
 

@@ -11,4 +11,9 @@ export interface IConferencia {
   id_salon?: number;
   salon?: ISalon;
   foto: string;
+  lugares?: {
+    confirmados: number,
+    pendientes: number,
+    disponibles: number,
+  };
 }
