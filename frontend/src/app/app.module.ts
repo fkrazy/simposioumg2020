@@ -19,6 +19,7 @@ import { RegistroComponent } from './registro/registro.component';
 import { CarouselModule } from 'ngx-bootstrap/carousel';
 import { TokenInterceptor } from './token-interceptor';
 import { AuthService } from './auth/auth.service';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 const routes: Route[] = [
   {
@@ -72,7 +73,8 @@ const routes: Route[] = [
         RouterModule.forRoot(routes),
         FontAwesomeModule,
       NgbModule,
-      CarouselModule.forRoot()
+      CarouselModule.forRoot(),
+      BrowserAnimationsModule
     ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: TokenInterceptor, multi: true },
