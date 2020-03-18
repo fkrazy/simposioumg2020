@@ -4,4 +4,5 @@ export interface ICuenta {
   numero: string;
   banco: string;
   titular: string;
+  numero_depositos?: number;
 }

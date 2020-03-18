@@ -31,6 +31,7 @@
       <th>N&iacute;mero</th>
       <th>Banco</th>
       <th>Titular</th>
+      <th>Dep&oacute;sitos</th>
     </tr>
     </thead>
     <tbody>
@@ -38,6 +39,9 @@
       <td>{{cuenta.numero}}</td>
       <td>{{cuenta.banco}}</td>
       <td>{{cuenta.titular}}</td>
+      <td>
+        <span class="badge badge-info">{{cuenta.numero_depositos}}</span>
+      </td>
     </tr>
     </tbody>
   </table>
