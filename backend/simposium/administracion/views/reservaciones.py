@@ -4,7 +4,7 @@ from rest_framework.response import Response
 
 from django.utils import timezone
 
-from ..models import Reservacion, Pago, Conferencia
+from ..models import Reservacion, Pago, Conferencia, ValidacionPago
 from ..permisos import PermisoReservaciones
 from ..serializers import ReservacionSerializer, ReadReservacionSerializer
 
@@ -27,21 +27,25 @@ class ReservacionViewSet(viewsets.ModelViewSet):
 
     def create(self, request, *args, **kwargs):
 
+        request.data['asistente'] = request.user.id;
+        request.data['fecha'] = str(timezone.now())
+        request.data['estado'] = Reservacion.PAGO_POR_VALIDAR
+
         serializer = self.get_serializer(data=request.data)
-        serializer.asistente = request.user.asistente
-        serializer.fecha = timezone.now()
-        serializer.estado = Reservacion.PAGO_SIN_REGISTRAR
+
         try:
             pago = request.user.asistente.pago
             if pago.estado == Pago.ACEPTADO:
                 serializer.estado = Reservacion.CONFIRMADA
-            # elif pago.estado == Pago.PENDIENTE_VALIDACION:
-            #     serializer.estado = Reservacion.PAGO_POR_VALIDAR
-            # elif pago.estado in [Pago.EVALUACION_REEMBOLSO, Pago.REEMBOLSO_APROBADO, Pago.REEMBOLSADO, Pago.VALIDACION_RECHAZADA]:
+            elif pago.estado == Pago.PENDIENTE_VALIDACION:
+                if not pago.validaciones.filter(resultado=ValidacionPago.RECHAZADO).exists():
+                    serializer.estado = Reservacion.PAGO_POR_VALIDAR
+                else:
+                    return Response({"detail": "No puedes hacer reservaciones, tu pago ya fue rechazado una vez"}, status=status.HTTP_400_BAD_REQUEST)
             else:
-                return Response({"detail": "No puedes hacer reservaciones"}, status=status.HTTP_400_BAD_REQUEST)
+                return Response({"detail": "No puedes hacer reservaciones por el estado actual de tu pago"}, status=status.HTTP_400_BAD_REQUEST)
         except:
-            return Response({"detail": "No puedes hacer reservaciones"}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({"detail": "No puedes hacer reservaciones, primero debes registrar tu pago"}, status=status.HTTP_400_BAD_REQUEST)
         serializer.is_valid(raise_exception=True)
         conf = Conferencia.objects.get(pk=serializer.validated_data['conferencia'].id)
         if (conf.salon.capacidad - len(Reservacion.objects.filter(conferencia=conf).all())) <= 0:
