@@ -14,7 +14,8 @@ class PermisoReservaciones(BasePermission):
             es_admin = es_admin or group.name == 'ADMIN'
             es_asistente = es_asistente or group.name == 'ASISTENTE'
 
-        return ((es_admin or es_asistente) and request.method in SAFE_METHODS) or (es_asistente and request.method == 'POST')
+        return ((es_admin or es_asistente) and request.method in SAFE_METHODS) \
+               or (es_asistente and (request.method == 'POST' or request.method == 'DELETE'))
 
     def has_object_permission(self, request, view, obj):
 
