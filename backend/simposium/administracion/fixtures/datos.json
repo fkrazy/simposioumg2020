@@ -1,0 +1,238 @@
+[
+
+  {
+    "model": "auth.group",
+    "pk": 1,
+    "fields": {
+      "name": "ADMIN"
+    }
+  },
+  {
+    "model": "auth.group",
+    "pk": 2,
+    "fields": {
+      "name": "ASISTENTE"
+    }
+  },
+  {
+    "model": "auth.group",
+    "pk": 3,
+    "fields": {
+      "name": "ESTUDIANTE"
+    }
+  },
+  {
+    "model": "auth.group",
+    "pk": 4,
+    "fields": {
+      "name": "STAFF"
+    }
+  },
+
+
+
+  {
+    "model": "auth.user",
+    "pk": 1,
+    "fields": {
+      "username": "solomeo@gmail.com",
+      "email": "solomeo@gmail.com",
+      "password": "pbkdf2_sha256$150000$QaqaoDV90zhm$z+Fxrtnit4G31IYGsRni7v4Y5J+lfNvXy5lASx2rLZQ=",
+      "is_superuser": 1,
+      "first_name": "Solomeo",
+      "last_name": "Paredes",
+      "is_staff": 1,
+      "date_joined": "2020-03-18 17:12:30.547771",
+      "last_login": "2020-03-18 16:56:36.847053"
+    }
+  },
+  {
+    "model": "auth.user",
+    "pk": 2,
+    "fields": {
+      "username": "voldemort@gmail.com",
+      "email": "voldemort@gmail.com",
+      "password": "pbkdf2_sha256$150000$QaqaoDV90zhm$z+Fxrtnit4G31IYGsRni7v4Y5J+lfNvXy5lASx2rLZQ=",
+      "is_superuser": 0,
+      "first_name": "Tom",
+      "last_name": "Riddle",
+      "is_staff": 0,
+      "date_joined": "2020-03-18 17:12:30.547771",
+      "last_login": "2020-03-18 16:56:36.847053"
+    }
+  },
+
+
+  {
+    "model": "auth.user_groups",
+    "pk": 1,
+    "fields": {
+      "group_id": 1,
+      "user_id": 1
+    }
+  },
+  {
+    "model": "auth.user_groups",
+    "pk": 2,
+    "fields": {
+      "group_id": 1,
+      "user_id": 2
+    }
+  },
+
+  {
+    "model": "administracion.carrera",
+    "fields": {
+      "codigo": 90,
+      "nombre": "Ingeniería en Sistemas"
+    }
+  },
+  {
+    "model": "administracion.carrera",
+    "fields": {
+      "codigo": 666,
+      "nombre": "Otra"
+    }
+  },
+
+  {
+    "model": "administracion.cuenta",
+    "pk": 1,
+    "fields": {
+      "numero": "111-1234325325",
+      "banco": "Banco Industrial",
+      "titular": "Alejandro Roberto Martínez Juárez"
+    }
+  },
+  {
+    "model": "administracion.cuenta",
+    "pk": 2,
+    "fields": {
+      "numero": "222-1234441251",
+      "banco": "BANRURAL",
+      "titular": "Miguel Andrés López Domínguez"
+    }
+  },
+  {
+    "model": "administracion.cuenta",
+    "pk": 3,
+    "fields": {
+      "numero": "333-332351235",
+      "banco": "BAM",
+      "titular": "Karla Ramírez Vásquez"
+    }
+  },
+
+
+  {
+    "model": "administracion.salon",
+    "pk": 1,
+    "fields": {
+      "nombre": "A-32",
+      "ubicacion": "Primer nivel",
+      "capacidad": 235
+    }
+  },
+  {
+    "model": "administracion.salon",
+    "pk": 2,
+    "fields": {
+      "nombre": "A-45",
+      "ubicacion": "Primer nivel",
+      "capacidad": 132
+    }
+  },
+  {
+    "model": "administracion.salon",
+    "pk": 3,
+    "fields": {
+      "nombre": "B-33",
+      "ubicacion": "Tercer nivel",
+      "capacidad": 180
+    }
+  },
+
+
+  {
+    "model": "administracion.conferencista",
+    "pk": 1,
+    "fields": {
+      "nombre": "Elon el Loco Musk",
+      "profesion": "Ingeniero",
+      "resumen": "Fundador de Tesla, PayPal, SpaceX, entre otros."
+    }
+  },
+  {
+    "model": "administracion.conferencista",
+    "pk": 2,
+    "fields": {
+      "nombre": "Bill el Millonario Gates",
+      "profesion": "Filántropo, Programador",
+      "resumen": "Fundador de Microsoft"
+    }
+  },
+  {
+    "model": "administracion.conferencista",
+    "pk": 3,
+    "fields": {
+      "nombre": "Richard el Barbas Stallman",
+      "profesion": "Programador",
+      "resumen": "Creador del proyecto GNU"
+    }
+  },
+  {
+    "model": "administracion.conferencista",
+    "pk": 4,
+    "fields": {
+      "nombre": "Linus el Dinosaurio Torvals",
+      "profesion": "Programador",
+      "resumen": "Creador de Linux"
+    }
+  },
+  {
+    "model": "administracion.conferencista",
+    "pk": 5,
+    "fields": {
+      "nombre": "Tom el Pelos Locos Scott",
+      "profesion": "Youtuber",
+      "resumen": "Creador de videos sobre ciencia y tecnología en Youtube"
+    }
+  },
+  {
+    "model": "administracion.conferencista",
+    "pk": 6,
+    "fields": {
+      "nombre": "Steve la Chilindrina Wozniak",
+      "profesion": "Programador",
+      "resumen": "Co-fundador de Apple y creador del Apple II"
+    }
+  },
+
+
+
+  {
+    "model": "administracion.conferencia",
+    "pk": 1,
+    "fields": {
+      "tema": "Vida en el espacio",
+      "inicio": "07:00:00",
+      "fin": "09:00:00",
+      "conferencista_id": 1,
+      "salon_id": 1,
+      "foto": "/test_images/img-1.jpg"
+    }
+  },
+  {
+    "model": "administracion.conferencia",
+    "pk": 2,
+    "fields": {
+      "tema": "Barbas programadoras!",
+      "inicio": "09:00:00",
+      "fin": "11:00:00",
+      "conferencista_id": 3,
+      "salon_id": 1,
+      "foto": "/test_images/img-2.jpg"
+    }
+  }
+
+]
