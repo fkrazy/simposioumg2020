@@ -6,6 +6,10 @@ import { HeaderComponent } from './header/header.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
+import { CarouselModule } from 'ngx-bootstrap/carousel';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { ToastrModule } from 'ngx-toastr';
+
 import { AppComponent } from './app.component';
 import { LogOutComponent } from './log-out/log-out.component';
 import { LogInComponent } from './log-in/log-in.component';
@@ -16,10 +20,8 @@ import { OnlyAdminGuard } from './auth/only-admin.guard';
 import { InicioComponent } from './inicio/inicio.component';
 import { ConferenciasComponent } from './conferencias/conferencias.component';
 import { RegistroComponent } from './registro/registro.component';
-import { CarouselModule } from 'ngx-bootstrap/carousel';
 import { TokenInterceptor } from './token-interceptor';
 import { AuthService } from './auth/auth.service';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 const routes: Route[] = [
   {
@@ -74,7 +76,8 @@ const routes: Route[] = [
         FontAwesomeModule,
       NgbModule,
       CarouselModule.forRoot(),
-      BrowserAnimationsModule
+      BrowserAnimationsModule,
+      ToastrModule.forRoot()
     ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: TokenInterceptor, multi: true },
