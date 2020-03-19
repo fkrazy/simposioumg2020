@@ -1,9 +1,13 @@
 import { Component, OnInit } from '@angular/core';
-import { ISalon } from '../../models/ISalon';
-import { SalonService } from '../../services/salon.service';
 import { faPlus, faTrashAlt, faEdit, faSave, faTimes } from '@fortawesome/free-solid-svg-icons';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { ToastrService } from 'ngx-toastr';
+
+import { ISalon } from '../../models/ISalon';
+import { SalonService } from '../../services/salon.service';
+
+import swal from 'sweetalert2';
 
 @Component({
   selector: 'app-salones',
@@ -41,7 +45,8 @@ export class SalonesComponent implements OnInit {
 
   constructor(
     private salonService: SalonService,
-    private modalService: NgbModal
+    private modalService: NgbModal,
+    private toastr: ToastrService
   ) { }
 
   ngOnInit() {
@@ -88,11 +93,29 @@ export class SalonesComponent implements OnInit {
   public onEliminarSalon(): void {
     if (this.selectedSalon == null) return;
 
-    this.salonService.delete(this.selectedSalon.id)
-      .subscribe((res) => {
-        this.salones.splice(this.salones.findIndex((s) => s.id === this.selectedSalon.id), 1);
-        this.selectedSalon = null;
-      }, console.error);
+    swal.fire({
+      title: 'Estas a punto de eliminar un salon ',
+      text: 'La eliminacion no se puede revertir',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Eliminar',
+      cancelButtonText: 'Cancelar'
+    }).then((result) => {
+      if (result.value) {
+        this.salonService.delete(this.selectedSalon.id)
+          .subscribe((res) => {
+            this.salones.splice(this.salones.findIndex((s) => s.id === this.selectedSalon.id), 1);
+            this.selectedSalon = null;
+          }, error => {
+            console.error(error);
+            if (error.error.detail) {
+              this.toastr.error(error.error.detail);
+            }
+          });
+      }
+    });
   }
 
   public onSalonClicked(salon: ISalon): void {

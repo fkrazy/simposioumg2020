@@ -2,8 +2,12 @@ import { Component, OnInit } from '@angular/core';
 import { faPlus, faTrashAlt, faEdit, faSave, faTimes } from '@fortawesome/free-solid-svg-icons';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import {ToastrService} from 'ngx-toastr';
 import { ICuenta } from '../../models/ICuenta';
 import { CuentaService } from '../../services/cuenta.service';
+
+import swal from 'sweetalert2';
+import {error} from 'util';
 
 @Component({
   selector: 'app-cuentas',
@@ -41,7 +45,8 @@ export class CuentasComponent implements OnInit {
 
   constructor(
     private cuentaService: CuentaService,
-    private modalService: NgbModal
+    private modalService: NgbModal,
+    private toastr: ToastrService
   ) { }
 
   ngOnInit() {
@@ -85,13 +90,32 @@ export class CuentasComponent implements OnInit {
 
   public onEliminarCuenta(): void {
     if (this.selectedCuenta == null) return;
-    this.cuentaService.delete(this.selectedCuenta.id)
-      .subscribe((res) => {
 
-        this.cuentas.splice(this.cuentas.findIndex((c) => c.id == this.selectedCuenta.id), 1);
-        this.selectedCuenta = null;
+    swal.fire({
+      title: 'Estas a punto de eliminar una cuenta',
+      text: 'La eliminacion no se puede revertir',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Eliminar',
+      cancelButtonText: 'Cancelar'
+    }).then((result) => {
+      if (result.value) {
+        this.cuentaService.delete(this.selectedCuenta.id)
+          .subscribe((res) => {
 
-      }, console.error);
+            this.cuentas.splice(this.cuentas.findIndex((c) => c.id === this.selectedCuenta.id), 1);
+            this.selectedCuenta = null;
+
+          }, err => {
+            console.error(err);
+            if (err.error.detail) {
+              this.toastr.error(err.error.detail);
+            }
+          });
+      }
+    });
   }
 
   public onCuentaClicked(cuenta: ICuenta): void {

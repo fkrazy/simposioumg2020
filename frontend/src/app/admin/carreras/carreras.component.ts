@@ -1,9 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { faPlus, faTrashAlt, faEdit, faSave, faTimes } from '@fortawesome/free-solid-svg-icons';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { ICarrera } from '../../models/ICarrera';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { ToastrService } from 'ngx-toastr';
+import { ICarrera } from '../../models/ICarrera';
 import { CarreraService } from '../../services/carrera.service';
+
+import swal from 'sweetalert2';
 
 @Component({
   selector: 'app-carreras',
@@ -37,6 +40,7 @@ export class CarrerasComponent implements OnInit {
   constructor(
     private carreraService: CarreraService,
     private modalService: NgbModal,
+    private toastr: ToastrService
   ) { }
 
   ngOnInit() {
@@ -73,11 +77,30 @@ export class CarrerasComponent implements OnInit {
 
   public onEliminarCarrera(): void {
     if (this.selectedCarrera == null) return;
-    this.carreraService.delete(this.selectedCarrera.codigo).subscribe((res) => {
-      // this.cargarCarreras();
-      this.carreras.splice(this.carreras.findIndex((c) => c.codigo == this.selectedCarrera.codigo), 1);
-      this.selectedCarrera = null;
-    }, console.error);
+    swal.fire({
+      title: 'Estas a punto de eliminar una carrera',
+      text: 'La eliminacion no se puede revertir',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Eliminar',
+      cancelButtonText: 'Cancelar'
+    }).then((result) => {
+      if (result.value) {
+        this.carreraService.delete(this.selectedCarrera.codigo).subscribe((res) => {
+          // this.cargarCarreras();
+          this.carreras.splice(this.carreras.findIndex((c) => c.codigo == this.selectedCarrera.codigo), 1);
+          this.selectedCarrera = null;
+        }, error => {
+          if (error.error.detail) {
+            this.toastr.error(error.error.detail);
+          }
+          console.error(error);
+        });
+      }
+    });
+
   }
 
   public onCarreraClicked(carrera: ICarrera): void {

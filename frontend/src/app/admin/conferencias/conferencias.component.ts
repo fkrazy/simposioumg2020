@@ -1,13 +1,16 @@
 import { Component, OnInit } from '@angular/core';
 import { faPlus, faTrashAlt, faEdit, faSave, faTimes } from '@fortawesome/free-solid-svg-icons';
-import {AbstractControl, FormControl, FormGroup, ValidatorFn, Validators} from '@angular/forms';
+import { AbstractControl, FormControl, FormGroup, ValidatorFn, Validators } from '@angular/forms';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import {IConferencista} from '../../models/IConferencista';
-import {IConferencia} from '../../models/IConferencia';
-import {ISalon} from '../../models/ISalon';
-import {ConferenciaService} from '../../services/conferencia.service';
-import {ConferencistaService} from '../../services/conferencista.service';
-import {SalonService} from '../../services/salon.service';
+import { ToastrService } from 'ngx-toastr';
+import { IConferencista } from '../../models/IConferencista';
+import { IConferencia } from '../../models/IConferencia';
+import { ISalon } from '../../models/ISalon';
+import { ConferenciaService } from '../../services/conferencia.service';
+import { ConferencistaService } from '../../services/conferencista.service';
+import { SalonService } from '../../services/salon.service';
+
+import swal from 'sweetalert2';
 
 @Component({
   selector: 'app-conferencias',
@@ -66,7 +69,8 @@ export class ConferenciasComponent implements OnInit {
     private conferenciaService: ConferenciaService,
     private conferencistaService: ConferencistaService,
     private salonService: SalonService,
-    private modalService: NgbModal
+    private modalService: NgbModal,
+    private toastr: ToastrService
   ) { }
 
   ngOnInit() {
@@ -163,11 +167,31 @@ export class ConferenciasComponent implements OnInit {
 
   public onEliminarConferencia(): void {
     if (this.selectedConferencia == null) return;
-    this.conferenciaService.delete(this.selectedConferencia.id)
-      .subscribe((res) => {
-        this.conferencias.splice(this.conferencias.findIndex((c) => c.id === this.selectedConferencia.id), 1);
-        this.selectedConferencia = null;
-      }, console.error);
+
+    swal.fire({
+      title: 'Estas a punto de eliminar una conferencia',
+      text: 'La eliminacion no se puede revertir',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Eliminar',
+      cancelButtonText: 'Cancelar'
+    }).then((result) => {
+      if (result.value) {
+        this.conferenciaService.delete(this.selectedConferencia.id)
+          .subscribe((res) => {
+            this.conferencias.splice(this.conferencias.findIndex((c) => c.id === this.selectedConferencia.id), 1);
+            this.selectedConferencia = null;
+          }, error => {
+            if (error.error.detail) {
+              this.toastr.error(error.error.detail);
+            }
+          });
+      }
+    });
+
+
   }
 
   public onConferenciaClicked(conferencia: IConferencia): void {

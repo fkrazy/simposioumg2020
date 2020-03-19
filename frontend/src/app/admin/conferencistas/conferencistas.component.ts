@@ -2,8 +2,12 @@ import { Component, OnInit } from '@angular/core';
 import { faPlus, faTrashAlt, faEdit, faSave, faTimes } from '@fortawesome/free-solid-svg-icons';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { ToastrService } from 'ngx-toastr';
+
 import { IConferencista } from '../../models/IConferencista';
 import { ConferencistaService } from '../../services/conferencista.service';
+
+import swal from 'sweetalert2';
 
 @Component({
   selector: 'app-conferencistas',
@@ -41,7 +45,8 @@ export class ConferencistasComponent implements OnInit {
 
   constructor(
     private confService: ConferencistaService,
-    private modalService: NgbModal
+    private modalService: NgbModal,
+    private toastr: ToastrService
   ) { }
 
   ngOnInit() {
@@ -90,11 +95,30 @@ export class ConferencistasComponent implements OnInit {
   public onEliminarConf(): void {
     if (this.selectedConf == null) return;
 
-    this.confService.delete(this.selectedConf.id)
-      .subscribe((res) => {
-        this.conferencistas.splice(this.conferencistas.findIndex((c) => c.id === this.selectedConf.id), 1);
-        this.selectedConf = null;
-      }, console.error);
+    swal.fire({
+      title: 'Estas a punto de eliminar a un conferencista',
+      text: 'La eliminacion no se puede revertir',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Eliminar',
+      cancelButtonText: 'Cancelar'
+    }).then((result) => {
+      if (result.value) {
+        this.confService.delete(this.selectedConf.id)
+          .subscribe((res) => {
+            this.conferencistas.splice(this.conferencistas.findIndex((c) => c.id === this.selectedConf.id), 1);
+            this.selectedConf = null;
+          }, error => {
+            console.error(error);
+            if (error.error.detail) {
+              this.toastr.error(error.error.detail);
+            }
+          });
+      }
+    });
+
   }
 
   public onConfClicked(conferencista: IConferencista): void {
