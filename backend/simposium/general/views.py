@@ -63,9 +63,9 @@ def signin(request):
 
     try:
         payload['asistente'] = AsistenteSerializer(user.asistente).data
-        payload['estudiante'] = EstudianteUmgSerializer(user.Asistente.estudianteUmg).data
+        payload['estudiante'] = EstudianteUmgSerializer(user.asistente.estudianteUmg).data
     except:
-        print('NO ES ASISTENTE O ESTUDIANTE')
+        pass
 
     return Response(payload, status=HTTP_200_OK)
 
@@ -105,7 +105,8 @@ def registrar(request):
             if registro_serializer.data['es_estudiante']:
                 user.groups.add(Group.objects.get(name='ESTUDIANTE'))
                 user.save()
-                estudiante = EstudianteUmg(asistente=asistente, semestre=registro_serializer.data['semestre'],
+                estudiante = EstudianteUmg(asistente=asistente, carnet=registro_serializer.data['carnet'],
+                                           semestre=registro_serializer.data['semestre'],
                                            carrera=carrera)
                 estudiante.save()
     except (IntegrityError, DatabaseError) as error:
