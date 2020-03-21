@@ -1,31 +1,31 @@
 [
 
-  {
+    {
     "model": "auth.group",
     "pk": 1,
     "fields": {
-      "name": "ADMIN"
+      "name": "STAFF"
     }
   },
   {
     "model": "auth.group",
     "pk": 2,
     "fields": {
-      "name": "ASISTENTE"
+      "name": "ADMIN"
     }
   },
   {
     "model": "auth.group",
     "pk": 3,
     "fields": {
-      "name": "ESTUDIANTE"
+      "name": "ASISTENTE"
     }
   },
   {
     "model": "auth.group",
     "pk": 4,
     "fields": {
-      "name": "STAFF"
+      "name": "ESTUDIANTE"
     }
   },
 
@@ -73,9 +73,25 @@
   },
   {
     "model": "auth.user_groups",
+    "pk": 1,
+    "fields": {
+      "group_id": 2,
+      "user_id": 1
+    }
+  },
+  {
+    "model": "auth.user_groups",
     "pk": 2,
     "fields": {
       "group_id": 1,
+      "user_id": 2
+    }
+  },
+  {
+    "model": "auth.user_groups",
+    "pk": 2,
+    "fields": {
+      "group_id": 2,
       "user_id": 2
     }
   },
