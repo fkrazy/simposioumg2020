@@ -38,9 +38,11 @@ Para cargar los datos iniciales hay que ejecutar:
 ```
 python manage.py loaddata datos
 ```
-Esto crear&aacute; dos usuarios que se pueden utilizar para iniciar sesi&oacute;n: 
-1. solomeo@gmail.com que es superusuario(se puede ingresar al admin de django con &eacute;l) y tiene el rol ADMIN.
-1. voldemort@gmail.com que tiene el rol ADMIN pero no es superusuario.
+Esto crear&aacute; los siguientes usuarios que se pueden utilizar para iniciar sesi&oacute;n: 
+1. solomeo@gmail.com que es superusuario(se puede ingresar al admin de django con &eacute;l) y tiene el rol STAFF y ADMIN.
+1. voldemort@gmail.com que tiene el rol STAFF y ADMIN, pero no es superusuario.
+1. potter@gmail.com que tiene el rol ASISTENTE
+1. hermione@gmail.com que tiene el rol ASISTENTE y ESTUDIANTE
 
 > La ejecuci&oacute;n de este comando borrar&aacute; los datos de las tablas.
 

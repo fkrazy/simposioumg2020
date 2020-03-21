@@ -61,6 +61,51 @@
       "last_login": "2020-03-20 16:24:28.643240+00:00"
     }
   },
+  {
+    "model": "auth.user",
+    "pk": 3,
+    "fields": {
+      "username": "potter@gmail.com",
+      "email": "potter@gmail.com",
+      "password": "pbkdf2_sha256$150000$QaqaoDV90zhm$z+Fxrtnit4G31IYGsRni7v4Y5J+lfNvXy5lASx2rLZQ=",
+      "is_superuser": 0,
+      "first_name": "Harry",
+      "last_name": "Potter",
+      "is_staff": 0,
+      "date_joined": "2020-03-20 16:24:28.643240+00:00"
+    }
+  },
+  {
+    "model": "auth.user",
+    "pk": 4,
+    "fields": {
+      "username": "hermione@gmail.com",
+      "email": "hermione@gmail.com",
+      "password": "pbkdf2_sha256$150000$QaqaoDV90zhm$z+Fxrtnit4G31IYGsRni7v4Y5J+lfNvXy5lASx2rLZQ=",
+      "is_superuser": 0,
+      "first_name": "Hermione",
+      "last_name": "Granger",
+      "is_staff": 0,
+      "date_joined": "2020-03-20 16:24:28.643240+00:00"
+    }
+  },
+
+
+  {
+   "model": "administracion.asistente",
+    "fields": {
+      "usuario_id": 3,
+      "telefono": "33333333"
+    }
+  },
+  {
+   "model": "administracion.asistente",
+    "fields": {
+      "usuario_id": 4,
+      "telefono": "44444444"
+    }
+  },
+
 
 
   {
@@ -73,7 +118,7 @@
   },
   {
     "model": "auth.user_groups",
-    "pk": 1,
+    "pk": 2,
     "fields": {
       "group_id": 2,
       "user_id": 1
@@ -81,7 +126,7 @@
   },
   {
     "model": "auth.user_groups",
-    "pk": 2,
+    "pk": 3,
     "fields": {
       "group_id": 1,
       "user_id": 2
@@ -89,12 +134,37 @@
   },
   {
     "model": "auth.user_groups",
-    "pk": 2,
+    "pk": 4,
     "fields": {
       "group_id": 2,
       "user_id": 2
     }
   },
+  {
+    "model": "auth.user_groups",
+    "pk": 5,
+    "fields": {
+      "group_id": 3,
+      "user_id": 3
+    }
+  },
+  {
+    "model": "auth.user_groups",
+    "pk": 6,
+    "fields": {
+      "group_id": 3,
+      "user_id": 4
+    }
+  },
+  {
+    "model": "auth.user_groups",
+    "pk": 7,
+    "fields": {
+      "group_id": 4,
+      "user_id": 4
+    }
+  },
+
 
   {
     "model": "administracion.carrera",
@@ -110,6 +180,18 @@
       "nombre": "Otra"
     }
   },
+
+
+  {
+   "model": "administracion.estudianteumg",
+    "fields": {
+      "asistente_id": 4,
+      "carnet": "4444-44-444",
+      "semestre": 10,
+      "carrera_id": 90
+    }
+  },
+
 
   {
     "model": "administracion.cuenta",
