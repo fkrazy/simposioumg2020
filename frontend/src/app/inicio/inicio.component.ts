@@ -11,6 +11,8 @@ export class InicioComponent implements OnInit {
 
   @ViewChild('modalPrimerLogin', {static: true}) modalPrimerLogin;
 
+  public fecha = '10 Mayo 2020';
+
   constructor(
     public auth: AuthService,
     private modalService: NgbModal
