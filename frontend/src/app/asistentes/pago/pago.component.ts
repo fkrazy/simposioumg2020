@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { faEdit, faSave, faTimes, faMoneyBill } from '@fortawesome/free-solid-svg-icons';
+import { faEdit, faSave, faTimes, faMoneyBill, faReceipt, faPaperPlane } from '@fortawesome/free-solid-svg-icons';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ICuenta } from '../../models/ICuenta';
@@ -15,7 +15,7 @@ import { EvaluacionReembolsoService } from '../../services/evaluacion-reembolso.
 @Component({
   selector: 'app-pago',
   templateUrl: './pago.component.html',
-  styleUrls: ['./pago.component.scss']
+  styleUrls: ['./pago.component.scss'],
 })
 export class PagoComponent implements OnInit {
 
@@ -50,6 +50,10 @@ export class PagoComponent implements OnInit {
   faSave = faSave;
   faTimes = faTimes;
   faMoneyBill = faMoneyBill;
+  faReceipt = faReceipt;
+  faPaperPlane = faPaperPlane;
+
+  public monto = 300;
 
   public cuentas: ICuenta[] = [];
   public pago: IPago = null;
