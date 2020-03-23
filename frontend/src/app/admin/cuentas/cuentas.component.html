@@ -1,51 +1,52 @@
 
-
-<div class="row">
-  <div class="col">
-    <h2>Cuentas</h2>
+<div class="container">
+  <div class="row">
+    <div class="col">
+      <h2>Cuentas</h2>
+    </div>
   </div>
-</div>
 
-<div class="row">
-  <div class="col p-2">
-    <button (click)="openModalNueva(modalCuentaContent)" class="btn btn-info btn-sm float-right ml-1">
-      <fa-icon [icon]="faPlus"></fa-icon>
-      Nueva
-    </button>
-    <button (click)="openModalEditar(modalCuentaContent)" [disabled]="selectedCuenta == null" class="btn btn-warning btn-sm float-right ml-1">
-      <fa-icon [icon]="faEdit"></fa-icon>
-      Editar
-    </button>
-    <button (click)="onEliminarCuenta()" [disabled]="selectedCuenta == null" class="btn btn-danger btn-sm float-right ml-1">
-      <fa-icon [icon]="faTrashAlt"></fa-icon>
-      Eliminar
-    </button>
+  <div class="row">
+    <div class="col p-2">
+      <button (click)="openModalNueva(modalCuentaContent)" class="btn btn-info btn-sm float-right ml-1">
+        <fa-icon [icon]="faPlus"></fa-icon>
+        Nueva
+      </button>
+      <button (click)="openModalEditar(modalCuentaContent)" [disabled]="selectedCuenta == null" class="btn btn-warning btn-sm float-right ml-1">
+        <fa-icon [icon]="faEdit"></fa-icon>
+        Editar
+      </button>
+      <button (click)="onEliminarCuenta()" [disabled]="selectedCuenta == null" class="btn btn-danger btn-sm float-right ml-1">
+        <fa-icon [icon]="faTrashAlt"></fa-icon>
+        Eliminar
+      </button>
+    </div>
   </div>
-</div>
 
-<div class="table-responsive">
+  <div class="table-responsive">
 
-  <table class="table table-hover">
-    <thead>
-    <tr>
-      <th>N&iacute;mero</th>
-      <th>Banco</th>
-      <th>Titular</th>
-      <th>Dep&oacute;sitos</th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr *ngFor="let cuenta of cuentas" (click)="onCuentaClicked(cuenta)" [ngClass]="{'bg-dark text-light': cuenta == selectedCuenta}">
-      <td>{{cuenta.numero}}</td>
-      <td>{{cuenta.banco}}</td>
-      <td>{{cuenta.titular}}</td>
-      <td>
-        <span class="badge badge-info">{{cuenta.numero_depositos}}</span>
-      </td>
-    </tr>
-    </tbody>
-  </table>
+    <table class="table table-hover">
+      <thead>
+      <tr>
+        <th>N&iacute;mero</th>
+        <th>Banco</th>
+        <th>Titular</th>
+        <th>Dep&oacute;sitos</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr *ngFor="let cuenta of cuentas" (click)="onCuentaClicked(cuenta)" [ngClass]="{'bg-dark text-light': cuenta == selectedCuenta}">
+        <td>{{cuenta.numero}}</td>
+        <td>{{cuenta.banco}}</td>
+        <td>{{cuenta.titular}}</td>
+        <td>
+          <span class="badge badge-info">{{cuenta.numero_depositos}}</span>
+        </td>
+      </tr>
+      </tbody>
+    </table>
 
+  </div>
 </div>
 
 <ng-template #modalCuentaContent let-modalCuenta>
