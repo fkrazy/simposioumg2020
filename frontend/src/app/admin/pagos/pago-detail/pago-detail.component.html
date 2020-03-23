@@ -1,145 +1,157 @@
 
 
-<div *ngIf="pago == null" class="container-not-found d-flex justify-content-center align-content-center align-items-center">
-  <h3 class="mt-4 error-not-found">El pago que buscas no existe.</h3>
-</div>
-
-<ng-template [ngIf]="pago != null">
-
-  <div class="row mt-3">
-    <div class="col-12 d-flex justify-content-end">
-
-      <ng-container *ngIf="pago.estado == PAGO_PENDIENTE_VALIDACION">
-
-        <button (click)="openModalRechazoPago(contentModalRechazoPago)"
-                [disabled]="rechazandoPago || aceptandoPago"
-                class="btn btn-sm btn-danger mr-2">
-          <fa-icon [icon]="faTimes"></fa-icon>&nbsp;
-          Rechazar
-        </button>
-
-        <button (click)="onAceptarPago()"
-                [disabled]="pago.fecha == null || pago.hora == null || rechazandoPago || aceptandoPago"
-                class="btn btn-sm btn-success">
-          <fa-icon [icon]="faCheck"></fa-icon>&nbsp;
-          Aceptar
-        </button>
-      </ng-container>
-
-      <ng-container *ngIf="pago.estado == PAGO_EVALUACION_REEMBOLSO">
-
-        <button (click)="openModalRechazoReembolso(contentModalRechazoReembolso)"
-                [disabled]="rechazandoReembolso || aceptandoReembolso"
-                class="btn btn-sm btn-danger mr-2">
-          <fa-icon [icon]="faTimes"></fa-icon>&nbsp;
-          Rechazar
-        </button>
-
-        <button (click)="onAceptarReembolso()"
-                [disabled]="rechazandoReembolso || aceptandoReembolso"
-                class="btn btn-sm btn-success">
-          <fa-icon [icon]="faCheck"></fa-icon>&nbsp;
-          Aceptar
-        </button>
-      </ng-container>
-
-      <button *ngIf="pago.estado === PAGO_REEMBOLSO_APROBADO" (click)="onReembolsar()"
-              [disabled]="reembolsando"
-              class="btn btn-sm btn-success">
-        <fa-icon [icon]="faMoneyBill"></fa-icon>&nbsp;
-        Reembolsar
-      </button>
-
-    </div>
+<div class="container">
+  <div *ngIf="pago == null" class="container-not-found d-flex justify-content-center align-content-center align-items-center">
+    <h3 class="mt-4 error-not-found">El pago que buscas no existe.</h3>
   </div>
 
-  <div class="row mt-3">
-    <div class="col-12 col-md-6 col-lg-3">
+  <ng-template [ngIf]="pago != null">
+
+    <div class="row mt-3">
+      <div class="col-12 d-flex justify-content-end">
+
+        <ng-container *ngIf="pago.estado == PAGO_PENDIENTE_VALIDACION">
+
+          <button (click)="openModalRechazoPago(contentModalRechazoPago)"
+                  [disabled]="rechazandoPago || aceptandoPago"
+                  class="btn btn-sm btn-danger mr-2">
+            <fa-icon [icon]="faTimes"></fa-icon>&nbsp;
+            Rechazar
+            <i *ngIf="rechazandoPago" class="pi pi-spin pi-spinner" style="font-size: 0.8em"></i>
+          </button>
+
+          <button (click)="onAceptarPago()"
+                  [disabled]="pago.fecha == null || pago.hora == null || rechazandoPago || aceptandoPago"
+                  class="btn btn-sm btn-success">
+            <fa-icon [icon]="faCheck"></fa-icon>&nbsp;
+            Aceptar
+            <i *ngIf="aceptandoPago" class="pi pi-spin pi-spinner" style="font-size: 0.8em"></i>
+          </button>
+        </ng-container>
+
+        <ng-container *ngIf="pago.estado == PAGO_EVALUACION_REEMBOLSO">
+
+          <button (click)="openModalRechazoReembolso(contentModalRechazoReembolso)"
+                  [disabled]="rechazandoReembolso || aceptandoReembolso"
+                  class="btn btn-sm btn-danger mr-2">
+            <fa-icon [icon]="faTimes"></fa-icon>&nbsp;
+            Rechazar
+            <i *ngIf="rechazandoReembolso" class="pi pi-spin pi-spinner" style="font-size: 0.8em"></i>
+          </button>
+
+          <button (click)="onAceptarReembolso()"
+                  [disabled]="rechazandoReembolso || aceptandoReembolso"
+                  class="btn btn-sm btn-success">
+            <fa-icon [icon]="faCheck"></fa-icon>&nbsp;
+            Aceptar
+            <i *ngIf="aceptandoReembolso" class="pi pi-spin pi-spinner" style="font-size: 0.8em"></i>
+          </button>
+        </ng-container>
+
+        <button *ngIf="pago.estado === PAGO_REEMBOLSO_APROBADO" (click)="onReembolsar()"
+                [disabled]="reembolsando"
+                class="btn btn-sm btn-success">
+          <fa-icon [icon]="faMoneyBill"></fa-icon>&nbsp;
+          Reembolsar
+          <i *ngIf="reembolsando" class="pi pi-spin pi-spinner" style="font-size: 0.8em"></i>
+        </button>
+
+      </div>
+    </div>
+
+    <div class="row mt-3">
+      <div class="col-12 col-md-6 col-lg-3">
         <div class="detail">
           <label class="detail-label">No. de recibo</label>
           <p class="detail-content">{{ pago.codigo_pago }}</p>
         </div>
 
-      <div class="detail">
-        <label class="detail-label">Estado</label>
-        <p class="detail-content">{{ TEXTO_ESTADOSPAGO[pago.estado] }}</p>
+        <div class="detail">
+          <label class="detail-label">Estado</label>
+          <p class="detail-content">{{ TEXTO_ESTADOSPAGO[pago.estado] }}</p>
+        </div>
+
+        <div class="detail">
+          <label class="detail-label">Asistente</label>
+          <p class="detail-content">{{ pago.titular.usuario.nombres + ' ' + pago.titular.usuario.apellidos }}</p>
+          <p class="detail-content">{{ pago.titular.usuario.username }}</p>
+        </div>
+
+        <div class="detail">
+          <label class="detail-label">No. de cuenta</label>
+          <p class="detail-content">{{ pago.cuenta.numero }}</p>
+        </div>
+
+        <div class="detail">
+          <label class="detail-label">Banco</label>
+          <p class="detail-content">{{ pago.cuenta.banco }}</p>
+        </div>
+
+        <div class="detail">
+          <label class="detail-label">Titular de cuenta</label>
+          <p class="detail-content">{{ pago.cuenta.titular }}</p>
+        </div>
+
+        <div *ngIf="pago.fecha" class="detail">
+          <label class="detail-label">Fecha de dep&oacute;sito</label>
+          <p class="detail-content">{{ pago.fecha }}</p>
+        </div>
+
+        <div *ngIf="pago.hora" class="detail">
+          <label class="detail-label">Hora de dep&oacute;sito</label>
+          <p class="detail-content">{{ pago.hora }}</p>
+        </div>
+
+        <div class="detail">
+          <label class="detail-label">Fecha y hora de registro</label>
+          <p class="detail-content">{{ pago.fecha_registro }}</p>
+        </div>
+
+        <button (click)="openModalEditarPago(contentModalEdicionPago)"
+                *ngIf="pago.estado == PAGO_PENDIENTE_VALIDACION"
+                class="btn btn-sm btn-warning mt-3">
+          <fa-icon [icon]="faEdit"></fa-icon>&nbsp;
+          Modificar
+        </button>
+
       </div>
-
-      <div class="detail">
-        <label class="detail-label">Asistente</label>
-        <p class="detail-content">{{ pago.titular.usuario.nombres + ' ' + pago.titular.usuario.apellidos }}</p>
-        <p class="detail-content">{{ pago.titular.usuario.username }}</p>
+      <div class="col-12 col-md-6 col-lg-9 mt-3 mt-md-0">
+        <div class="foto-recibo-container d-flex justify-content-center justify-content-md-end align-content-center">
+          <img [src]="pago.foto" alt="Foto del recibo" class="img-fluid">
+        </div>
       </div>
-
-      <div class="detail">
-        <label class="detail-label">No. de cuenta</label>
-        <p class="detail-content">{{ pago.cuenta.numero }}</p>
-      </div>
-
-      <div class="detail">
-        <label class="detail-label">Banco</label>
-        <p class="detail-content">{{ pago.cuenta.banco }}</p>
-      </div>
-
-      <div class="detail">
-        <label class="detail-label">Titular de cuenta</label>
-        <p class="detail-content">{{ pago.cuenta.titular }}</p>
-      </div>
-
-      <div *ngIf="pago.fecha" class="detail">
-        <label class="detail-label">Fecha de dep&oacute;sito</label>
-        <p class="detail-content">{{ pago.fecha }}</p>
-      </div>
-
-      <div *ngIf="pago.hora" class="detail">
-        <label class="detail-label">Hora de dep&oacute;sito</label>
-        <p class="detail-content">{{ pago.hora }}</p>
-      </div>
-
-      <div class="detail">
-        <label class="detail-label">Fecha y hora de registro</label>
-        <p class="detail-content">{{ pago.fecha_registro }}</p>
-      </div>
-
-      <button (click)="openModalEditarPago(contentModalEdicionPago)" *ngIf="pago.estado == PAGO_PENDIENTE_VALIDACION" class="btn btn-sm btn-warning mt-3">
-        <fa-icon [icon]="faEdit"></fa-icon>&nbsp;
-        Modificar
-      </button>
-
     </div>
-    <div class="col-12 col-md-6 col-lg-9 mt-3 mt-md-0">
-      <div class="foto-recibo-container d-flex justify-content-center justify-content-md-end align-content-center">
-        <img [src]="pago.foto" alt="Foto del recibo" class="img-fluid">
+
+
+    <div class="row mt-3">
+      <div *ngIf="reembolsosPago.length > 0" class="col">
+        <h5>Evaluaciones de reembolso</h5>
+        <ul class="list-unstyled">
+          <li *ngFor="let evaluacion of reembolsosPago">
+            <i *ngIf="evaluacion.resultado === EVALREEMBOLSO_PAGO_RECHAZADO" [ngStyle]="{'font-size': '0.8rem', 'margin': '0', 'padding': '0'}" class="pi pi-times text-danger"></i>
+            <i *ngIf="evaluacion.resultado === EVALREEMBOLSO_PAGO_ACEPTADO" [ngStyle]="{'font-size': '0.8rem', 'margin': '0', 'padding': '0'}" class="pi pi-check text-success"></i>
+            <i *ngIf="evaluacion.resultado === EVALREEMBOLSO_PAGO_REEMBOLSADO" [ngStyle]="{'font-size': '0.8rem', 'margin': '0', 'padding': '0'}" class="pi pi-money-bill text-success"></i>
+            <span class="fecha-evalreembolso">{{ evaluacion.fecha_hora }}</span>
+            <br>
+            <span class="mensaje-evalreembolso">{{ evaluacion.mensaje }}</span>
+          </li>
+        </ul>
+      </div>
+      <div *ngIf="validacionesPago.length > 0" class="col">
+        <h5>Validaciones</h5>
+        <ul class="list-unstyled">
+          <li *ngFor="let validacion of validacionesPago">
+            <i *ngIf="validacion.resultado === VALIDACION_PAGO_RECHAZADO" [ngStyle]="{'font-size': '0.8rem', 'margin': '0', 'padding': '0'}" class="pi pi-times text-danger"></i>
+            <i *ngIf="validacion.resultado === VALIDACION_PAGO_ACEPTADO" [ngStyle]="{'font-size': '0.8rem', 'margin': '0', 'padding': '0'}" class="pi pi-check text-success"></i>
+            <span class="fecha-validacion">{{ validacion.fecha_hora }}</span>
+            <br>
+            <span class="mensaje-validacion">{{ validacion.mensaje }}</span>
+          </li>
+        </ul>
       </div>
     </div>
-  </div>
-
-
-  <div class="row mt-3">
-    <div *ngIf="reembolsosPago.length > 0" class="col">
-      <h5>Evaluaciones de reembolso</h5>
-      <ul class="list-group">
-        <li *ngFor="let evaluacion of reembolsosPago"
-            [ngClass]="{'list-group-item': true,
-                      'text-danger': evaluacion.resultado === EVALREEMBOLSO_PAGO_RECHAZADO,
-                      'text-success': evaluacion.resultado === EVALREEMBOLSO_PAGO_ACEPTADO || evaluacion.resultado === EVALREEMBOLSO_PAGO_REEMBOLSADO}">
-          {{ evaluacion.fecha_hora + ' - ' +  evaluacion.mensaje }}
-        </li>
-      </ul>
-    </div>
-    <div *ngIf="validacionesPago.length > 0" class="col">
-      <h5>Validaciones</h5>
-      <ul class="list-group">
-        <li *ngFor="let validacion of validacionesPago"
-            [ngClass]="{'list-group-item': true,
-                      'text-danger': validacion.resultado === VALIDACION_PAGO_RECHAZADO,
-                      'text-success': validacion.resultado === VALIDACION_PAGO_ACEPTADO}">
-          {{ validacion.fecha_hora + ' - ' +  validacion.mensaje }}
-        </li>
-      </ul>
-    </div>
-  </div>
-</ng-template>
+  </ng-template>
+</div>
 
 <ng-template #contentModalEdicionPago let-modalEdicionPago>
 
@@ -194,9 +206,12 @@
 
       <div class="row">
         <div class="col d-flex justify-content-end">
-          <button [disabled]="!formEdicionPago.valid || actualizandoPago" type="submit" form="form-edicion-pago" class="btn btn-info">
+          <button [disabled]="!formEdicionPago.valid || actualizandoPago"
+                  type="submit" form="form-edicion-pago"
+                  class="btn btn-sm btn-info">
             <fa-icon [icon]="faSave"></fa-icon>&nbsp;
             Guardar
+            <i *ngIf="actualizandoPago" class="pi pi-spin pi-spinner" style="font-size: 0.8em"></i>
           </button>
         </div>
       </div>
