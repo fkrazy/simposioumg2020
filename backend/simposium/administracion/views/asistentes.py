@@ -11,7 +11,6 @@ class AsistenteViewSet(viewsets.ModelViewSet):
 
     def retrieve(self, request, *args, **kwargs):
         instance = self.get_object()
-        # serializer = self.get_serializer(instance)
         return Response({
             "usuario": {
                 "id": instance.usuario.id,

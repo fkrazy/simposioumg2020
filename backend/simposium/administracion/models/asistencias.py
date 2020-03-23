@@ -5,8 +5,10 @@ from .conferencias import Conferencia
 
 class Asistencia(models.Model):
 
-    ticket = models.ForeignKey(Ticket, related_name="asistencias", null=False, verbose_name="Ticket", on_delete=models.PROTECT)
-    conferencia = models.ForeignKey(Conferencia, related_name="asistencias", null=False, verbose_name="Conferencia", on_delete=models.PROTECT)
+    ticket = models.ForeignKey(Ticket, related_name="asistencias", null=False, verbose_name="Ticket",
+                               on_delete=models.PROTECT)
+    conferencia = models.ForeignKey(Conferencia, related_name="asistencias", null=False, verbose_name="Conferencia",
+                                    on_delete=models.PROTECT)
     hora = models.TimeField(null=False, verbose_name='Hora de asistencia')
 
     class Meta:
