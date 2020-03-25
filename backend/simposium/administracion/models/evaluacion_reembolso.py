@@ -25,7 +25,7 @@ class EvaluacionReembolso(models.Model):
 
     # relaciones
     pago = models.ForeignKey(Pago, related_name='evaluaciones_reembolso', verbose_name='Pago', null=False,
-                             on_delete=models.PROTECT)
+                             on_delete=models.CASCADE)
     usuario = models.ForeignKey(User, related_name='evaluaciones_reembolsos', verbose_name='Usuario que evaluó', null=False,
                                 on_delete=models.PROTECT)
 

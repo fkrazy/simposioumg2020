@@ -8,7 +8,7 @@ class Conferencia(models.Model):
     inicio = models.TimeField(null=False, verbose_name='Hora de inicio')
     fin = models.TimeField(null=False, verbose_name='Hora de finalización')
     conferencista = models.ForeignKey(Conferencista, related_name='conferencias', null=False, on_delete=models.PROTECT)
-    salon = models.ForeignKey(Salon, related_name='conferencias', null=False, on_delete=models.CASCADE)
+    salon = models.ForeignKey(Salon, related_name='conferencias', null=False, on_delete=models.PROTECT)
     foto = models.ImageField(blank=False, null=False, upload_to='conferencias', default='none')
 
     def __str__(self):

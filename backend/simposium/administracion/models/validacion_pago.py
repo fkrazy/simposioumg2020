@@ -20,7 +20,7 @@ class ValidacionPago(models.Model):
     resultado = models.PositiveSmallIntegerField(verbose_name='Resultado', choices=RESULTADOS, default=ACEPTADO, null=False)
 
     # relaciones
-    pago = models.ForeignKey(Pago, related_name='validaciones', verbose_name='Pago', null=False, on_delete=models.PROTECT)
+    pago = models.ForeignKey(Pago, related_name='validaciones', verbose_name='Pago', null=False, on_delete=models.CASCADE)
     usuario = models.ForeignKey(User, related_name='validaciones_pagos', verbose_name='Usuario que validó', null=False, on_delete=models.PROTECT)
 
     fecha_hora = models.DateTimeField(null=False, verbose_name='Fecha y hora de validación', default=datetime.utcnow)
