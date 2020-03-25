@@ -3,11 +3,12 @@ import { faPlus, faTrashAlt, faEdit, faSave, faTimes } from '@fortawesome/free-s
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ToastrService } from 'ngx-toastr';
+import { MessageService } from 'primeng';
 
 import { ISalon } from '../../models/ISalon';
 import { SalonService } from '../../services/salon.service';
-
-import swal from 'sweetalert2';
+import { ErrorWithMessages, ErrorWithToastr } from '../../utils/errores';
+import { pedirConfirmacion } from '../../utils/confirmaciones';
 
 @Component({
   selector: 'app-salones',
@@ -21,6 +22,9 @@ export class SalonesComponent implements OnInit {
   faTrashAlt = faTrashAlt;
   faSave = faSave;
   faTimes = faTimes;
+
+  public erroresFormSalon: ErrorWithMessages;
+  public erroresEliminacion: ErrorWithToastr;
 
   public opcionNuevoSalon = true;
   public salones: ISalon[] = [];
@@ -46,8 +50,12 @@ export class SalonesComponent implements OnInit {
   constructor(
     private salonService: SalonService,
     private modalService: NgbModal,
-    private toastr: ToastrService
-  ) { }
+    private toastr: ToastrService,
+    private messageService: MessageService,
+  ) {
+    this.erroresFormSalon = new ErrorWithMessages(this.messageService, () => this.guardando = false);
+    this.erroresEliminacion = new ErrorWithToastr(this.toastr);
+  }
 
   ngOnInit() {
     this.salonService.getAll()
@@ -70,7 +78,7 @@ export class SalonesComponent implements OnInit {
           this.guardando = false;
           this.modalService.dismissAll();
 
-        }, console.error);
+        }, error => this.erroresFormSalon.showError(error));
     } else {
 
       const salon = this.formSalon.value;
@@ -84,7 +92,7 @@ export class SalonesComponent implements OnInit {
 
           this.guardando = false;
           this.modalService.dismissAll();
-        }, console.error);
+        }, error => this.erroresFormSalon.showError(error));
 
     }
 
@@ -93,27 +101,16 @@ export class SalonesComponent implements OnInit {
   public onEliminarSalon(): void {
     if (this.selectedSalon == null) return;
 
-    swal.fire({
-      title: 'Estas a punto de eliminar un salon ',
-      text: 'La eliminacion no se puede revertir',
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonColor: '#3085d6',
-      cancelButtonColor: '#d33',
-      confirmButtonText: 'Eliminar',
-      cancelButtonText: 'Cancelar'
-    }).then((result) => {
+    pedirConfirmacion('Estas a punto de eliminar un salon',
+      'La eliminacion no se puede revertir',
+      'Eliminar')
+      .then((result) => {
       if (result.value) {
         this.salonService.delete(this.selectedSalon.id)
           .subscribe((res) => {
             this.salones.splice(this.salones.findIndex((s) => s.id === this.selectedSalon.id), 1);
             this.selectedSalon = null;
-          }, error => {
-            console.error(error);
-            if (error.error.detail) {
-              this.toastr.error(error.error.detail);
-            }
-          });
+          }, error => this.erroresEliminacion.showError(error));
       }
     });
   }

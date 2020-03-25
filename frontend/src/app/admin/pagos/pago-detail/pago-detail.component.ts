@@ -1,19 +1,22 @@
-import {Component, OnInit} from '@angular/core';
-import {ActivatedRoute, ParamMap} from '@angular/router';
-import {FormControl, FormGroup, Validators} from '@angular/forms';
-import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
-import {faCheck, faEdit, faSave, faTimes, faMoneyBill} from '@fortawesome/free-solid-svg-icons';
+import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute, ParamMap } from '@angular/router';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { faCheck, faEdit, faSave, faTimes, faMoneyBill } from '@fortawesome/free-solid-svg-icons';
+import { MessageService } from 'primeng';
 
-import {EstadoPago, IPago} from '../../../models/IPago';
-import {PagoService} from '../../../services/pago.service';
-import {ICuenta} from '../../../models/ICuenta';
-import {CuentaService} from '../../../services/cuenta.service';
-import {AsistenteService} from '../../../services/asistente.service';
-import {IValidacionPago, ResultadoValidacionPago} from '../../../models/IValidacionPago';
-import {ValidacionPagoService} from '../../../services/validacion-pago.service';
-import {AuthService} from '../../../auth/auth.service';
-import {IEvaluacionReembolso, ResultadoEvaluacionReembolso} from '../../../models/IEvaluacionReembolso';
-import {EvaluacionReembolsoService} from '../../../services/evaluacion-reembolso.service';
+import { EstadoPago, IPago } from '../../../models/IPago';
+import { PagoService } from '../../../services/pago.service';
+import { ICuenta } from '../../../models/ICuenta';
+import { CuentaService } from '../../../services/cuenta.service';
+import { AsistenteService } from '../../../services/asistente.service';
+import { IValidacionPago, ResultadoValidacionPago } from '../../../models/IValidacionPago';
+import { ValidacionPagoService } from '../../../services/validacion-pago.service';
+import { AuthService } from '../../../auth/auth.service';
+import { IEvaluacionReembolso, ResultadoEvaluacionReembolso } from '../../../models/IEvaluacionReembolso';
+import { EvaluacionReembolsoService } from '../../../services/evaluacion-reembolso.service';
+import {ToastrService} from 'ngx-toastr';
+import {ErrorWithMessages, ErrorWithToastr} from '../../../utils/errores';
 
 
 @Component({
@@ -44,6 +47,9 @@ export class PagoDetailComponent implements OnInit {
   EVALREEMBOLSO_PAGO_REEMBOLSADO = ResultadoEvaluacionReembolso.REEMBOLSADO;
 
   TEXTO_ESTADOSPAGO: string[] = [];
+
+  public erroresForms: ErrorWithMessages;
+  public erroresToastr: ErrorWithToastr;
 
   public pago: IPago = null;
   public validacionesPago: IValidacionPago[] = [];
@@ -95,6 +101,8 @@ export class PagoDetailComponent implements OnInit {
     private auth: AuthService,
     private route: ActivatedRoute,
     private modalService: NgbModal,
+    private toastr: ToastrService,
+    private messageService: MessageService,
   ) {
     this.TEXTO_ESTADOSPAGO[0] = null;
     this.TEXTO_ESTADOSPAGO[EstadoPago.PENDIENTE_VALIDACION] = 'Pendiente';
@@ -103,6 +111,17 @@ export class PagoDetailComponent implements OnInit {
     this.TEXTO_ESTADOSPAGO[EstadoPago.EVALUACION_REEMBOLSO] = 'Solicitud de reembolso';
     this.TEXTO_ESTADOSPAGO[EstadoPago.REEMBOLSO_APROBADO] = 'Reembolso aprobado';
     this.TEXTO_ESTADOSPAGO[EstadoPago.REEMBOLSADO] = 'Reembolsado';
+
+    const resetToFalse = () => {
+      this.actualizandoPago = false;
+      this.aceptandoPago = false;
+      this.rechazandoPago = false;
+      this.aceptandoReembolso = false;
+      this.rechazandoReembolso = false;
+      this.reembolsando = false;
+    };
+    this.erroresForms = new ErrorWithMessages(this.messageService, resetToFalse);
+    this.erroresToastr = new ErrorWithToastr(this.toastr, resetToFalse);
   }
 
   ngOnInit() {
@@ -132,10 +151,7 @@ export class PagoDetailComponent implements OnInit {
         this.pago = res;
         this.actualizandoPago = false;
         this.modalService.dismissAll();
-      }, error => {
-        this.actualizandoPago = false;
-        console.error(error);
-      });
+      }, error => this.erroresForms.showError(error));
 
   }
 
@@ -158,9 +174,7 @@ export class PagoDetailComponent implements OnInit {
             this.pago = pagoUpdated;
           }, console.error);
         this.aceptandoPago = false;
-      }, error => {
-        this.aceptandoPago = false;
-      });
+      }, error => this.erroresToastr.showError(error));
 
   }
 
@@ -184,10 +198,7 @@ export class PagoDetailComponent implements OnInit {
           }, console.error);
         this.rechazandoPago = false;
         this.modalService.dismissAll();
-      }, error => {
-        this.rechazandoPago = false;
-        console.error(error);
-      });
+      }, error => this.erroresForms.showError(error));
 
 
   }
@@ -211,9 +222,7 @@ export class PagoDetailComponent implements OnInit {
             this.pago = pagoUpdated;
           }, console.error);
         this.aceptandoReembolso = false;
-      }, error => {
-        this.aceptandoReembolso = false;
-      });
+      }, error => this.erroresToastr.showError(error));
 
   }
 
@@ -237,10 +246,7 @@ export class PagoDetailComponent implements OnInit {
           }, console.error);
         this.rechazandoReembolso = false;
         this.modalService.dismissAll();
-      }, error => {
-        this.rechazandoReembolso = false;
-        console.error(error);
-      });
+      }, error => this.erroresForms.showError(error));
 
 
   }
@@ -264,33 +270,27 @@ export class PagoDetailComponent implements OnInit {
             this.pago = pagoUpdated;
           }, console.error);
         this.reembolsando = false;
-      }, error => {
-        this.reembolsando = false;
-      });
+      }, error => this.erroresToastr.showError(error));
 
   }
 
   public openModalEditarPago(content): void {
     this.modalService.dismissAll();
     this.formEdicionPago.reset(this.pago);
-    this.modalService.open(content, {
-      centered: true,
-      size: 'lg',
-      windowClass: 'animated bounceIn'
-    });
+    this.openModal(content);
   }
 
   public openModalRechazoPago(content): void {
     this.modalService.dismissAll();
-    this.modalService.open(content, {
-      centered: true,
-      size: 'lg',
-      windowClass: 'animated bounceIn'
-    });
+    this.openModal(content);
   }
 
   public openModalRechazoReembolso(content): void {
     this.modalService.dismissAll();
+    this.openModal(content);
+  }
+
+  private openModal(content): void {
     this.modalService.open(content, {
       centered: true,
       size: 'lg',
@@ -325,6 +325,5 @@ export class PagoDetailComponent implements OnInit {
         this.asistente = res;
       }, console.error);
   }*/
-
 
 }

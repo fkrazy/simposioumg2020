@@ -3,10 +3,14 @@ import { CommonModule } from '@angular/common';
 import { Route, RouterModule } from '@angular/router';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { ToastrModule } from 'ngx-toastr';
+import { MessagesModule, MessageService } from 'primeng';
+
 import { PagosComponent } from './pagos/pagos.component';
 import { ValidacionesPagosComponent } from './validaciones-pagos/validaciones-pagos.component';
 import { ReembolsosPagosComponent } from './reembolsos-pagos/reembolsos-pagos.component';
 import { PagoDetailComponent } from './pago-detail/pago-detail.component';
+
 
 const routes: Route[] = [
   {
@@ -34,7 +38,13 @@ const routes: Route[] = [
     FormsModule,
     ReactiveFormsModule,
     RouterModule.forChild(routes),
-    FontAwesomeModule
+    FontAwesomeModule,
+    ToastrModule,
+
+    MessagesModule,
+  ],
+  providers: [
+    MessageService,
   ]
 })
 export class PagosModule { }

@@ -2,21 +2,30 @@ import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
+import { faUserCheck } from '@fortawesome/free-solid-svg-icons';
+
+import { MessageService } from 'primeng';
+
 import { environment } from '../../environments/environment';
 import { ICarrera } from '../models/ICarrera';
 import { CarreraService } from '../services/carrera.service';
+import { ErrorWithMessages } from '../utils/errores';
 
 @Component({
   selector: 'app-registro',
   templateUrl: './registro.component.html',
-  styleUrls: ['./registro.component.scss']
+  styleUrls: ['./registro.component.scss'],
+  providers: []
 })
 export class RegistroComponent implements OnInit {
+
+  faUserCheck = faUserCheck;
+
+  private erroresForm: ErrorWithMessages;
 
   public carreras: ICarrera[] = [];
 
   public registrando = false;
-  public errorRegistro: string = null;
 
   public formRegistro = new FormGroup({
     nombres: new FormControl('',[
@@ -62,8 +71,11 @@ export class RegistroComponent implements OnInit {
   constructor(
     private carreraService: CarreraService,
     private http: HttpClient,
-    private router: Router
-  ) { }
+    private router: Router,
+    private messageService: MessageService,
+  ) {
+    this.erroresForm = new ErrorWithMessages(this.messageService, () => this.registrando = false);
+  }
 
   ngOnInit() {
     this.carreraService.getAll()
@@ -74,10 +86,9 @@ export class RegistroComponent implements OnInit {
 
   public onRegistrar(): void {
     this.registrando = true;
-    this.errorRegistro = null;
     const {password: password, password_conf: password_conf} = this.formRegistro.value;
     if (password !== password_conf) {
-      this.errorRegistro = 'Las contraseñas no coinciden';
+      this.messageService.add({severity: 'error', summary: undefined, detail: 'Las contraseñas no coinciden'});
       this.registrando = false;
       return;
     }
@@ -94,11 +105,7 @@ export class RegistroComponent implements OnInit {
       .subscribe((res) => {
         this.router.navigateByUrl('/login');
         this.registrando = false;
-      }, error => {
-        console.error(error);
-        this.errorRegistro = error.error.detail;
-        this.registrando = false;
-      });
+      }, error => this.erroresForm.showError(error));
 
   }
 

@@ -1,3 +1,4 @@
+from django.db.models import ProtectedError
 from rest_framework import viewsets, status
 from rest_framework.permissions import SAFE_METHODS
 from rest_framework.response import Response
@@ -53,3 +54,10 @@ class ReservacionViewSet(viewsets.ModelViewSet):
         self.perform_create(serializer)
         headers = self.get_success_headers(serializer.data)
         return Response((ReadReservacionSerializer(Reservacion.objects.get(pk=serializer.data["id"]))).data, status=status.HTTP_201_CREATED, headers=headers)
+
+        def destroy(self, request, *args, **kwargs):
+            try:
+                return super().destroy(request, args, kwargs)
+            except ProtectedError:
+                return Response({"detail": 'Otros registros referencian a esta reservacion'},
+                                status=status.HTTP_400_BAD_REQUEST)

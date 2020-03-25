@@ -6,6 +6,8 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { PagoComponent } from './pago/pago.component';
 import { TicketComponent } from './ticket/ticket.component';
 
+import { CarouselModule, CardModule, MessageService, MessagesModule } from 'primeng';
+
 const routes: Route[] = [
   {
     path: '',
@@ -29,7 +31,14 @@ const routes: Route[] = [
     FormsModule,
     ReactiveFormsModule,
     RouterModule.forChild(routes),
-    FontAwesomeModule
+    FontAwesomeModule,
+
+    CarouselModule,
+    CardModule,
+    MessagesModule,
+  ],
+  providers: [
+    MessageService,
   ]
 })
 export class AsistentesModule { }

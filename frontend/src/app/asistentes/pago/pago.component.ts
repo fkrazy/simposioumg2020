@@ -1,7 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import { faEdit, faSave, faTimes, faMoneyBill } from '@fortawesome/free-solid-svg-icons';
+import { faEdit, faSave, faTimes, faMoneyBill, faReceipt, faPaperPlane } from '@fortawesome/free-solid-svg-icons';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { ToastrService } from 'ngx-toastr';
+import { MessageService } from 'primeng';
+
 import { ICuenta } from '../../models/ICuenta';
 import { CuentaService } from '../../services/cuenta.service';
 import { IPago, EstadoPago } from '../../models/IPago';
@@ -11,11 +14,12 @@ import { IValidacionPago, ResultadoValidacionPago } from '../../models/IValidaci
 import { ValidacionPagoService } from '../../services/validacion-pago.service';
 import { IEvaluacionReembolso, ResultadoEvaluacionReembolso } from '../../models/IEvaluacionReembolso';
 import { EvaluacionReembolsoService } from '../../services/evaluacion-reembolso.service';
+import { ErrorWithMessages, ErrorWithToastr } from '../../utils/errores';
 
 @Component({
   selector: 'app-pago',
   templateUrl: './pago.component.html',
-  styleUrls: ['./pago.component.scss']
+  styleUrls: ['./pago.component.scss'],
 })
 export class PagoComponent implements OnInit {
 
@@ -50,13 +54,20 @@ export class PagoComponent implements OnInit {
   faSave = faSave;
   faTimes = faTimes;
   faMoneyBill = faMoneyBill;
+  faReceipt = faReceipt;
+  faPaperPlane = faPaperPlane;
+
+  public erroresForms: ErrorWithMessages;
+  public erroresToastr: ErrorWithToastr;
+
+  public monto = 300;
 
   public cuentas: ICuenta[] = [];
   public pago: IPago = null;
   public validacionesPago: IValidacionPago[] = [];
   public reembolsosPago: IEvaluacionReembolso[] = [];
-  public registrandoPago = false;
 
+  public registrandoPago = false;
   public guardando = false;
   public solicitandoReembolso = false;
 
@@ -93,7 +104,9 @@ export class PagoComponent implements OnInit {
     private evaluacionReembolsoService: EvaluacionReembolsoService,
     private cuentaService: CuentaService,
     private auth: AuthService,
-    private modalService: NgbModal
+    private modalService: NgbModal,
+    private messageService: MessageService,
+    private toastr: ToastrService,
   ) {
     this.TEXTO_ESTADOSPAGO[0] = 'Sin pagar';
     this.TEXTO_ESTADOSPAGO[EstadoPago.PENDIENTE_VALIDACION] = 'Pendiente de validación';
@@ -102,6 +115,13 @@ export class PagoComponent implements OnInit {
     this.TEXTO_ESTADOSPAGO[EstadoPago.EVALUACION_REEMBOLSO] = 'En evaluación de reembolso';
     this.TEXTO_ESTADOSPAGO[EstadoPago.REEMBOLSO_APROBADO] = 'Reembolso aprobado';
     this.TEXTO_ESTADOSPAGO[EstadoPago.REEMBOLSADO] = 'Reembolsado';
+    const resetToFalse = () => {
+      this.guardando = false;
+      this.registrandoPago = false;
+      this.solicitandoReembolso = false;
+    };
+    this.erroresForms = new ErrorWithMessages(this.messageService, resetToFalse);
+    this.erroresToastr = new ErrorWithToastr(this.toastr, resetToFalse);
   }
 
   ngOnInit() {
@@ -128,10 +148,7 @@ export class PagoComponent implements OnInit {
       this.pago = res;
       this.registrandoPago = false;
       this.modalService.dismissAll();
-    }, error => {
-      this.registrandoPago = false;
-      console.error(error);
-    });
+    }, error => this.erroresForms.showError(error));
 
   }
 
@@ -151,20 +168,13 @@ export class PagoComponent implements OnInit {
       this.pago = res;
       this.guardando = false;
       this.modalService.dismissAll();
-    }, error => {
-      this.guardando = false;
-      console.error(error);
-    });
+    }, error => this.erroresForms.showError(error));
   }
 
   public openModalRegistroPago(content): void {
     this.formRegistroPago.reset({ foto: '' });
     this.modalService.dismissAll();
-    this.modalService.open(content, {
-      size: 'lg',
-      centered: true,
-      windowClass: 'animated bounceIn'
-    });
+    this.openModal(content);
   }
 
   public openModalEdicionPago(content): void {
@@ -175,6 +185,10 @@ export class PagoComponent implements OnInit {
       foto: ''
     });
     this.modalService.dismissAll();
+    this.openModal(content);
+  }
+
+  private openModal(content): void {
     this.modalService.open(content, {
       size: 'lg',
       centered: true,
@@ -191,10 +205,7 @@ export class PagoComponent implements OnInit {
       .subscribe((res) => {
         this.pago = res;
         this.solicitandoReembolso = false;
-      }, error => {
-        this.solicitandoReembolso = false;
-        console.error(error);
-      });
+      }, error => this.erroresToastr.showError(error));
   }
 
   public onChangeFotoRecibo(event): void {
