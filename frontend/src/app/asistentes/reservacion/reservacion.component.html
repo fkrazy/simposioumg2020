@@ -1,0 +1,109 @@
+<div class="col-12 col-md-10 p-5">
+   
+      <div class="form-group row">
+        <label for="conferencia_id" class="col-12 col-md-10 col-form-label" >  <h3>Detalle de las Conferencias</h3> </label>
+        <button class="btn btn-lg btn-outline-primary" (click)="cambiar()"> Cambiar Vista </button>
+      </div>
+      
+    <div *ngIf="estados()" class="row mt-4" id="contenido_todo">
+      <div class="col">
+        <div class="col-12 col-md-20 p-4" style="text-align: center;"><h4>Todas las conferencias</h4></div>
+
+        <div class="col-12 col-md-20 p-4" *ngIf="pago.estado !== PAGO_ACEPTADO">
+          <!-- Button trigger modal -->
+          <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">¿Asignarse?</button>
+ 
+        </div>
+
+        <div class="table-responsive">
+          <table class="table table-hover">
+            <thead>
+            <tr>
+              <th>ID conferencia</th>
+              <th>Nombre</th>
+              <th>Conferencista</th>
+              <th>Profesion</th>
+              <th>Foto</th>
+              <th *ngIf="pago.estado == PAGO_ACEPTADO">Asignarse</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr *ngFor="let lconfer of Lista_conferencias">
+              
+                <td>{{lconfer.id}}</td>              
+                <td>{{lconfer.tema }}</td>
+                <td>{{lconfer.conferencista.nombre}}</td>
+                <td>{{lconfer.conferencista.profesion}}</td>
+                <td class="col-md-4"><img src="{{lconfer.foto}}" alt="" width="100%"></td>
+                <td *ngIf="pago.estado == PAGO_ACEPTADO" ><button class="btn btn-lg btn-outline-primary" (click)="Asistir(lconfer.id)"> Asistir </button></td>
+            </tr>
+            </tbody>
+          </table>
+    
+        </div>
+        
+      </div>
+    </div>
+
+
+      
+    <div *ngIf="!estados()" class="row mt-4" id="contenido_uno">
+      <div class="col-12 col-md-20 p-4" style="text-align: center;"> <h4>Mis conferencias</h4> </div>
+      <div class="col">
+        <div class="table-responsive">
+    
+          <table class="table table-hover">
+            <thead>
+            <tr>
+              <th>Nombre</th>
+              <th>Conferencista</th>
+              <th>Salon</th>
+              <th>Ubicaci&oacute;n</th>
+              <th>Hora inicio</th>
+              <th>Hora fin</th>
+              <th>Desasignarse</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr *ngFor="let l of reservaciones">
+                          
+                <td>{{l.conferencia.tema }}</td>
+                <td>{{l.conferencia.conferencista.nombre}}</td>
+                <td>{{l.conferencia.salon.nombre}}</td>
+                <td>{{l.conferencia.salon.ubicacion}}</td>
+                <td>{{l.conferencia.inicio}}</td>
+                <td>{{l.conferencia.fin}}</td>
+                <td><button class="btn btn-lg btn-outline-primary" (click)="Desasistir(l.id)"> Cancelar Asistencia </button></td>
+            </tr>
+            </tbody>
+          </table>
+    
+        </div>
+        
+      </div>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">¿ Asignarse ?</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Cerrar">
+              </button>
+          </div>
+          <div class="modal-body" style="color: #005F76">
+            <h5 >Para asignarte a las conferencias primero debes 
+              realizar el pago
+	          </h5> 
+            <a [routerLink]="['/asistentes/pago']" style="color:black;"> 
+              <h4>para mas informacion visita  pagos</h4>
+               </a>
+          </div>
+          <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+        </div>
+        </div>
+      </div>
+    </div>
+</div>
