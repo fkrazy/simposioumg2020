@@ -4,11 +4,11 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { MessageService } from 'primeng';
 import { ToastrService } from 'ngx-toastr';
-import swal from 'sweetalert2';
 
 import { ICuenta } from '../../models/ICuenta';
 import { CuentaService } from '../../services/cuenta.service';
 import { ErrorWithMessages, ErrorWithToastr } from '../../utils/errores';
+import { pedirConfirmacion } from '../../utils/confirmaciones';
 
 @Component({
   selector: 'app-cuentas',
@@ -99,26 +99,20 @@ export class CuentasComponent implements OnInit {
   public onEliminarCuenta(): void {
     if (this.selectedCuenta == null) return;
 
-    swal.fire({
-      title: 'Estas a punto de eliminar una cuenta',
-      text: 'La eliminacion no se puede revertir',
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonColor: '#3085d6',
-      cancelButtonColor: '#d33',
-      confirmButtonText: 'Eliminar',
-      cancelButtonText: 'Cancelar'
-    }).then((result) => {
-      if (result.value) {
-        this.cuentaService.delete(this.selectedCuenta.id)
-          .subscribe((res) => {
+    pedirConfirmacion('Estas a punto de eliminar una cuenta',
+      'La eliminacion no se puede revertir',
+      'Eliminar')
+      .then((result) => {
+        if (result.value) {
+          this.cuentaService.delete(this.selectedCuenta.id)
+            .subscribe((res) => {
 
-            this.cuentas.splice(this.cuentas.findIndex((c) => c.id === this.selectedCuenta.id), 1);
-            this.selectedCuenta = null;
+              this.cuentas.splice(this.cuentas.findIndex((c) => c.id === this.selectedCuenta.id), 1);
+              this.selectedCuenta = null;
 
-          }, err => this.erroresEliminacion.showError(err));
-      }
-    });
+            }, err => this.erroresEliminacion.showError(err));
+        }
+      });
   }
 
   public onCuentaClicked(cuenta: ICuenta): void {

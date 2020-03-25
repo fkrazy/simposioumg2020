@@ -4,11 +4,11 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ToastrService } from 'ngx-toastr';
 import { MessageService } from 'primeng';
-import swal from 'sweetalert2';
 
 import { ICarrera } from '../../models/ICarrera';
 import { CarreraService } from '../../services/carrera.service';
 import { ErrorWithMessages, ErrorWithToastr } from '../../utils/errores';
+import { pedirConfirmacion } from '../../utils/confirmaciones';
 
 
 @Component({
@@ -85,16 +85,10 @@ export class CarrerasComponent implements OnInit {
 
   public onEliminarCarrera(): void {
     if (this.selectedCarrera == null) return;
-    swal.fire({
-      title: 'Estas a punto de eliminar una carrera',
-      text: 'La eliminacion no se puede revertir',
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonColor: '#3085d6',
-      cancelButtonColor: '#d33',
-      confirmButtonText: 'Eliminar',
-      cancelButtonText: 'Cancelar'
-    }).then((result) => {
+    pedirConfirmacion('Estas a punto de eliminar una carrera',
+      'La eliminacion no se puede revertir',
+      'Eliminar')
+    .then((result) => {
       if (result.value) {
         this.carreraService.delete(this.selectedCarrera.codigo).subscribe((res) => {
           // this.cargarCarreras();

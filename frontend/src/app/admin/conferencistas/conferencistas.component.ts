@@ -4,11 +4,11 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ToastrService } from 'ngx-toastr';
 import { MessageService } from 'primeng';
-import swal from 'sweetalert2';
 
 import { IConferencista } from '../../models/IConferencista';
 import { ConferencistaService } from '../../services/conferencista.service';
 import { ErrorWithMessages, ErrorWithToastr } from '../../utils/errores';
+import { pedirConfirmacion } from '../../utils/confirmaciones';
 
 @Component({
   selector: 'app-conferencistas',
@@ -103,16 +103,10 @@ export class ConferencistasComponent implements OnInit {
   public onEliminarConf(): void {
     if (this.selectedConf == null) return;
 
-    swal.fire({
-      title: 'Estas a punto de eliminar a un conferencista',
-      text: 'La eliminacion no se puede revertir',
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonColor: '#3085d6',
-      cancelButtonColor: '#d33',
-      confirmButtonText: 'Eliminar',
-      cancelButtonText: 'Cancelar'
-    }).then((result) => {
+    pedirConfirmacion('Estas a punto de eliminar a un conferencista',
+      'La eliminacion no se puede revertir',
+      'Eliminar')
+    .then((result) => {
       if (result.value) {
         this.confService.delete(this.selectedConf.id)
           .subscribe((res) => {
