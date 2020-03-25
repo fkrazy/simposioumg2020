@@ -4,12 +4,15 @@ from django.utils import timezone
 from .asistentes import Asistente
 from .cuentas import Cuenta
 
+
 class Pago(models.Model):
     PENDIENTE_VALIDACION = 1     # cuando el usuario registra el pago y lo envía para validacion
     VALIDACION_RECHAZADA = 2    # cuando el administrador rechaza el pago por ser inválido o tener datos erróneos, etc.
     ACEPTADO = 3                # el pago ha sido aceptado como válido
-    EVALUACION_REEMBOLSO = 4     # cuando el usuario ya pagó y pide un reembolso, en este estado el reembolso todavía debe ser evaluado por un administrador
-    REEMBOLSO_APROBADO = 5     # cuando el reembolso del pago ha sido aprobado pero aún no se ha hecho efectivo, es decir se aún no se devuelve el dinero
+    EVALUACION_REEMBOLSO = 4     # cuando el usuario ya pagó y pide un reembolso, en este estado el reembolso
+    # todavía debe ser evaluado por un administrador
+    REEMBOLSO_APROBADO = 5     # cuando el reembolso del pago ha sido aprobado pero aún no se ha hecho efectivo,
+    # es decir se aún no se devuelve el dinero
     REEMBOLSADO = 6     # cuando el dinero del pago ha sido devuelto
 
     ESTADOS = (
@@ -21,9 +24,11 @@ class Pago(models.Model):
         (REEMBOLSADO, 'Reembolsado')
     )
 
-    titular = models.OneToOneField(Asistente, primary_key=True, related_name='pago', verbose_name='Asistente', null=False, on_delete=models.PROTECT)
+    titular = models.OneToOneField(Asistente, primary_key=True, related_name='pago', verbose_name='Asistente',
+                                   null=False, on_delete=models.PROTECT)
     codigo_pago = models.CharField(max_length=32, verbose_name="Código de recibo", null=False)
-    cuenta = models.ForeignKey(Cuenta, null=False, related_name='pagos', verbose_name='Cuenta', on_delete=models.PROTECT)
+    cuenta = models.ForeignKey(Cuenta, null=False, related_name='pagos', verbose_name='Cuenta',
+                               on_delete=models.PROTECT)
     foto = models.TextField(verbose_name='Foto', null=False)
 
     fecha_registro = models.DateTimeField(verbose_name='Fecha de registro', null=False, default=timezone.now)

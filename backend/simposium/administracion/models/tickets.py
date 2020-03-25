@@ -13,6 +13,7 @@ class Ticket(models.Model):
         (INVALIDO, "INVALIDADO")
     )
 
-    asistente = models.OneToOneField(Asistente, primary_key=True, related_name="ticket", verbose_name="Usuario", on_delete=models.CASCADE)
+    asistente = models.OneToOneField(Asistente, primary_key=True, related_name="ticket", verbose_name="Usuario",
+                                     on_delete=models.CASCADE)
     codigo_qr = models.TextField(null=False)
     estado = models.PositiveSmallIntegerField(verbose_name="Estados", choices=ESTADOS, default=VALIDO, null=False)

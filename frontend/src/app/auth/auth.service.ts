@@ -59,7 +59,7 @@ export class AuthService {
   public firstLogin(): boolean {
     if (this.isAuthenticated()) {
       const firstLogin = this.loggedUser.firstLogin == true;
-      if (firstLogin == true) {
+      if (firstLogin === true) {
         this.loggedUser.firstLogin = false;
         localStorage.setItem('logged_user', JSON.stringify(this.loggedUser));
       }
@@ -89,7 +89,7 @@ export class AuthService {
   }
 
   private saveUserToStorage(): void {
-    if (this.loggedUser == null) return;
+    if (this.loggedUser == null) { return; }
     localStorage.setItem('logged_user', JSON.stringify(this.loggedUser));
   }
 

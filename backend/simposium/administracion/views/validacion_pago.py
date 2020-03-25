@@ -49,7 +49,9 @@ class ValidacionPagoViewSet(viewsets.ModelViewSet):
                 pago.save()
                 if self.request.data['resultado'] == ValidacionPago.ACEPTADO:
                     Reservacion.objects.filter(asistente=pago.titular).update(estado=Reservacion.CONFIRMADA)
-                    ticket = Ticket(asistente=pago.titular, codigo_qr='data:image/png;base64,' + crear_qr(str(pago.titular.usuario.id)))
+                    usuario = pago.titular.usuario
+                    ticket = Ticket(asistente=pago.titular, codigo_qr='data:image/png;base64,' +
+                                                                      crear_qr(f'{usuario.id}-{usuario.password}'))
                     ticket.save()
                 elif self.request.data['resultado'] == ValidacionPago.RECHAZADO:
                     Reservacion.objects.filter(asistente=pago.titular).delete()
