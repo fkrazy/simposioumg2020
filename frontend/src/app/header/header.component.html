@@ -1,6 +1,7 @@
 <header>
   <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow">
     <div class="container">
+
       <a class="navbar-brand" [routerLink]="['/']">SimposioUMG</a>
 
       <button
@@ -18,7 +19,7 @@
 
         <ul class="navbar-nav flex-grow" *ngIf="isAuthenticated()">
 
-          <div class="btn-group" *ngIf="isAdmin()">
+          <!--<div class="btn-group" *ngIf="isAdmin()">
             <button type="button" class="btn btn-info btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
               Admin
             </button>
@@ -33,7 +34,7 @@
               <a [routerLinkActive]="['link-active']" [routerLink]="['/admin/cuentas']" class="dropdown-item text-dark" title="Salir">Cuentas</a>
 
             </div>
-          </div>
+          </div>-->
 
           <ng-container *ngIf="isAsistente()">
 
@@ -47,7 +48,11 @@
           </ng-container>
 
           <li class="nav-item">
-            <a [routerLink]="['/logout']" class="nav-link text-dark"><fa-icon [icon]="faSignOutAlt"></fa-icon>&nbsp;Salir</a>
+            <!--<a [routerLink]="['/logout']" class="nav-link text-dark"><fa-icon [icon]="faSignOutAlt"></fa-icon>&nbsp;Salir</a>-->
+            <p-splitButton *ngIf="!auth.isAdmin(); else menuAdmin" label="{{auth.user.username}}" icon="pi pi-user" [model]="itemsMenuUser" styleClass="ui-button-secondary"></p-splitButton>
+            <ng-template #menuAdmin>
+              <p-splitButton label="{{auth.user.username}}" icon="pi pi-user" [model]="itemsMenuAdmin" styleClass="ui-button-secondary"></p-splitButton>
+            </ng-template>
           </li>
 
         </ul>
