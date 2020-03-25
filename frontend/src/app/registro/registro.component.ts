@@ -4,11 +4,12 @@ import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { faUserCheck } from '@fortawesome/free-solid-svg-icons';
 
-import { Message } from 'primeng';
+import { MessageService } from 'primeng';
 
 import { environment } from '../../environments/environment';
 import { ICarrera } from '../models/ICarrera';
 import { CarreraService } from '../services/carrera.service';
+import { ErrorWithMessages } from '../utils/errores';
 
 @Component({
   selector: 'app-registro',
@@ -20,7 +21,7 @@ export class RegistroComponent implements OnInit {
 
   faUserCheck = faUserCheck;
 
-  public msgs: Message[] = [];
+  private erroresForm: ErrorWithMessages;
 
   public carreras: ICarrera[] = [];
 
@@ -71,7 +72,10 @@ export class RegistroComponent implements OnInit {
     private carreraService: CarreraService,
     private http: HttpClient,
     private router: Router,
-  ) { }
+    private messageService: MessageService,
+  ) {
+    this.erroresForm = new ErrorWithMessages(this.messageService, () => this.registrando = false);
+  }
 
   ngOnInit() {
     this.carreraService.getAll()
@@ -81,11 +85,10 @@ export class RegistroComponent implements OnInit {
   }
 
   public onRegistrar(): void {
-    this.msgs = [];
     this.registrando = true;
     const {password: password, password_conf: password_conf} = this.formRegistro.value;
     if (password !== password_conf) {
-      this.notificarError('Las contraseñas no coinciden');
+      this.messageService.add({severity: 'error', summary: undefined, detail: 'Las contraseñas no coinciden'});
       this.registrando = false;
       return;
     }
@@ -102,20 +105,8 @@ export class RegistroComponent implements OnInit {
       .subscribe((res) => {
         this.router.navigateByUrl('/login');
         this.registrando = false;
-      }, error => {
-        console.error(error);
+      }, error => this.erroresForm.showError(error));
 
-        if (error.error.detail) {
-          this.notificarError(error.error.detail);
-        }
-        this.registrando = false;
-      });
-
-  }
-
-  private notificarError(msg): void {
-    this.msgs = [];
-    this.msgs.push({severity: 'error', summary: undefined, detail: msg});
   }
 
 }

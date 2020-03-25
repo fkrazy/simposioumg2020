@@ -80,9 +80,12 @@
         </div>
       </div>
 
+      <p-messages></p-messages>
+
       <div class="form-group row">
-        <div class="col">
-          <input (change)="onFotoChange($event)" type="file" accept="image/*">
+        <label for="foto" class="col-12 col-md-9 col-lg-2 col-form-label">Foto</label>
+        <div class="col-12 col-md-9 col-lg-10">
+          <input (change)="onFotoChange($event)"  id="foto" type="file" accept="image/*" class="form-control form-control-file">
         </div>
       </div>
 
@@ -134,6 +137,7 @@
     <button [disabled]="!formConferencia.valid || guardando || (opcionNuevaConferencia && fotoUrl == null)" type="submit" form="form-conferencia" class="btn btn-primary">
       <fa-icon [icon]="faSave"></fa-icon>
       Guardar
+      <i *ngIf="guardando" class="pi pi-spin pi-spinner" style="font-size: 0.8rem"></i>
     </button>
   </div>
 

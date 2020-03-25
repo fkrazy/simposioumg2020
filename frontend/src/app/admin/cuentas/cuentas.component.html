@@ -67,6 +67,9 @@
   <div class="modal-body">
 
     <form (ngSubmit)="onSubmitFormCuenta()" [formGroup]="formCuenta" id="form-cuenta">
+
+      <p-messages></p-messages>
+
       <div class="form-group row">
         <label for="numero" class="col-12 col-md-2 col-form-label">N&uacute;mero</label>
         <div class="col-12 col-md-10">
@@ -90,9 +93,10 @@
   </div>
 
   <div class="modal-footer">
-    <button [disabled]="!formCuenta.valid" type="submit" form="form-cuenta" class="btn btn-primary">
+    <button [disabled]="!formCuenta.valid || guardando" type="submit" form="form-cuenta" class="btn btn-sm btn-primary">
       <fa-icon [icon]="faSave"></fa-icon>
       Guardar
+      <i *ngIf="guardando" class="pi pi-spin pi-spinner" style="font-size: 0.8rem"></i>
     </button>
   </div>
 

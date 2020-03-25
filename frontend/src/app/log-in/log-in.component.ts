@@ -3,10 +3,11 @@ import { Router } from '@angular/router';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { faTimes, faSignInAlt } from '@fortawesome/free-solid-svg-icons';
 
-import {Message} from 'primeng';
+import { MessageService } from 'primeng';
 
 import { IUser } from '../models/IUser';
 import { AuthService } from '../auth/auth.service';
+import { ErrorWithMessages } from '../utils/errores';
 
 @Component({
   selector: 'app-log-in',
@@ -15,10 +16,10 @@ import { AuthService } from '../auth/auth.service';
 })
 export class LogInComponent implements OnInit {
 
-  public msgs: Message[] = [];
-
   faTimes = faTimes;
   faSignInAlt = faSignInAlt;
+
+  private erroresForm: ErrorWithMessages;
 
   public entrando = false;
 
@@ -34,8 +35,11 @@ export class LogInComponent implements OnInit {
 
   constructor(
     private auth: AuthService,
-    private router: Router
-  ) { }
+    private router: Router,
+    private messageService: MessageService,
+  ) {
+    this.erroresForm = new ErrorWithMessages(messageService);
+  }
 
   ngOnInit() {
   }
@@ -46,17 +50,8 @@ export class LogInComponent implements OnInit {
     this.auth.signIn(username, password)
       .then((user: IUser) => {
         this.router.navigateByUrl('/');
-      }).catch((error: any) => {
-      if (error.error.detail) {
-        this.notificarError(error.error.detail);
-      }
-
-    }).finally(() => this.entrando = false);
+      })
+      .catch(error => this.erroresForm.showError(error))
+      .finally(() => this.entrando = false);
   }
-
-  private notificarError(msg): void {
-    this.msgs = [];
-    this.msgs.push({severity: 'error', summary: undefined, detail: msg});
-  }
-
 }

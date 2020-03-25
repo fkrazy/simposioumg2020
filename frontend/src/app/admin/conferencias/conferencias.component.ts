@@ -2,15 +2,17 @@ import { Component, OnInit } from '@angular/core';
 import { faPlus, faTrashAlt, faEdit, faSave, faTimes } from '@fortawesome/free-solid-svg-icons';
 import { AbstractControl, FormControl, FormGroup, ValidatorFn, Validators } from '@angular/forms';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { MessageService } from 'primeng';
 import { ToastrService } from 'ngx-toastr';
+import swal from 'sweetalert2';
+
 import { IConferencista } from '../../models/IConferencista';
 import { IConferencia } from '../../models/IConferencia';
 import { ISalon } from '../../models/ISalon';
 import { ConferenciaService } from '../../services/conferencia.service';
 import { ConferencistaService } from '../../services/conferencista.service';
 import { SalonService } from '../../services/salon.service';
-
-import swal from 'sweetalert2';
+import { ErrorWithMessages, ErrorWithToastr } from '../../utils/errores';
 
 @Component({
   selector: 'app-conferencias',
@@ -24,6 +26,9 @@ export class ConferenciasComponent implements OnInit {
   faTrashAlt = faTrashAlt;
   faSave = faSave;
   faTimes = faTimes;
+
+  public erroresFormConferencia: ErrorWithMessages;
+  public erroresEliminacion: ErrorWithToastr;
 
   public opcionNuevaConferencia = false;
   public conferencias: IConferencia[] = [];
@@ -70,8 +75,12 @@ export class ConferenciasComponent implements OnInit {
     private conferencistaService: ConferencistaService,
     private salonService: SalonService,
     private modalService: NgbModal,
-    private toastr: ToastrService
-  ) { }
+    private toastr: ToastrService,
+    private messageService: MessageService,
+  ) {
+    this.erroresFormConferencia = new ErrorWithMessages(messageService, () => this.guardando = false);
+    this.erroresEliminacion = new ErrorWithToastr(this.toastr);
+  }
 
   ngOnInit() {
 
@@ -121,10 +130,7 @@ export class ConferenciasComponent implements OnInit {
           this.guardando = false;
           this.modalService.dismissAll();
 
-        }, error => {
-          this.guardando = false;
-          console.error(error);
-        });
+        }, error => this.erroresFormConferencia.showError(error));
     } else {
 
       const formData = new FormData();
@@ -156,10 +162,7 @@ export class ConferenciasComponent implements OnInit {
           this.guardando = false;
           this.modalService.dismissAll();
 
-        }, error => {
-          this.guardando = false;
-          console.error(error);
-        });
+        }, error => this.erroresFormConferencia.showError(error));
 
     }
 
@@ -183,11 +186,7 @@ export class ConferenciasComponent implements OnInit {
           .subscribe((res) => {
             this.conferencias.splice(this.conferencias.findIndex((c) => c.id === this.selectedConferencia.id), 1);
             this.selectedConferencia = null;
-          }, error => {
-            if (error.error.detail) {
-              this.toastr.error(error.error.detail);
-            }
-          });
+          }, error => this.erroresEliminacion.showError(error));
       }
     });
 

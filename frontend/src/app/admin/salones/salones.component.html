@@ -65,6 +65,9 @@
   <div class="modal-body">
 
     <form (ngSubmit)="onSubmitFormSalon()" [formGroup]="formSalon" id="form-salon">
+
+      <p-messages></p-messages>
+
       <div class="form-group row">
         <label for="nombre" class="col-12 col-md-2 col-form-label">Nombre</label>
         <div class="col-12 col-md-10">

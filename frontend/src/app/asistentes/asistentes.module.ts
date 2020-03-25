@@ -6,7 +6,7 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { PagoComponent } from './pago/pago.component';
 import { TicketComponent } from './ticket/ticket.component';
 
-import { CarouselModule, CardModule} from 'primeng';
+import { CarouselModule, CardModule, MessageService, MessagesModule } from 'primeng';
 
 const routes: Route[] = [
   {
@@ -35,6 +35,10 @@ const routes: Route[] = [
 
     CarouselModule,
     CardModule,
+    MessagesModule,
+  ],
+  providers: [
+    MessageService,
   ]
 })
 export class AsistentesModule { }

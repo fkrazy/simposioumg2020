@@ -3,11 +3,12 @@ import { faPlus, faTrashAlt, faEdit, faSave, faTimes } from '@fortawesome/free-s
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ToastrService } from 'ngx-toastr';
+import { MessageService } from 'primeng';
+import swal from 'sweetalert2';
 
 import { IConferencista } from '../../models/IConferencista';
 import { ConferencistaService } from '../../services/conferencista.service';
-
-import swal from 'sweetalert2';
+import { ErrorWithMessages, ErrorWithToastr } from '../../utils/errores';
 
 @Component({
   selector: 'app-conferencistas',
@@ -21,6 +22,9 @@ export class ConferencistasComponent implements OnInit {
   faTrashAlt = faTrashAlt;
   faSave = faSave;
   faTimes = faTimes;
+
+  public erroresFormConferencista: ErrorWithMessages;
+  public erroresEliminacion: ErrorWithToastr;
 
   public opcionNuevoConf = false;
   public conferencistas: IConferencista[] = [];
@@ -46,8 +50,12 @@ export class ConferencistasComponent implements OnInit {
   constructor(
     private confService: ConferencistaService,
     private modalService: NgbModal,
-    private toastr: ToastrService
-  ) { }
+    private toastr: ToastrService,
+    private messageService: MessageService,
+  ) {
+    this.erroresFormConferencista = new ErrorWithMessages(this.messageService, () => this.guardando = false);
+    this.erroresEliminacion = new ErrorWithToastr(this.toastr);
+  }
 
   ngOnInit() {
     this.confService.getAll()
@@ -70,7 +78,7 @@ export class ConferencistasComponent implements OnInit {
           this.guardando = false;
           this.modalService.dismissAll();
 
-        }, console.error);
+        }, error => this.erroresFormConferencista.showError(error));
     } else {
 
       const conf = this.formConf.value;
@@ -86,7 +94,7 @@ export class ConferencistasComponent implements OnInit {
           this.guardando = false;
           this.modalService.dismissAll();
 
-        }, console.error);
+        }, error => this.erroresFormConferencista.showError(error));
 
     }
 
@@ -110,12 +118,7 @@ export class ConferencistasComponent implements OnInit {
           .subscribe((res) => {
             this.conferencistas.splice(this.conferencistas.findIndex((c) => c.id === this.selectedConf.id), 1);
             this.selectedConf = null;
-          }, error => {
-            console.error(error);
-            if (error.error.detail) {
-              this.toastr.error(error.error.detail);
-            }
-          });
+          }, error => this.erroresEliminacion.showError(error));
       }
     });
 

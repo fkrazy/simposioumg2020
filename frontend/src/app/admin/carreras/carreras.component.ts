@@ -3,15 +3,18 @@ import { faPlus, faTrashAlt, faEdit, faSave, faTimes } from '@fortawesome/free-s
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ToastrService } from 'ngx-toastr';
+import { MessageService } from 'primeng';
+import swal from 'sweetalert2';
+
 import { ICarrera } from '../../models/ICarrera';
 import { CarreraService } from '../../services/carrera.service';
+import { ErrorWithMessages, ErrorWithToastr } from '../../utils/errores';
 
-import swal from 'sweetalert2';
 
 @Component({
   selector: 'app-carreras',
   templateUrl: './carreras.component.html',
-  styleUrls: ['./carreras.component.scss']
+  styleUrls: ['./carreras.component.scss'],
 })
 export class CarrerasComponent implements OnInit {
 
@@ -20,6 +23,9 @@ export class CarrerasComponent implements OnInit {
   faTrashAlt = faTrashAlt;
   faSave = faSave;
   faTimes = faTimes;
+
+  public erroresFormCarrera: ErrorWithMessages;
+  public erroresEliminacion: ErrorWithToastr;
 
   public opcionNuevaCarrera = true;
   public carreras: ICarrera[] = [];
@@ -40,8 +46,12 @@ export class CarrerasComponent implements OnInit {
   constructor(
     private carreraService: CarreraService,
     private modalService: NgbModal,
-    private toastr: ToastrService
-  ) { }
+    private toastr: ToastrService,
+    private messageService: MessageService,
+  ) {
+    this.erroresFormCarrera = new ErrorWithMessages(this.messageService, () => this.guardando = false);
+    this.erroresEliminacion = new ErrorWithToastr(this.toastr);
+  }
 
   ngOnInit() {
     this.cargarCarreras();
@@ -57,20 +67,18 @@ export class CarrerasComponent implements OnInit {
         .subscribe((res) => {
 
           this.carreras.push(res);
-
           this.guardando = false;
           this.modalService.dismissAll();
 
-        }, console.error);
+        }, error => this.erroresFormCarrera.showError(error));
     } else {
       const carrera = this.formCarrera.value;
       this.carreraService.update(carrera).subscribe((res) => {
 
         this.selectedCarrera.nombre = res.nombre;
-
         this.guardando = false;
         this.modalService.dismissAll();
-      }, console.error);
+      }, error => this.erroresFormCarrera.showError(error));
     }
 
   }
@@ -90,14 +98,9 @@ export class CarrerasComponent implements OnInit {
       if (result.value) {
         this.carreraService.delete(this.selectedCarrera.codigo).subscribe((res) => {
           // this.cargarCarreras();
-          this.carreras.splice(this.carreras.findIndex((c) => c.codigo == this.selectedCarrera.codigo), 1);
+          this.carreras.splice(this.carreras.findIndex((c) => c.codigo === this.selectedCarrera.codigo), 1);
           this.selectedCarrera = null;
-        }, error => {
-          if (error.error.detail) {
-            this.toastr.error(error.error.detail);
-          }
-          console.error(error);
-        });
+        }, error => this.erroresEliminacion.showError(error));
       }
     });
 
@@ -137,4 +140,5 @@ export class CarrerasComponent implements OnInit {
       this.carreras = res;
     }, console.error);
   }
+
 }

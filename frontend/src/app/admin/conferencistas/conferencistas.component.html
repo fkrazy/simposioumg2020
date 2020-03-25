@@ -66,6 +66,7 @@
   <div class="modal-body">
 
     <form (ngSubmit)="onSubmitFormConf()" [formGroup]="formConf" id="form-conf">
+      <p-messages></p-messages>
       <div class="form-group row">
         <label for="nombre" class="col-12 col-md-2 col-form-label">Nombre</label>
         <div class="col-12 col-md-10">
@@ -91,9 +92,10 @@
   </div>
 
   <div class="modal-footer">
-    <button [disabled]="!formConf.valid" type="submit" form="form-conf" class="btn btn-primary">
+    <button [disabled]="!formConf.valid || guardando" type="submit" form="form-conf" class="btn btn-primary">
       <fa-icon [icon]="faSave"></fa-icon>
       Guardar
+      <i *ngIf="guardando" class="pi pi-spin pi-spinner" style="font-size: 0.8rem"></i>
     </button>
   </div>
 

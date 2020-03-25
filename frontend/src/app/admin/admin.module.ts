@@ -3,6 +3,8 @@ import { CommonModule } from '@angular/common';
 import { Route, RouterModule } from '@angular/router';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { MessageService, MessagesModule } from 'primeng';
+
 import { ConferenciasComponent } from './conferencias/conferencias.component';
 import { SalonesComponent } from './salones/salones.component';
 import { ConferencistasComponent } from './conferencistas/conferencistas.component';
@@ -52,7 +54,12 @@ const routes: Route[] = [
     FormsModule,
     ReactiveFormsModule,
     RouterModule.forChild(routes),
-    FontAwesomeModule
+    FontAwesomeModule,
+
+    MessagesModule,
+  ],
+  providers: [
+    MessageService,
   ]
 })
 export class AdminModule { }
