@@ -1,11 +1,15 @@
+
 from django.contrib.auth.models import User
 
 # Create your views here.
 from django.http import Http404
+from django.utils import timezone
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from administracion.models import Ticket
+
+from administracion.models import Asistencia
 
 
 class GetValidation(APIView):
@@ -32,10 +36,19 @@ class GetValidation(APIView):
             else:
                 return Response({'message': "qr invalido"})
         raise Http404
-    #
-    # def post(self, request, format=None):
-    #     serializer = Serializer(data=request.data)
-    #     if serializer.is_valid():
-    #         serializer.save()
-    #         return Response(serializer.data, status=status.HTTP_201_CREATED)
-    #     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def post(self, request, format=None):
+        params = request.query_params
+        ticket = Ticket.objects.filter(id=params.get('id'))
+        user = ticket.asistente.usuario
+        conferencia = params.get('id_conferencia')
+        if user:
+            if user.password == params.get('password'):
+                if not ticket.asistencias.any(conferencia_id=conferencia):
+                    Asistencia.objects.create(conferencia_id=conferencia, ticket=ticket, hora=timezone.now().hour)
+                    return Response({'message': 'correcto'})
+                else:
+                    return Response({'message': "ticket ya ingresado a conferencia"})
+            else:
+                return Response({'message': "qr invalido"})
+        raise Http404
