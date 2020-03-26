@@ -12,7 +12,7 @@ class ReadUserSerializer(serializers.ModelSerializer):
     def to_representation(self, instance):
         roles = ''
         for group in instance.groups.all():
-            roles += group.name
+            roles += ',' + group.name
         return {
             'id': instance.id,
             'username': instance.username,
