@@ -1,5 +1,6 @@
+from django.db.models import ProtectedError
 from django.utils import timezone
-from rest_framework import viewsets
+from rest_framework import viewsets, status
 from rest_framework.exceptions import PermissionDenied, ValidationError
 from rest_framework.decorators import action
 from rest_framework.response import Response
@@ -224,3 +225,9 @@ class PagoViewSet(viewsets.ModelViewSet):
             instance._prefetched_objects_cache = {}
 
         return Response(ReadPagoSerializer(instance).data)
+
+    def destroy(self, request, *args, **kwargs):
+        try:
+            return super().destroy(request, args, kwargs)
+        except ProtectedError:
+            return Response({"detail": 'Otros registros referencian a este pago'}, status=status.HTTP_400_BAD_REQUEST )

@@ -2,12 +2,13 @@ import { Component, OnInit } from '@angular/core';
 import { faPlus, faTrashAlt, faEdit, faSave, faTimes } from '@fortawesome/free-solid-svg-icons';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import {ToastrService} from 'ngx-toastr';
+import { MessageService } from 'primeng';
+import { ToastrService } from 'ngx-toastr';
+
 import { ICuenta } from '../../models/ICuenta';
 import { CuentaService } from '../../services/cuenta.service';
-
-import swal from 'sweetalert2';
-import {error} from 'util';
+import { ErrorWithMessages, ErrorWithToastr } from '../../utils/errores';
+import { pedirConfirmacion } from '../../utils/confirmaciones';
 
 @Component({
   selector: 'app-cuentas',
@@ -21,6 +22,9 @@ export class CuentasComponent implements OnInit {
   faTrashAlt = faTrashAlt;
   faSave = faSave;
   faTimes = faTimes;
+
+  public erroresFormCuenta: ErrorWithMessages;
+  public erroresEliminacion: ErrorWithToastr;
 
   public opcionNuevaCuenta = true;
   public cuentas: ICuenta[] = [];
@@ -46,8 +50,12 @@ export class CuentasComponent implements OnInit {
   constructor(
     private cuentaService: CuentaService,
     private modalService: NgbModal,
-    private toastr: ToastrService
-  ) { }
+    private toastr: ToastrService,
+    private messageService: MessageService,
+  ) {
+    this.erroresFormCuenta = new ErrorWithMessages(this.messageService,() => this.guardando = false);
+    this.erroresEliminacion = new ErrorWithToastr(this.toastr);
+  }
 
   ngOnInit() {
     this.cuentaService.getAll().subscribe((res) => {
@@ -69,7 +77,7 @@ export class CuentasComponent implements OnInit {
           this.guardando = false;
           this.modalService.dismissAll();
 
-        }, console.error);
+        }, error => this.erroresFormCuenta.showError(error));
     } else {
       const cuenta = this.formCuenta.value;
       cuenta.id = this.selectedCuenta.id;
@@ -82,7 +90,7 @@ export class CuentasComponent implements OnInit {
 
           this.guardando = false;
           this.modalService.dismissAll();
-        }, console.error);
+        }, error => this.erroresFormCuenta.showError(error));
 
     }
 
@@ -91,31 +99,20 @@ export class CuentasComponent implements OnInit {
   public onEliminarCuenta(): void {
     if (this.selectedCuenta == null) return;
 
-    swal.fire({
-      title: 'Estas a punto de eliminar una cuenta',
-      text: 'La eliminacion no se puede revertir',
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonColor: '#3085d6',
-      cancelButtonColor: '#d33',
-      confirmButtonText: 'Eliminar',
-      cancelButtonText: 'Cancelar'
-    }).then((result) => {
-      if (result.value) {
-        this.cuentaService.delete(this.selectedCuenta.id)
-          .subscribe((res) => {
+    pedirConfirmacion('Estas a punto de eliminar una cuenta',
+      'La eliminacion no se puede revertir',
+      'Eliminar')
+      .then((result) => {
+        if (result.value) {
+          this.cuentaService.delete(this.selectedCuenta.id)
+            .subscribe((res) => {
 
-            this.cuentas.splice(this.cuentas.findIndex((c) => c.id === this.selectedCuenta.id), 1);
-            this.selectedCuenta = null;
+              this.cuentas.splice(this.cuentas.findIndex((c) => c.id === this.selectedCuenta.id), 1);
+              this.selectedCuenta = null;
 
-          }, err => {
-            console.error(err);
-            if (err.error.detail) {
-              this.toastr.error(err.error.detail);
-            }
-          });
-      }
-    });
+            }, err => this.erroresEliminacion.showError(err));
+        }
+      });
   }
 
   public onCuentaClicked(cuenta: ICuenta): void {

@@ -1,12 +1,12 @@
 
 <div class="container">
     <carousel layout="row" flex>
-        <slide *ngFor="let conferencia of Lista_conferencias" onclick="" layout="row" layout-xs="column" flex>
-          <img class="imagen" src="{{conferencia.foto}}" alt="{{conferencia.id}}" style="display: block; width: 100%; height: 600px;">
+    <slide *ngFor="let conferencia of Lista_conferencias" layout="row" layout-xs="column" flex>
+         <img class="imagen" src="{{conferencia.foto}}" alt="{{conferencia.id}}" style="display: block; width: 100%; height: 600px;">
           <div class="carousel-caption  d-md-block bg-dark" layout="row" layout-xs="column" flex>
          <h2 layout-align="end center">{{conferencia.tema}}</h2>
          <p layout-align="end center">Impartido por: {{conferencia.conferencista.nombre}} Hora de Inicio: {{conferencia.inicio}}
-                                       Salon: {{conferencia.salon.nombre}} Ubicado en: {{conferencia.salon.ubicacion}}</p>
+                                       Salon: {{conferencia.salon.nombre}} Ubicado en el: {{conferencia.salon.ubicacion}}</p>
           </div>
         </slide>
       </carousel>

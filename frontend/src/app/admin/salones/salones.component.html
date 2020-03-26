@@ -1,48 +1,50 @@
 
-<div class="row">
-  <div class="col">
-    <h2>Salones</h2>
+<div class="container">
+  <div class="row">
+    <div class="col">
+      <h2>Salones</h2>
+    </div>
   </div>
-</div>
 
-<div class="row">
-  <div class="col p-2">
-    <button (click)="openModalNuevo(modalSalonContent)" class="btn btn-info btn-sm float-right ml-1">
-      <fa-icon [icon]="faPlus"></fa-icon>
-      Nuevo
-    </button>
-    <button (click)="openModalEditar(modalSalonContent)" [disabled]="selectedSalon == null" class="btn btn-warning btn-sm float-right ml-1">
-      <fa-icon [icon]="faEdit"></fa-icon>
-      Editar
-    </button>
-    <button (click)="onEliminarSalon()" [disabled]="selectedSalon == null" class="btn btn-danger btn-sm float-right ml-1">
-      <fa-icon [icon]="faTrashAlt"></fa-icon>
-      Eliminar
-    </button>
+  <div class="row">
+    <div class="col p-2">
+      <button (click)="openModalNuevo(modalSalonContent)" class="btn btn-info btn-sm float-right ml-1">
+        <fa-icon [icon]="faPlus"></fa-icon>
+        Nuevo
+      </button>
+      <button (click)="openModalEditar(modalSalonContent)" [disabled]="selectedSalon == null" class="btn btn-warning btn-sm float-right ml-1">
+        <fa-icon [icon]="faEdit"></fa-icon>
+        Editar
+      </button>
+      <button (click)="onEliminarSalon()" [disabled]="selectedSalon == null" class="btn btn-danger btn-sm float-right ml-1">
+        <fa-icon [icon]="faTrashAlt"></fa-icon>
+        Eliminar
+      </button>
+    </div>
   </div>
-</div>
 
-<div class="table-responsive">
+  <div class="table-responsive">
 
-  <table class="table table-hover">
-    <thead>
+    <table class="table table-hover">
+      <thead>
       <tr>
         <!--<th>Id</th>-->
         <th>Nombre</th>
         <th>Ubicaci&oacute;n</th>
         <th>Capacidad</th>
       </tr>
-    </thead>
-    <tbody>
+      </thead>
+      <tbody>
       <tr *ngFor="let salon of salones" (click)="onSalonClicked(salon)" [ngClass]="{'bg-dark text-light': salon == selectedSalon}">
         <!--<td>{{salon.id}}</td>-->
         <td>{{salon.nombre}}</td>
         <td>{{salon.ubicacion}}</td>
         <td>{{salon.capacidad}}</td>
       </tr>
-    </tbody>
-  </table>
+      </tbody>
+    </table>
 
+  </div>
 </div>
 
 <ng-template #modalSalonContent let-modalSalon>
@@ -63,6 +65,9 @@
   <div class="modal-body">
 
     <form (ngSubmit)="onSubmitFormSalon()" [formGroup]="formSalon" id="form-salon">
+
+      <p-messages></p-messages>
+
       <div class="form-group row">
         <label for="nombre" class="col-12 col-md-2 col-form-label">Nombre</label>
         <div class="col-12 col-md-10">

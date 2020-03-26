@@ -5,6 +5,9 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { PagoComponent } from './pago/pago.component';
 import { TicketComponent } from './ticket/ticket.component';
+import { ReservacionComponent } from './reservacion/reservacion.component'
+
+import { CarouselModule, CardModule, MessageService, MessagesModule } from 'primeng';
 
 const routes: Route[] = [
   {
@@ -19,17 +22,28 @@ const routes: Route[] = [
   {
     path: 'ticket',
     component: TicketComponent
+  },
+  {
+    path: 'reservacion',
+    component: ReservacionComponent
   }
 ];
 
 @NgModule({
-  declarations: [PagoComponent, TicketComponent],
+  declarations: [PagoComponent, TicketComponent,ReservacionComponent],
   imports: [
     CommonModule,
     FormsModule,
     ReactiveFormsModule,
     RouterModule.forChild(routes),
-    FontAwesomeModule
+    FontAwesomeModule,
+
+    CarouselModule,
+    CardModule,
+    MessagesModule,
+  ],
+  providers: [
+    MessageService,
   ]
 })
 export class AsistentesModule { }

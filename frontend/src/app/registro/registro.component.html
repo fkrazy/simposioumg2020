@@ -1,116 +1,116 @@
+<div class="container">
 
-<form (ngSubmit)="onRegistrar()" [formGroup]="formRegistro" id="form-registro" class="mt-5">
+  <p class="mt-3 text-center"><span class="font-weight-bold titulo-registro">Reg&iacute;strate</span> y s&eacute; parte de este gran evento</p>
 
-    <div *ngIf="errorRegistro != null" class="row">
-      <div class="col-12">
-        <div class="alert alert-danger" role="alert">
-          {{errorRegistro}}
-        </div>
-      </div>
-    </div>
+  <form (ngSubmit)="onRegistrar()" [formGroup]="formRegistro" id="form-registro" class="mt-4 mb-4">
 
-  <div class="row">
+    <p-messages></p-messages>
 
-    <div class="col-12 col-md-6">
+    <div class="row">
 
-      <div class="form-group row">
-        <label for="nombres" class="col-sm-2 col-md-3 col-lg-2 col-form-label">Nombres</label>
-        <div class="col-sm-10 col-md-9 col-lg-10">
-          <input formControlName="nombres" id="nombres" type="text" class="form-control" placeholder="Nombres">
-        </div>
-      </div>
+      <div class="col-12 col-md-6">
 
-      <div class="form-group row">
-        <label for="apellidos" class="col-sm-2 col-md-3 col-lg-2 col-form-label">Apellidos</label>
-        <div class="col-sm-10 col-md-9 col-lg-10">
-          <input formControlName="apellidos" [formGroup]="formRegistro" id="apellidos" type="text" class="form-control" placeholder="Apellidos">
-        </div>
-      </div>
-
-      <div class="form-group row">
-        <label for="telefono" class="col-sm-2 col-md-3 col-lg-2 col-form-label">Tel&eacute;fono</label>
-        <div class="col-sm-10 col-md-9 col-lg-10">
-          <input formControlName="telefono" [formGroup]="formRegistro" id="telefono" type="text" class="form-control" placeholder="Tel&eacute;fono">
-        </div>
-      </div>
-
-      <div class="form-group row">
-        <div class="col">
-
-          <label class="form-check-label">¿Estudias en la UMG?</label>&nbsp;
-          <div class="form-check form-check-inline">
-            <input formControlName="es_estudiante" class="form-check-input" type="radio" id="es_estudiante_si" value="true">
-            <label class="form-check-label" for="es_estudiante_si">S&iacute;</label>
+        <div class="form-group row">
+          <label for="nombres" class="col-sm-2 col-md-3 col-lg-2 col-form-label">Nombres</label>
+          <div class="col-sm-10 col-md-9 col-lg-10">
+            <input formControlName="nombres" id="nombres" type="text" class="form-control" placeholder="Nombres">
           </div>
-
-          <div class="form-check form-check-inline">
-            <input formControlName="es_estudiante" class="form-check-input" type="radio" id="es_estudiante_no" value="false">
-            <label class="form-check-label" for="es_estudiante_no">No</label>
-          </div>
-
         </div>
-      </div>
-      <ng-container *ngIf="formRegistro.value.es_estudiante == 'true'">
-        <form [formGroup]="formEstudiante" class="animated fadeInLeft">
-          <div class="form-group row">
-            <label for="carnet" class="col-sm-2 col-md-3 col-lg-2 col-form-label">Carnet</label>
-            <div class="col-sm-10 col-md-9 col-lg-10">
-              <input formControlName="carnet" [formGroup]="formEstudiante" id="carnet" type="text" class="form-control" placeholder="Carnet">
+
+        <div class="form-group row">
+          <label for="apellidos" class="col-sm-2 col-md-3 col-lg-2 col-form-label">Apellidos</label>
+          <div class="col-sm-10 col-md-9 col-lg-10">
+            <input formControlName="apellidos" [formGroup]="formRegistro" id="apellidos" type="text" class="form-control" placeholder="Apellidos">
+          </div>
+        </div>
+
+        <div class="form-group row">
+          <label for="telefono" class="col-sm-2 col-md-3 col-lg-2 col-form-label">Tel&eacute;fono</label>
+          <div class="col-sm-10 col-md-9 col-lg-10">
+            <input formControlName="telefono" [formGroup]="formRegistro" id="telefono" type="text" class="form-control" placeholder="Tel&eacute;fono">
+          </div>
+        </div>
+
+        <div class="form-group row">
+          <div class="col">
+
+            <label class="form-check-label">¿Estudias en la UMG?</label>&nbsp;
+            <div class="form-check form-check-inline">
+              <input formControlName="es_estudiante" class="form-check-input" type="radio" id="es_estudiante_si" value="true">
+              <label class="form-check-label" for="es_estudiante_si">S&iacute;</label>
             </div>
-          </div>
-          <div class="form-group row">
-            <label for="semestre" class="col-sm-2 col-md-3 col-lg-2 col-form-label">Semestre</label>
-            <div class="col-sm-10 col-md-9 col-lg-10">
-              <input formControlName="semestre" [formGroup]="formEstudiante" id="semestre" type="text" class="form-control" placeholder="No. de semestre">
-            </div>
-          </div>
-          <div class="form-group row">
-            <label for="carrera" class="col-sm-2 col-md-3 col-lg-2 col-form-label">Carrera</label>
-            <div class="col-sm-10 col-md-9 col-lg-10">
-              <select formControlName="codigo_carrera" [formGroup]="formEstudiante" id="carrera" class="custom-select">
-                <option *ngFor="let c of carreras" [value]="c.codigo">{{ c.nombre }}</option>
-              </select>
+
+            <div class="form-check form-check-inline">
+              <input formControlName="es_estudiante" class="form-check-input" type="radio" id="es_estudiante_no" value="false">
+              <label class="form-check-label" for="es_estudiante_no">No</label>
             </div>
 
           </div>
-        </form>
-      </ng-container>
+        </div>
+        <ng-container *ngIf="formRegistro.value.es_estudiante == 'true'">
+          <form [formGroup]="formEstudiante" class="animated fadeInLeft">
+            <div class="form-group row">
+              <label for="carnet" class="col-sm-2 col-md-3 col-lg-2 col-form-label">Carnet</label>
+              <div class="col-sm-10 col-md-9 col-lg-10">
+                <input formControlName="carnet" [formGroup]="formEstudiante" id="carnet" type="text" class="form-control" placeholder="Carnet">
+              </div>
+            </div>
+            <div class="form-group row">
+              <label for="semestre" class="col-sm-2 col-md-3 col-lg-2 col-form-label">Semestre</label>
+              <div class="col-sm-10 col-md-9 col-lg-10">
+                <input formControlName="semestre" [formGroup]="formEstudiante" id="semestre" type="text" class="form-control" placeholder="No. de semestre">
+              </div>
+            </div>
+            <div class="form-group row">
+              <label for="carrera" class="col-sm-2 col-md-3 col-lg-2 col-form-label">Carrera</label>
+              <div class="col-sm-10 col-md-9 col-lg-10">
+                <select formControlName="codigo_carrera" [formGroup]="formEstudiante" id="carrera" class="custom-select">
+                  <option *ngFor="let c of carreras" [value]="c.codigo">{{ c.nombre }}</option>
+                </select>
+              </div>
+
+            </div>
+          </form>
+        </ng-container>
+
+      </div>
+
+      <div class="col-12 col-md-6">
+
+        <div class="form-group row">
+          <label for="correo" class="col-sm-2 col-md-3 col-lg-2 col-form-label">Correo</label>
+          <div class="col-sm-10 col-md-9 col-lg-10">
+            <input formControlName="correo" id="correo" type="text" class="form-control" placeholder="Correo electr&oacute;nico">
+          </div>
+        </div>
+
+        <div class="form-group row">
+          <label for="password" class="col-sm-2 col-md-3 col-lg-2 col-form-label">Contrase&ntilde;a</label>
+          <div class="col-sm-10 col-md-9 col-lg-10">
+            <input formControlName="password" id="password" type="password" class="form-control" placeholder="Contrase&ntilde;a">
+          </div>
+        </div>
+
+        <div class="form-group row">
+          <label for="password_conf" class="col-sm-2 col-md-3 col-lg-2 col-form-label">Confirmar</label>
+          <div class="col-sm-10 col-md-9 col-lg-10">
+            <input formControlName="password_conf" id="password_conf" type="password" class="form-control" placeholder="Confirmar contrase&ntilde;a">
+          </div>
+        </div>
+
+      </div>
+
+      <div class="col-12 d-flex justify-content-end">
+        <button
+          [disabled]="!formRegistro.valid || registrando || (formRegistro.value.es_estudiante == 'true' && !formEstudiante.valid)"
+          type="submit" form="form-registro" class="btn btn-sm btn-dark">
+          <fa-icon [icon]="faUserCheck"></fa-icon>
+          Listo&nbsp;<i *ngIf="registrando" class="pi pi-spin pi-spinner" style="font-size: 0.80rem"></i>
+        </button>
+      </div>
 
     </div>
 
-    <div class="col-12 col-md-6">
+  </form>
 
-      <div class="form-group row">
-        <label for="correo" class="col-sm-2 col-md-3 col-lg-2 col-form-label">Correo</label>
-        <div class="col-sm-10 col-md-9 col-lg-10">
-          <input formControlName="correo" id="correo" type="text" class="form-control" placeholder="Correo electr&oacute;nico">
-        </div>
-      </div>
-
-      <div class="form-group row">
-        <label for="password" class="col-sm-2 col-md-3 col-lg-2 col-form-label">Contrase&ntilde;a</label>
-        <div class="col-sm-10 col-md-9 col-lg-10">
-          <input formControlName="password" id="password" type="password" class="form-control" placeholder="Contrase&ntilde;a">
-        </div>
-      </div>
-
-      <div class="form-group row">
-        <label for="password_conf" class="col-sm-2 col-md-3 col-lg-2 col-form-label">Confirmar</label>
-        <div class="col-sm-10 col-md-9 col-lg-10">
-          <input formControlName="password_conf" id="password_conf" type="password" class="form-control" placeholder="Confirmar contrase&ntilde;a">
-        </div>
-      </div>
-
-    </div>
-
-    <div class="col-12">
-      <button
-        [disabled]="!formRegistro.valid || registrando || (formRegistro.value.es_estudiante == 'true' && !formEstudiante.valid)"
-        type="submit" form="form-registro" class="btn btn-info">
-        Listo
-      </button>
-    </div>
-
-  </div>
-
-</form>
+</div>

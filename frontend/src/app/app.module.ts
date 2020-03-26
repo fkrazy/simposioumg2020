@@ -10,6 +10,8 @@ import { CarouselModule } from 'ngx-bootstrap/carousel';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ToastrModule } from 'ngx-toastr';
 
+import { SplitButtonModule, MessagesModule, MessageService } from 'primeng';
+
 import { AppComponent } from './app.component';
 import { LogOutComponent } from './log-out/log-out.component';
 import { LogInComponent } from './log-in/log-in.component';
@@ -74,15 +76,19 @@ const routes: Route[] = [
         ReactiveFormsModule,
         RouterModule.forRoot(routes),
         FontAwesomeModule,
-      NgbModule,
-      CarouselModule.forRoot(),
-      BrowserAnimationsModule,
-      ToastrModule.forRoot()
+        NgbModule,
+        CarouselModule.forRoot(),
+        BrowserAnimationsModule,
+        ToastrModule.forRoot(),
+
+        SplitButtonModule,
+        MessagesModule,
     ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: TokenInterceptor, multi: true },
-    AuthService
+    MessageService,
+    AuthService,
   ],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
 })
 export class AppModule { }

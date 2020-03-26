@@ -1,3 +1,4 @@
+from django.db.models import ProtectedError
 from rest_framework import viewsets, status, permissions
 from rest_framework.permissions import SAFE_METHODS
 from rest_framework.response import Response
@@ -38,3 +39,9 @@ class ConferenciaViewSet(viewsets.ModelViewSet):
             instance._prefetched_objects_cache = {}
 
         return Response(ReadConferenciaSerializer(Conferencia.objects.get(pk=instance.id), context={"request": request}).data)
+
+    def destroy(self, request, *args, **kwargs):
+        try:
+            return super().destroy(request, args, kwargs)
+        except ProtectedError:
+            return Response({"detail": 'Otros registros referencian a esta conferencia'}, status=status.HTTP_400_BAD_REQUEST )

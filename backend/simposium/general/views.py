@@ -15,6 +15,8 @@ from rest_framework.status import (
 from rest_framework.response import Response
 from .authentication import token_expire_handler, expires_in
 
+import re
+
 from .serializers import UserSigninSerializer, UserSerializer, RegistroAsistenteSerializer
 from administracion.models import Carrera, Asistente, EstudianteUmg
 from administracion.serializers import AsistenteSerializer, EstudianteUmgSerializer
@@ -84,8 +86,9 @@ def registrar(request):
             return Response({"detail": "Falta el semestre"})
         if not registro_serializer.data['codigo_carrera']:
             return Response({"detail": "Falta la carrera"})
-        carrera = Carrera.objects.get(pk=registro_serializer.data['codigo_carrera'])
-        if carrera is None:
+        try:
+            carrera = Carrera.objects.get(pk=registro_serializer.data['codigo_carrera'])
+        except Carrera.DoesNotExist:
             return Response({"detail": "La carrera no existe"})
 
     try:
@@ -110,6 +113,14 @@ def registrar(request):
                                            carrera=carrera)
                 estudiante.save()
     except (IntegrityError, DatabaseError) as error:
-        return Response({"detail": str(error)}, status=HTTP_400_BAD_REQUEST)
+        errorStr = str(error)
+        match = re.search("Duplicate entry.*for key '(.*)'.*", errorStr, re.IGNORECASE)
+        if match:
+            campo = match.group(1)
+            if campo == 'username' or campo == 'email':
+                errorStr = 'Correo o nombre de usuario repetido'
+            elif campo == 'carnet':
+                errorStr = 'Carnet repetido'
+        return Response({"detail": errorStr}, status=HTTP_400_BAD_REQUEST)
 
     return Response(status=HTTP_204_NO_CONTENT)
