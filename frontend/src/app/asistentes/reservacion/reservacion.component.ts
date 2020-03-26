@@ -1,4 +1,5 @@
 import { Component, OnInit, ErrorHandler } from '@angular/core';
+import { ToastrService } from 'ngx-toastr';
 import { IReservacion } from '../../models/IReservacion';
 import { ReservacionService } from './../../services/reservacion.service'
 import { IConferencia } from './../../models/IConferencia';
@@ -10,7 +11,7 @@ import { IValidacionPago } from '../../models/IValidacionPago';
 import { IEvaluacionReembolso } from '../../models/IEvaluacionReembolso';
 import { EvaluacionReembolsoService } from '../../services/evaluacion-reembolso.service';
 import { AuthService } from '../../auth/auth.service';
-
+import { ErrorWithToastr } from '../../utils/errores';
 
 
 @Component({
@@ -33,11 +34,13 @@ export class ReservacionComponent implements OnInit {
   public reembolsosPago: IEvaluacionReembolso[] = [];
 
   estado_todo =false;
-  
+
   Lista_conferencias : IConferencia [] = [];
-  
+
   reservaciones : IReservacion[] =[];
   rese : IReservacion = null;
+
+  private errores: ErrorWithToastr = null;
 
   PAGO_PENDIENTE_VALIDACION = EstadoPago.PENDIENTE_VALIDACION;
   PAGO_ACEPTADO = EstadoPago.ACEPTADO;
@@ -52,8 +55,9 @@ export class ReservacionComponent implements OnInit {
     private pagoService: PagoService,
     private validacionPagoService: ValidacionPagoService,
     private evaluacionReembolsoService: EvaluacionReembolsoService,
-    private auth: AuthService
-  ) { 
+    private auth: AuthService,
+    private toastr: ToastrService,
+  ) {
     this.TEXTO_ESTADOSPAGO[0] = 'Sin pagar';
     this.TEXTO_ESTADOSPAGO[EstadoPago.PENDIENTE_VALIDACION] = 'Pendiente de validación';
     this.TEXTO_ESTADOSPAGO[EstadoPago.ACEPTADO] = 'Aceptado';
@@ -67,6 +71,7 @@ export class ReservacionComponent implements OnInit {
     this.inicio();
     this.pago = ReservacionComponent.PAGO_SINREGISTRAR;
     this.cargarPago();
+    this.errores = new ErrorWithToastr(this.toastr);
   }
   private cargarPago(): void {
     this.pagoService.get(this.auth.user.id)
@@ -99,7 +104,7 @@ export class ReservacionComponent implements OnInit {
     }, console.error);
   }
 
-  
+
  public cambiar(){
     if(this.estado_todo == true){
       this.estado_todo = false;
@@ -120,7 +125,7 @@ export class ReservacionComponent implements OnInit {
       this.cambiar();
       location.reload();
      //console.log(res);
-    },console.error)
+    }, error => this.errores.showError(error));
   }
 
   public Desasistir(numero){
@@ -128,6 +133,6 @@ export class ReservacionComponent implements OnInit {
      this.rese=res;
      location.reload();
      // console.log(res)
-    },console.error);
+    }, error => this.errores.showError(error));
   }
 }
