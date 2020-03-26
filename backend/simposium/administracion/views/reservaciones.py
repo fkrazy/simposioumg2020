@@ -1,5 +1,6 @@
-from django.db.models import ProtectedError
+from django.db.models import ProtectedError, Q
 from rest_framework import viewsets, status
+from rest_framework.exceptions import ValidationError
 from rest_framework.permissions import SAFE_METHODS
 from rest_framework.response import Response
 
@@ -51,6 +52,13 @@ class ReservacionViewSet(viewsets.ModelViewSet):
         conf = Conferencia.objects.get(pk=serializer.validated_data['conferencia'].id)
         if (conf.salon.capacidad - len(Reservacion.objects.filter(conferencia=conf).all())) <= 0:
             return Response({"detail": "Ya no hay cupo para esta conferencia"}, status=status.HTTP_400_BAD_REQUEST)
+
+        if Reservacion.objects.filter(asistente=request.user.asistente)\
+            .filter(Q(conferencia__inicio__gte=conf.inicio) & Q(conferencia__inicio__lt=conf.fin)
+                    | Q(conferencia__fin__gt=conf.inicio) & Q(conferencia__fin__lte=conf.fin)
+                    | Q(conferencia__inicio__lt=conf.inicio) & Q(conferencia__fin__gt=conf.fin)).exists():
+            raise ValidationError("No puedes asistir a más de una conferencia al mismo tiempo")
+
         self.perform_create(serializer)
         headers = self.get_success_headers(serializer.data)
         return Response((ReadReservacionSerializer(Reservacion.objects.get(pk=serializer.data["id"]))).data, status=status.HTTP_201_CREATED, headers=headers)
