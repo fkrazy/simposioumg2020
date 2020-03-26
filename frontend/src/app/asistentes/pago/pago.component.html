@@ -21,7 +21,7 @@
     <div *ngIf="pago.estado == 0" class="col-12 col-md-12 mb-4">
       <h4>Instrucciones</h4>
       <p class="text-justify">
-        Para completar tu registro de asistencia debes realizar un dep&oacute;sito de <strong>Q.{{ monto}}</strong> en cualquiera de las siguientes cuentas bancarias:
+        Para completar tu registro de asistencia debes realizar un dep&oacute;sito de <strong *ngIf="eventoService.evento !== null">Q.{{ eventoService.evento.costo }}</strong> en cualquiera de las siguientes cuentas bancarias:
       </p>
 
       <p-carousel [value]="cuentas" [numVisible]="4" [numScroll]="3" [circular]="false" [responsiveOptions]="[

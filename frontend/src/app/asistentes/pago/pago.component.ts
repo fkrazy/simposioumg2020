@@ -15,6 +15,7 @@ import { ValidacionPagoService } from '../../services/validacion-pago.service';
 import { IEvaluacionReembolso, ResultadoEvaluacionReembolso } from '../../models/IEvaluacionReembolso';
 import { EvaluacionReembolsoService } from '../../services/evaluacion-reembolso.service';
 import { ErrorWithMessages, ErrorWithToastr } from '../../utils/errores';
+import { EventoService } from '../../services/evento.service';
 
 @Component({
   selector: 'app-pago',
@@ -60,8 +61,6 @@ export class PagoComponent implements OnInit {
   public erroresForms: ErrorWithMessages;
   public erroresToastr: ErrorWithToastr;
 
-  public monto = 300;
-
   public cuentas: ICuenta[] = [];
   public pago: IPago = null;
   public validacionesPago: IValidacionPago[] = [];
@@ -103,6 +102,7 @@ export class PagoComponent implements OnInit {
     private validacionPagoService: ValidacionPagoService,
     private evaluacionReembolsoService: EvaluacionReembolsoService,
     private cuentaService: CuentaService,
+    public eventoService: EventoService,
     private auth: AuthService,
     private modalService: NgbModal,
     private messageService: MessageService,

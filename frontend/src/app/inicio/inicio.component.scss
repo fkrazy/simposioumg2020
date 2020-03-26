@@ -18,7 +18,26 @@
   margin-bottom: 0;
 }
 
-.fecha {
+.fecha, .lugar {
   margin-top: 0;
   font-size: 1.1rem;
+}
+
+.lugar, .dias_que_faltan {
+  position: absolute;
+  padding: 2px 4px;
+  border-radius: 3px 3px;
+  background-color: rgba(52, 58, 64, 0.8);
+}
+
+.lugar {
+  /* #343a40 */
+  bottom: 1rem;
+  left: 1rem;
+
+}
+
+.dias_que_faltan {
+  top: 5rem;
+  right: 1rem;
 }

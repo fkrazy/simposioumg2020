@@ -22,4 +22,5 @@ urlpatterns = [
     path('', include(router.urls)),
     path(r'validaciones/pago/<int:pago_id>', views.validaciones_de_pago),
     path(r'reembolsos/pago/<int:pago_id>', views.reembolsos_de_pago),
+    path(r'evento', views.get_info_evento),
 ]
