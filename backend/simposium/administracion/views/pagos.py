@@ -90,7 +90,7 @@ class PagoViewSet(viewsets.ModelViewSet):
     def aceptados(self, request):
         aceptados = self.filter_queryset(self.get_queryset())\
             .filter(estado=Pago.ACEPTADO)\
-            .order_by('fecha_registro')
+            .order_by('fecha', 'hora')
 
         page = self.paginate_queryset(aceptados)
         if page is not None:
@@ -104,7 +104,7 @@ class PagoViewSet(viewsets.ModelViewSet):
     @action(detail=False, methods=['GET'])
     def rechazados(self, request):
         rechazados = self.filter_queryset(self.get_queryset())\
-            .filter(estado=Pago.ACEPTADO)\
+            .filter(estado=Pago.VALIDACION_RECHAZADA)\
             .order_by('fecha_registro')
 
         page = self.paginate_queryset(rechazados)
