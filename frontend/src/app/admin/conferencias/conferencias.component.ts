@@ -14,6 +14,9 @@ import { SalonService } from '../../services/salon.service';
 import { ErrorWithMessages, ErrorWithToastr } from '../../utils/errores';
 import { pedirConfirmacion } from '../../utils/confirmaciones';
 
+import * as matchAll from 'string.prototype.matchall';
+matchAll.shim();
+
 @Component({
   selector: 'app-conferencias',
   templateUrl: './conferencias.component.html',
