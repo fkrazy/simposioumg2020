@@ -20,10 +20,11 @@
             <thead>
             <tr>
               <th>ID conferencia</th>
-              <th>Nombre</th>
+              <th class="active" >Nombre</th>
               <th>Conferencista</th>
               <th>Profesion</th>
-              <th>Foto</th>
+              <th>Salon</th>
+              <th width="15%" >Foto</th>
               <th *ngIf="pago.estado == PAGO_ACEPTADO">Asignarse</th>
             </tr>
             </thead>
@@ -31,10 +32,11 @@
             <tr *ngFor="let lconfer of Lista_conferencias">
               
                 <td>{{lconfer.id}}</td>              
-                <td>{{lconfer.tema }}</td>
-                <td>{{lconfer.conferencista.nombre}}</td>
+                <td >{{lconfer.tema }}</td>
+                <td >{{lconfer.conferencista.nombre}}</td>
                 <td>{{lconfer.conferencista.profesion}}</td>
-                <td class="col-md-4"><img src="{{lconfer.foto}}" alt="" width="100%"></td>
+                <td>{{lconfer.salon.nombre}}</td>
+                <td ><img src="{{lconfer.foto}}" alt="" width="100%"></td>
                 <td *ngIf="pago.estado == PAGO_ACEPTADO" ><button class="btn btn-lg btn-outline-primary" (click)="Asistir(lconfer.id)"> Asistir </button></td>
             </tr>
             </tbody>
