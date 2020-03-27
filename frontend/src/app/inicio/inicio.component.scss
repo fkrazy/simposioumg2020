@@ -1,6 +1,7 @@
 
 .inicio {
   color: #20C20E;
+  position: relative;
   height: 90vh;
   background-image: url("/assets/img/bg-inicio.jpg");
   background-size: cover;
@@ -38,6 +39,6 @@
 }
 
 .dias_que_faltan {
-  top: 5rem;
+  top: 1rem;
   right: 1rem;
 }
