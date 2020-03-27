@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'administracion',
     'cliente',
     'validacion',
+    'reportes',
     'corsheaders',
 ]
 
@@ -136,6 +137,13 @@ USE_L10N = True
 USE_TZ = True
 
 CORS_ORIGIN_ALLOW_ALL = True
+
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_HOST_USER = 'deswebumg@gmail.com'
+EMAIL_HOST_PASSWORD = 'desarrollo2019'
+EMAIL_USE_TLS = True
+EMAIL_USE_SSL = False
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.0/howto/static-files/

@@ -5,31 +5,40 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { ReporteAsistenciasComponent } from './reporte-asistencias/reporte-asistencias.component';
 import { ReportePagosComponent } from './reporte-pagos/reporte-pagos.component';
+import { ReporteEstudiantesComponent } from './reporte-estudiantes/reporte-estudiantes.component';
+import {MultiSelectModule, TableModule} from 'primeng';
 
 const routes: Route[] = [
   {
     path: '',
-    redirectTo: 'asistencias',
+    redirectTo: 'pagos',
     pathMatch: 'full'
   },
-  {
+  /*{
     path: 'asistencias',
     component: ReporteAsistenciasComponent
-  },
+  },*/
   {
     path: 'pagos',
     component: ReportePagosComponent
   },
+  {
+    path: 'estudiantes',
+    component: ReporteEstudiantesComponent,
+  },
 ];
 
 @NgModule({
-  declarations: [ReporteAsistenciasComponent, ReportePagosComponent],
+  declarations: [ReporteAsistenciasComponent, ReportePagosComponent, ReporteEstudiantesComponent],
   imports: [
     CommonModule,
     FormsModule,
     ReactiveFormsModule,
     RouterModule.forChild(routes),
-    FontAwesomeModule
+    FontAwesomeModule,
+
+    TableModule,
+    MultiSelectModule,
   ]
 })
 export class ReportesModule { }
