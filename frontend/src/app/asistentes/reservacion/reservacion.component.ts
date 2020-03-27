@@ -135,4 +135,7 @@ export class ReservacionComponent implements OnInit {
      // console.log(res)
     }, error => this.errores.showError(error));
   }
+  recargar(){
+    location.reload();
+  }
 }
