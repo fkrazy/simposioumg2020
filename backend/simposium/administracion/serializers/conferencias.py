@@ -33,7 +33,7 @@ class ReadConferenciaSerializer(serializers.ModelSerializer):
         rep["lugares"] = {
             "confirmados": confirmados,
             "pendientes": pendientes,
-            "disponibles": total
+            "disponibles": total - confirmados
         }
         return rep
 
