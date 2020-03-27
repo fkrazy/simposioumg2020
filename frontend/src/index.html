@@ -9,8 +9,33 @@
   <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500&display=swap" rel="stylesheet">
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css?family=Roboto+Slab&display=swap" rel="stylesheet">
+
+  <style type="text/css">
+    body, html {
+      height: 100%;
+    }
+    .app-loading {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100%;
+    }
+
+  </style>
+
 </head>
 <body>
-  <app-root></app-root>
+  <app-root>
+
+
+    <div class="app-loading">
+      <h1 class="h1 text-dark text-center">Simposio 2020</h1>
+      <i class="pi pi-spin pi-spinner" style="font-size: 6rem;"></i>
+      <p class="text-center text-dark">Cargando...</p>
+    </div>
+
+  </app-root>
 </body>
 </html>
