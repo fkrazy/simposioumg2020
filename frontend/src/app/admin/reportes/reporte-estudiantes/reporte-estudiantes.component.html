@@ -1,28 +1,41 @@
 
 <div class="container">
 
-  <h2 class="mt-4">Reporte de pagos</h2>
-  <p>Pagos ordenados</p>
+  <h2 class="mt-4">Reporte de estudiantes</h2>
+  <p>Estudiantes que asistir&aacute;n</p>
 
+
+  <div class="row">
+    <div class="col form-group">
+      <input [(ngModel)]="semestre" (input)="filtrar()" type="number" min="1" max="20" step="1" class="form-control form-control-sm" placeholder="Filtrar por semestre">
+    </div>
+    <div class="col form-group">
+      <select [(ngModel)]="carrera" (change)="filtrar()" class="custom-select custom-select-sm">
+        <option *ngFor="let carrera of carreras" [value]="carrera.codigo">{{ carrera.nombre }}</option>
+      </select>
+    </div>
+  </div>
 
   <div class="table-responsive">
     <table class="table" id="tabla-reporte">
       <thead>
-      <tr>
-        <th>Fecha y hora</th>
-        <th>Carnet</th>
-        <th>Nombre</th>
-        <th>Cuenta</th>
-      </tr>
+        <tr>
+          <th>Carnet</th>
+          <th>Semestre</th>
+          <th>Nombre</th>
+          <th>Carrera</th>
+          <th>Correo</th>
+        </tr>
       </thead>
 
       <tbody>
-      <tr *ngFor="let estud of estudiantes">
-        <td>{{ estud.pago.fecha + ' ' + (estud.pago.hora|slice:0:5)}}</td>
-        <td>{{ estud.carnet }}</td>
-        <td>{{ estud.pago.titular.usuario.nombres + ' ' + estud.pago.titular.usuario.apellidos }}</td>
-        <td>{{ estud.pago.cuenta.banco + ' ' + estud.pago.cuenta.numero }}</td>
-      </tr>
+        <tr *ngFor="let estud of estudiantes">
+          <td>{{ estud.carnet }}</td>
+          <td>{{ estud.semestre }}</td>
+          <td>{{ estud.pago.titular.usuario.nombres + ' ' + estud.pago.titular.usuario.apellidos }}</td>
+          <td>{{ estud.carrera.nombre }}</td>
+          <td>{{ estud.pago.titular.usuario.correo }}</td>
+        </tr>
       </tbody>
     </table>
   </div>

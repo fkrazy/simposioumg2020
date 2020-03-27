@@ -21,6 +21,8 @@ export class HeaderComponent implements OnInit {
     private auth: AuthService
   ) {
     this.itemsMenuAdmin = [
+      {label: 'Reporte de pagos', routerLink: '/admin/reportes/pagos'},
+      {label: 'Reporte de estudiantes', routerLink: '/admin/reportes/estudiantes'},
       {label: 'Pagos', routerLink: '/admin/pagos'},
       {label: 'Validaciones', routerLink: '/admin/pagos/validaciones'},
       {label: 'Reembolsos', routerLink: '/admin/pagos/reembolsos'},
