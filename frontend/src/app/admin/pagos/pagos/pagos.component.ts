@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import {IPago} from '../../../models/IPago';
+import {PagoService} from '../../../services/pago.service';
 
 @Component({
   selector: 'app-pagos',
@@ -7,9 +9,28 @@ import { Component, OnInit } from '@angular/core';
 })
 export class PagosComponent implements OnInit {
 
-  constructor() { }
+  private pagosAceptados: IPago[] = [];
+  private pagosRechazados: IPago[] = [];
+
+  constructor(
+    private pagoService: PagoService
+  ) { }
 
   ngOnInit() {
+    this.cargarPagosAceptados();
+    this.cargarPagosRechazados();
+  }
+
+  private cargarPagosAceptados(): void {
+    this.pagoService.getAllAceptados().subscribe((res) => {
+      this.pagosAceptados = res;
+    }, console.error);
+  }
+
+  private cargarPagosRechazados(): void {
+    this.pagoService.getAllRechazados().subscribe((res) => {
+      this.pagosRechazados = res;
+    }, console.error);
   }
 
 }
