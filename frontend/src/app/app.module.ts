@@ -10,7 +10,7 @@ import { CarouselModule } from 'ngx-bootstrap/carousel';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ToastrModule } from 'ngx-toastr';
 
-import { SplitButtonModule, MessagesModule, MessageService } from 'primeng';
+import { SplitButtonModule, MessagesModule, MessageService, CarouselModule as CarouselPrimeNg } from 'primeng';
 
 import { AppComponent } from './app.component';
 import { LogOutComponent } from './log-out/log-out.component';
@@ -83,6 +83,7 @@ const routes: Route[] = [
 
         SplitButtonModule,
         MessagesModule,
+        CarouselPrimeNg,
     ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: TokenInterceptor, multi: true },
