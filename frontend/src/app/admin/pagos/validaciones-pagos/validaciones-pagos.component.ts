@@ -12,7 +12,7 @@ export class ValidacionesPagosComponent implements OnInit {
 
   API_URL = environment.apiUrl;
 
-  private pagosPendientes: IPago[] = [];
+  public pagosPendientes: IPago[] = [];
 
   constructor(
     private pagoService: PagoService

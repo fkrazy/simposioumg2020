@@ -9,8 +9,8 @@ import {PagoService} from '../../../services/pago.service';
 })
 export class PagosComponent implements OnInit {
 
-  private pagosAceptados: IPago[] = [];
-  private pagosRechazados: IPago[] = [];
+  public pagosAceptados: IPago[] = [];
+  public pagosRechazados: IPago[] = [];
 
   constructor(
     private pagoService: PagoService

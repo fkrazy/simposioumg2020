@@ -18,7 +18,7 @@ export class HeaderComponent implements OnInit {
   isExpanded = false;
 
   constructor(
-    private auth: AuthService
+    public auth: AuthService
   ) {
     this.itemsMenuAdmin = [
       {label: 'Reporte de pagos', routerLink: '/admin/reportes/pagos'},

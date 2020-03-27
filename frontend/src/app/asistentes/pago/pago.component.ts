@@ -71,7 +71,7 @@ export class PagoComponent implements OnInit {
   public solicitandoReembolso = false;
 
   private fotoStr = '';
-  private fotoStrEdicion = '';
+  public fotoStrEdicion = '';
 
   public formRegistroPago = new FormGroup({
     codigo_recibo: new FormControl('', [

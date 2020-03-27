@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { environment } from '../../../../environments/environment';
 import { IPago } from '../../../models/IPago';
 import { PagoService } from '../../../services/pago.service';
 
@@ -10,11 +9,9 @@ import { PagoService } from '../../../services/pago.service';
 })
 export class ReembolsosPagosComponent implements OnInit {
 
-  API_URL = environment.apiUrl;
-
-  private pagosReembolsoPendiente: IPago[] = [];
-  private pagosReembolsoAprobado: IPago[] = [];
-  private pagosReembolsados: IPago[] = [];
+  public pagosReembolsoPendiente: IPago[] = [];
+  public pagosReembolsoAprobado: IPago[] = [];
+  public pagosReembolsados: IPago[] = [];
 
   constructor(
     private pagoService: PagoService
