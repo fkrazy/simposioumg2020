@@ -1,0 +1,63 @@
+
+<div class="container">
+
+
+  <div class="row mt-2">
+    <div class="col">
+      <h2>Aceptados</h2>
+      <div class="table-responsive">
+
+        <table class="table table-hover">
+          <thead>
+          <tr>
+            <th>Fecha y hora</th>
+            <th>Titular</th>
+            <th>Cuenta</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr *ngFor="let pago of pagosAceptados">
+            <td [routerLink]="['/admin/pagos', pago.titular_id]"><span class="btn btn-link text-dark">{{ pago.fecha + ' ' + (pago.hora|slice:0:5) }}</span></td>
+            <td>{{ pago.titular.usuario.username }}</td>
+            <td>{{ pago.cuenta.numero }}</td>
+          </tr>
+          </tbody>
+        </table>
+
+      </div>
+      <ng-container *ngIf="pagosAceptados.length === 0">
+        <p>No se han aceptado pagos</p>
+      </ng-container>
+    </div>
+  </div>
+
+  <div class="row mt-2">
+    <div class="col">
+      <h2>Rechazados</h2>
+      <div class="table-responsive">
+
+        <table class="table table-hover">
+          <thead>
+          <tr>
+            <th>Registro</th>
+            <th>Titular</th>
+            <th>Cuenta</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr *ngFor="let pago of pagosRechazados">
+            <td [routerLink]="['/admin/pagos', pago.titular_id]"><span class="btn btn-link text-dark">{{ pago.fecha_registro }}</span></td>
+            <td>{{ pago.titular.usuario.username }}</td>
+            <td>{{ pago.cuenta.numero }}</td>
+          </tr>
+          </tbody>
+        </table>
+
+      </div>
+      <ng-container *ngIf="pagosRechazados.length === 0">
+        <p>No se han rechazado pagos</p>
+      </ng-container>
+    </div>
+  </div>
+
+</div>

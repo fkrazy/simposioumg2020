@@ -1,0 +1,78 @@
+<header>
+  <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow">
+    <div class="container">
+
+      <a class="navbar-brand" [routerLink]="['/']">Simposio<span class="brand-umg bg-dark">UMG</span></a>
+
+      <button
+        class="navbar-toggler"
+        type="button"
+        data-toggle="collapse"
+        data-target=".navbar-collapse"
+        aria-label="Toggle navigation"
+        [attr.aria-expanded]="isExpanded"
+        (click)="toggle()">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse"
+        [ngClass]="{ show: isExpanded }">
+
+        <ul class="navbar-nav flex-grow" *ngIf="isAuthenticated()">
+
+          <!--<div class="btn-group" *ngIf="isAdmin()">
+            <button type="button" class="btn btn-info btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              Admin
+            </button>
+            <div class="dropdown-menu dropdown-menu-right w-100">
+              <a [routerLinkActive]="['link-active']" [routerLink]="['/admin/conferencias']" class="dropdown-item text-dark" title="Salir">Conferencias</a>
+              <a [routerLinkActive]="['link-active']" [routerLink]="['/admin/pagos']" class="dropdown-item text-dark" title="Salir">Pagos</a>
+              <a [routerLinkActive]="['link-active']" [routerLink]="['/admin/pagos/validaciones']" class="dropdown-item text-dark" title="Salir">Validaciones</a>
+              <a [routerLinkActive]="['link-active']" [routerLink]="['/admin/pagos/reembolsos']" class="dropdown-item text-dark" title="Salir">Reembolsos</a>
+              <a [routerLinkActive]="['link-active']" [routerLink]="['/admin/salones']" class="dropdown-item text-dark" title="Salir">Salones</a>
+              <a [routerLinkActive]="['link-active']" [routerLink]="['/admin/conferencistas']" class="dropdown-item text-dark" title="Salir">Conferencistas</a>
+              <a [routerLinkActive]="['link-active']" [routerLink]="['/admin/carreras']" class="dropdown-item text-dark" title="Salir">Carreras</a>
+              <a [routerLinkActive]="['link-active']" [routerLink]="['/admin/cuentas']" class="dropdown-item text-dark" title="Salir">Cuentas</a>
+              
+            </div>
+          </div>-->
+
+          <ng-container *ngIf="isAsistente()">
+
+            <li [routerLinkActive]="['link-active']"  class="nav-item">
+              <a [routerLink]="['/asistentes/pago']" class="nav-link text-dark">Pago</a>
+            </li>
+            <li [routerLinkActive]="['link-active']"  class="nav-item">
+              <a [routerLink]="['/asistentes/ticket']" class="nav-link text-dark">Ticket</a>
+            </li>
+            <li [routerLinkActive]="['link-active']"  class="nav-item">
+              <a [routerLink]="['/asistentes/reservacion']" class="nav-link text-dark">Asistir</a>
+            </li>
+
+          </ng-container>
+
+          <li class="nav-item">
+            <!--<a [routerLink]="['/logout']" class="nav-link text-dark"><fa-icon [icon]="faSignOutAlt"></fa-icon>&nbsp;Salir</a>-->
+            <p-splitButton *ngIf="!auth.isAdmin(); else menuAdmin" label="{{auth.user.username}}" icon="pi pi-user" [model]="itemsMenuUser" styleClass="ui-button-secondary"></p-splitButton>
+            <ng-template #menuAdmin>
+              <p-splitButton label="{{auth.user.username}}" icon="pi pi-user" [model]="itemsMenuAdmin" styleClass="ui-button-secondary"></p-splitButton>
+            </ng-template>
+          </li>
+
+        </ul>
+
+        <ul class="navbar-nav flex-grow" *ngIf="!isAuthenticated()">
+          <li [routerLinkActive]="['link-active']" class="nav-item">
+            <a [routerLink]="['/registro']" class="nav-link text-dark">Participar</a>
+          </li>
+          <li [routerLinkActive]="['link-active']" class="nav-item">
+            <a [routerLink]="['/login']" class="nav-link text-dark"><fa-icon [icon]="faSignInAlt"></fa-icon>&nbsp;Entrar</a>
+          </li>
+
+        </ul>
+
+      </div>
+    </div>
+  </nav>
+</header>
+
+

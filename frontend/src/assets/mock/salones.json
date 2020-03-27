@@ -1,0 +1,20 @@
+[
+  {
+    "id": 2201,
+    "nombre": "BB-01",
+    "ubicacion": "Edificio B, 2do. Nivel",
+    "capacidad": 180
+  },
+  {
+    "id": 2202,
+    "nombre": "AA-02",
+    "ubicacion": "Edificio A, 1er. Nivel",
+    "capacidad": 230
+  },
+  {
+    "id": 2203,
+    "nombre": "BA-03",
+    "ubicacion": "Edificio B, 1er. Nivel",
+    "capacidad": 195
+  }
+]

@@ -1,0 +1,20 @@
+[
+  {
+    "id": 3001,
+    "numero": "123412-12341-23",
+    "banco": "BANRURAL",
+    "titular": "Pancho Alejandrino López López"
+  },
+  {
+    "id": 3002,
+    "numero": "12411324-13431-13",
+    "banco": "BANCO INDUSTRIAL",
+    "titular": "Jaime Jesús Jorobado Barrientos"
+  },
+  {
+    "id": 3003,
+    "numero": "1445345245-1234-1325",
+    "banco": "BANCO G&T CONTINENTAL",
+    "titular": "Oribe Agustino Peralta Gómez"
+  }
+]

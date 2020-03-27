@@ -1,0 +1,77 @@
+
+<div class="container">
+
+  <h2 class="mt-4">Reporte de estudiantes</h2>
+  <p>Estudiantes que asistir&aacute;n</p>
+
+
+  <div class="row">
+    <div class="col form-group">
+      <input [(ngModel)]="semestre" (input)="filtrar()" type="number" min="1" max="20" step="1" class="form-control form-control-sm" placeholder="Filtrar por semestre">
+    </div>
+    <div class="col form-group">
+      <select [(ngModel)]="carrera" (change)="filtrar()" class="custom-select custom-select-sm">
+        <option *ngFor="let carrera of carreras" [value]="carrera.codigo">{{ carrera.nombre }}</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="table-responsive">
+    <table class="table" id="tabla-reporte">
+      <thead>
+        <tr>
+          <th>Carnet</th>
+          <th>Semestre</th>
+          <th>Nombre</th>
+          <th>Carrera</th>
+          <th>Correo</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <tr *ngFor="let estud of estudiantes">
+          <td>{{ estud.carnet }}</td>
+          <td>{{ estud.semestre }}</td>
+          <td>{{ estud.pago.titular.usuario.nombres + ' ' + estud.pago.titular.usuario.apellidos }}</td>
+          <td>{{ estud.carrera.nombre }}</td>
+          <td>{{ estud.pago.titular.usuario.correo }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div *ngIf="estudiantes.length > 0" class="d-flex justify-content-end mt-2">
+    <button (click)="openModalEnvioCorreo(content)" class="btn btn-sm btn-primary">Enviar a correo</button>
+  </div>
+
+</div>
+
+
+<ng-template #content>
+  <div class="modal-header">
+    <h4 class="modal-title" >Enviar correo</h4>
+  </div>
+  <div class="modal-body">
+
+    <form [formGroup]="formEnvioCorreo" id="form-correo">
+
+      <div class="form-group row">
+
+        <label for="correo" class="col-sm-2 col-form-label col-form-label-sm">Correo</label>
+        <div class="col-sm-10">
+          <input type="text" formControlName="correo" id="correo" class="form-control form-control-sm">
+        </div>
+
+      </div>
+
+
+    </form>
+  </div>
+  <div class="modal-footer">
+    <button [disabled]="!formEnvioCorreo.valid || enviandoCorreo" (click)="onEnviarCorreo()" class="btn btn-sm btn-dark" form="form-correo" >
+      <fa-icon [icon]="faPaperClip"></fa-icon>
+      Enviar
+      <i *ngIf="enviandoCorreo" class="pi pi-spin pi-spinner" style="font-size: 0.8rem;"></i>
+    </button>
+  </div>
+</ng-template>

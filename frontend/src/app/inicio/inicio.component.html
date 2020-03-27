@@ -1,0 +1,48 @@
+
+<div class="inicio d-flex justify-content-center align-content-center align-items-center">
+  <div class="text-light">
+    <h1 class="titulo">Simposio UMG</h1>
+    <ng-container *ngIf="eventoService.evento !== null">
+      <p class="fecha">
+        <fa-icon [icon]="faCalendar"></fa-icon>&nbsp;
+        {{ eventoService.evento.fecha }}
+      </p>
+      <p class="lugar">
+        <fa-icon [icon]="faMapMarker"></fa-icon>&nbsp;
+        {{ eventoService.evento.lugar }}
+      </p>
+      <p class="dias_que_faltan">
+        Faltan&nbsp;{{ eventoService.evento.dias_que_faltan }}
+        d&iacute;a<span *ngIf="eventoService.evento.dias_que_faltan !== 1">s</span>
+      </p>
+    </ng-container>
+  </div>
+</div>
+
+<hr>
+
+
+
+<app-conferencias></app-conferencias>
+
+<!--
+<ng-template #modalPrimerLogin>
+  <div class="modal-header">
+    <h2 class="modal-title">Hola {{auth.user.nombres}}!</h2>
+  </div>
+  <div class="modal-body">
+    <p class="text-justify">
+      Bienvenido, ya tienes una cuenta. Ahora debes realizar el pago de tu asistencia.
+    </p>
+    <p class="text-justify">
+      Si ya has pagado y cuentas con un recibo de dep&oacute;sito, debes registrar tu pago.
+    </p>
+    <p class="text-justify">
+      De lo contrario, debes realizar un dep&oacute;sito en cualquiera de las cuentas disponibles y despu&eacute;s registra tu pago.
+    </p>
+    <p>
+      Ve a "Pago" para m&aacute;s informaci&oacute;n.
+    </p>
+  </div>
+</ng-template>
+-->

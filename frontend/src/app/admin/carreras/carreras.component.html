@@ -1,0 +1,91 @@
+
+<div class="container">
+  <div class="row">
+    <div class="col">
+      <h2>Carreras</h2>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col p-2">
+      <button (click)="openModalNueva(modalCarreraContent)" class="btn btn-info btn-sm float-right ml-1">
+        <fa-icon [icon]="faPlus"></fa-icon>
+        Nueva
+      </button>
+      <button (click)="openModalEditar(modalCarreraContent)" [disabled]="selectedCarrera == null" class="btn btn-warning btn-sm float-right ml-1">
+        <fa-icon [icon]="faEdit"></fa-icon>
+        Editar
+      </button>
+      <button (click)="onEliminarCarrera()" [disabled]="selectedCarrera == null" class="btn btn-danger btn-sm float-right ml-1">
+        <fa-icon [icon]="faTrashAlt"></fa-icon>
+        Eliminar
+      </button>
+    </div>
+  </div>
+
+  <div class="table-responsive">
+
+    <table class="table table-hover">
+      <thead>
+      <tr>
+        <th>C&oacute;digo</th>
+        <th>Nombre</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr *ngFor="let carrera of carreras" (click)="onCarreraClicked(carrera)" [ngClass]="{'bg-dark text-light': carrera == selectedCarrera}">
+        <td>{{carrera.codigo}}</td>
+        <td>{{carrera.nombre}}</td>
+      </tr>
+      </tbody>
+    </table>
+
+  </div>
+</div>
+
+<ng-template #modalCarreraContent let-modalCarrera>
+
+  <div class="modal-header">
+
+    <h1 *ngIf="opcionNuevaCarrera;else titleEdicion" class="modal-title">Nueva</h1>
+    <ng-template #titleEdicion>
+      <h1 class="modal-title">Editar</h1>
+    </ng-template>
+
+    <button type="button" class="close" aria-label="Close" (click)="modalCarrera.dismiss('')">
+      <fa-icon [icon]="faTimes"></fa-icon>
+    </button>
+
+  </div>
+
+  <div class="modal-body">
+
+    <form (ngSubmit)="onSubmitFormCarrera()" [formGroup]="formCarrera" id="form-carrera">
+
+      <p-messages></p-messages>
+
+      <div *ngIf="opcionNuevaCarrera == true" class="form-group row">
+        <label for="codigo" class="col-12 col-md-2 col-form-label">C&oacute;digo</label>
+        <div class="col-12 col-md-10">
+          <input formControlName="codigo" type="text" id="codigo" class="form-control" placeholder="C&oacute;digo">
+        </div>
+      </div>
+      <div class="form-group row">
+        <label for="nombre" class="col-12 col-md-2 col-form-label">Nombre</label>
+        <div class="col-12 col-md-10">
+          <input formControlName="nombre" type="text" id="nombre" class="form-control" placeholder="Nombre">
+        </div>
+      </div>
+    </form>
+
+  </div>
+
+  <div class="modal-footer">
+    <button [disabled]="!formCarrera.valid || guardando" type="submit" form="form-carrera" class="btn btn-sm btn-primary">
+      <fa-icon [icon]="faSave"></fa-icon>
+      Guardar
+      <i *ngIf="guardando" class="pi pi-spin pi-spinner" style="font-size: 0.8rem"></i>
+    </button>
+  </div>
+
+</ng-template>

@@ -1,0 +1,53 @@
+
+
+.card-cuenta {
+  width: auto;
+  min-width: 270px;
+}
+
+#img-recibo {
+  max-height: 300px;
+}
+
+
+.foto-recibo-container > img {
+  max-height: 80vh;
+}
+
+.detail {
+  margin-top: 10px;
+}
+
+.detail > * {
+  display: block;
+  padding: 0;
+  margin: 0;
+}
+
+.detail-label {
+  font-size: 0.8rem;
+  line-height: 0.8rem;
+  padding: 0;
+}
+
+.detail-content {
+  font-size: 1.6rem;
+  line-height: 1.6rem;
+}
+
+.container-not-found {
+  height: 85vh;
+}
+
+.error-not-found {
+  text-align: center;
+}
+
+.fecha-validacion, .fecha-evalreembolso {
+  font-size: 0.8rem;
+}
+
+.mensaje-validacion, .mensaje-evalreembolso {
+  padding-left: 1rem;
+  font-size: 1rem;
+}

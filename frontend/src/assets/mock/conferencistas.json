@@ -1,0 +1,32 @@
+[
+  {
+    "id": 1001,
+    "nombre": "Bill Gates",
+    "profesion": "Filántropo,Programador",
+    "resumen": "Fundador de Microsoft"
+  },
+  {
+    "id": 1002,
+    "nombre": "Larry Page",
+    "profesion": "Programador",
+    "resumen": "Creador de Google"
+  },
+  {
+    "id": 1003,
+    "nombre": "Linus Torvals",
+    "profesion": "Programador",
+    "resumen": "Creador de Linux"
+  },
+  {
+    "id": 1004,
+    "nombre": "Richard Stallman",
+    "profesion": "Programador",
+    "resumen": "Fundador del proyecto GNU"
+  },
+  {
+    "id": 1005,
+    "nombre": "Louis Von Ann",
+    "profesion": "Programador",
+    "resumen": "Creador de Captcha y Duolingo"
+  }
+]
