@@ -43,7 +43,7 @@ class CreatePagoSerializer(serializers.ModelSerializer):
 
         try:
             data["fecha"] = datetime.strftime(datetime.strptime(data["fecha"], "%d/%m/%Y"), "%Y-%m-%d")
-        except ValueError:
+        except (ValueError, KeyError) as err:
             pass
         return super().to_internal_value(data)
 
