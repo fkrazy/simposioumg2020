@@ -7,6 +7,12 @@
 # Only exists if Bazel was run
 /frontend/bazel-out
 
+/frontend/mobile/platforms
+/frontend/mobile/plugins
+/frontend/mobile/www
+/frontend/mobile/build.txt
+/frontend/module/node_modules
+
 # dependencies
 /**/node_modules
 
